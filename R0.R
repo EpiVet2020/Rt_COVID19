@@ -132,3 +132,13 @@ infetados_dia <- cbind(covid19pt$data, (covid19pt[, 4:10]- lag(covid19pt[, 4:10]
 names(infetados_dia) <- c("Data", "Norte", "Centro", "Lisboa", "Alentejo", "Algarve", "Açores", "Madeira")
 
 
+##Taxa de recuperação
+
+##Nº de infetados recuperados
+
+##Taxa de contacto
+
+##Nº de suscetíveis infetados
+
+##Coeficiente de transmissão
+
