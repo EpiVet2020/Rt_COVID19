@@ -21,7 +21,7 @@ library(htmltools)
 library(R0)
 
 # Set working directory
-setwd("C:/Users/teres/Desktop/EPIVET")
+setwd("C:/Users/teres/Desktop/EPIVET/R0")
 
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
