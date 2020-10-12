@@ -15,6 +15,7 @@ library(RColorBrewer)
 library(grid)
 library(gridExtra)
 library(htmltools)
+library(zoo)
 
 
 #package para o R0 (Estimation of reproduction numbers for disease outbreak, based on incidence data)
@@ -22,12 +23,11 @@ library(R0)
 
 # Set working directory
 setwd("C:/Users/teres/Desktop/EPIVET/R0")
-
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
-
 #Transformar para formato de data
 covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
+
 
 
 
@@ -51,7 +51,8 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
 
 
-# REGIÕES comparar regiões relativamente a:
+
+# REGIÕES compararação de regiões relativamente a:
 ## Nº de casos 
 
 casos_região <- as.data.frame(t(as.data.frame(lapply(covid19pt[,4:10], last))))
@@ -59,6 +60,32 @@ casos_região <- as.data.frame(t(as.data.frame(lapply(covid19pt[,4:10], last))))
 casos_região <- casos_região %>% 
   rownames_to_column(var="Regiões")
 names(casos_região)[2] <- "N_casos"
+
+casos_regiao_total <- as.data.frame(cbind(covid19pt$data, covid19pt[,4:10]))
+names(casos_regiao_total) <- c("Data", "Norte", "Centro", "Lisboa", "Alentejo", "Algarve", "Açores", "Madeira")
+
+casos_regiao_total_melt <- melt(casos_regiao_total, id.vars = "Data")
+names(casos_regiao_total_melt) <- c("Data", "Regiões", "Casos")
+                                
+                                    
+##Gráfico evolução
+casos_grafico <- ggplot(casos_regiao_total_melt, aes(x = Data, y = Casos, color = Regiões)) +
+  geom_line() +
+  theme(legend.title = element_blank(),
+        axis.text.y = element_text(size = 8),
+        axis.text.x = element_text(size = 7)) +
+  labs(title = "Evolução do nº casos total",
+       x = "Tempo",
+       y = "Casos") +
+  scale_x_date(breaks = "months", date_labels = "%B")
+
+ggplotly(casos_grafico) %>% 
+  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                       "Casos",
+                                       rep("&nbsp;", 20),
+                                       rep("\n&nbsp;", 2)),
+                                     collapse = "")),
+         legend = list(x = 1, y = 0))
 
 
 ## Taxa de incidência cumulativa ou Risco
@@ -72,11 +99,10 @@ lisboa = 3631738
 madeira = 253945
 norte = 3575338
 
-### Criar uma tabela com uma coluna para as Regiãoes e outra para o número de pessoas nessa Região
+### Criar uma tabela com uma coluna para as Regiões e outra para o número de pessoas nessa Região
 populacao_regioes <- as.data.frame(c(norte, centro, lisboa, alentejo, algarve, acores, madeira), 
                                    c("norte", "centro", "lisboa", "alentejo", "algarve", "açores", "madeira"))
 colnames(populacao_regioes) <- "População"
-populacao_regioes_invertido <- t(populacao_regioes)
 
 ## Subtrair mortalidade por região à população para obter população suscetível sem doença
 mortes_região <- as.data.frame(t(as.data.frame(lapply(covid19pt[, 49:55], last))))
@@ -85,28 +111,61 @@ mortes_região <- mortes_região %>%
   rownames_to_column(var="Regiões")
 names(mortes_região)[2] <- "N_mortes"
 
+
+## Incidência cumulativa ou Attack Rate
 pop_suscetível <- as.data.frame(populacao_regioes[,1] - mortes_região[,2])
 
-## Attack rate ?!
-ic_regiao <- as.data.frame(t(casos_região[,2])*100 / pop_suscetível) %>% 
+ic_regiao <- as.data.frame(t(casos_região[,2]) / pop_suscetível) %>% 
   rownames_to_column(var="Regiao")
 colnames(ic_regiao)[2] <- "IC"
 ic_regiao[,1] <- c("Norte", "Centro", "LVT", "Alentejo", "Algarve", "Açores", "Madeira")
 
-# Estimativa R0 segundo attack rate
-R0 <- est.R0.AR(ic_regiao[,2], casos_região[,2], populacao_regioes[,1], 1, checked = FALSE)
+### Incidência cumulativa ou Attack rate até ao dia 1 Maio
+pop_suscetível_1maio <- as.data.frame(t(populacao_regioes[,1] - covid19pt[66, 49:55]))
+
+ic_regiao_1maio <- as.data.frame(t(covid19pt[66, 4:10]) / pop_suscetível_1maio) %>%
+  rownames_to_column(var= "Região")
+colnames(ic_regiao_1maio)[2] <- "IC"
+ic_regiao_1maio[,1] <- c("Norte", "Centro", "LVT", "Alentejo", "Algarve", "Açores", "Madeira")
+
+# R PACKAGE
+# Estimativa R0 segundo attack rate (considerando Pico/ até Maio)
+R0_maio <- est.R0.AR(AR = ic_regiao_1maio[,2], pop.size = pop_suscetível_1maio, S0 = 1)
+
+# Estimativa R0 segundo attack rate (atual)
+R0 <- est.R0.AR(AR = ic_regiao[,2], pop.size = pop_suscetível[,1], S0 = 1)
+
+# Estimate R (até Maio)
+estimate.R(epid = ic_regiao_1maio, GT = 1)
 
 
-#Taxa de incidência 
-pop_rep <- as.data.frame(t(populacao_regioes[rep(seq_len(ncol(populacao_regioes)), each=nrow(covid19pt))]))
-
-incidencia_região <- as.data.frame(covid19pt[, 4:10] - lag(covid19pt[, 4:10]))*100 / (pop_rep - covid19pt[, 4:10] - covid19pt[, 49:55])
 
 
 
+# ARTIGO
+# Rate of exponential growth (r) 
+## nº novos casos per capita / unidade de tempo (dia)
+r <- (covid19pt[1:66,4:10] - lag(covid19pt[1:66, 4:10])) / 66
+
+## Fazer a média, removendo primeira linha de NA's
+r_média <- as.data.frame(lapply(r[-1,1:7], mean))
+
+# Mean generation interval (Tc)
 
 
-# MÉTODO SIR
+
+
+
+
+
+
+
+
+
+
+
+
+# MÉTODO SIR - Portugal
 ## Variação do nº suscetíveis
 
 suscetiveis_norte <- as.data.frame(norte - covid19pt$obitos_arsnorte)
