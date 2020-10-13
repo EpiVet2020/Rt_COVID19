@@ -71,6 +71,7 @@ centro = 2217285
 lisboa = 3631738
 madeira = 253945
 norte = 3575338
+portugal = 10295909
 
 ### Criar uma tabela com uma coluna para as Regiãoes e outra para o número de pessoas nessa Região
 populacao_regioes <- as.data.frame(c(norte, centro, lisboa, alentejo, algarve, acores, madeira), 
@@ -87,14 +88,14 @@ names(mortes_região)[2] <- "N_mortes"
 
 pop_suscetível <- as.data.frame(populacao_regioes[,1] - mortes_região[,2])
 
-## Attack rate ?!
+## Attack rate ou Incidência cumulativa
 ic_regiao <- as.data.frame(t(casos_região[,2])*100 / pop_suscetível) %>% 
   rownames_to_column(var="Regiao")
 colnames(ic_regiao)[2] <- "IC"
 ic_regiao[,1] <- c("Norte", "Centro", "LVT", "Alentejo", "Algarve", "Açores", "Madeira")
 
 # Estimativa R0 segundo attack rate
-R0 <- est.R0.AR(ic_regiao[,2], casos_região[,2], populacao_regioes[,1], 1, checked = FALSE)
+R0 <- est.R0.AR(AR = ic_regiao[,2], pop.size =  populacao_regioes[,1], S0 = 1)
 
 
 #Taxa de incidência 
@@ -109,13 +110,13 @@ incidencia_região <- as.data.frame(covid19pt[, 4:10] - lag(covid19pt[, 4:10]))*
 # MÉTODO SIR
 ## Variação do nº suscetíveis
 
-suscetiveis_norte <- as.data.frame(norte - covid19pt$obitos_arsnorte)
-suscetiveis_centro <- as.data.frame(centro - covid19pt$obitos_arscentro)
-suscetiveis_lisboa <- as.data.frame(lisboa - covid19pt$obitos_arslvt)
-suscetiveis_alentejo <- as.data.frame(alentejo - covid19pt$obitos_arsalentejo)
-suscetiveis_algarve <- as.data.frame(algarve - covid19pt$obitos_arsalgarve)
-suscetiveis_acores <- as.data.frame(acores - covid19pt$obitos_acores)
-suscetiveis_madeira <- as.data.frame(madeira - covid19pt$obitos_madeira)
+suscetiveis_norte <- as.data.frame(norte - covid19pt$obitos_arsnorte - (covid19pt$confirmados_arsnorte - lag(covid19pt$confirmados_arsnorte)))
+suscetiveis_centro <- as.data.frame(centro - covid19pt$obitos_arscentro - (covid19pt$confirmados_arscentro - lag(covid19pt$confirmados_arscentro)))
+suscetiveis_lisboa <- as.data.frame(lisboa - covid19pt$obitos_arslvt- (covid19pt$confirmados_arslvt - lag(covid19pt$confirmados_arslvt)))
+suscetiveis_alentejo <- as.data.frame(alentejo - covid19pt$obitos_arsalentejo - (covid19pt$confirmados_arsalentejo - lag(covid19pt$confirmados_arsalentejo)))
+suscetiveis_algarve <- as.data.frame(algarve - covid19pt$obitos_arsalgarve - (covid19pt$confirmados_arsalgarve - lag(covid19pt$confirmados_arsalgarve)))
+suscetiveis_acores <- as.data.frame(acores - covid19pt$obitos_acores - (covid19pt$confirmados_acores - lag(covid19pt$confirmados_acores)))
+suscetiveis_madeira <- as.data.frame(madeira - covid19pt$obitos_madeira - (covid19pt$confirmados_madeira - lag(covid19pt$confirmados_madeira)))
 
 suscetiveis <- cbind(covid19pt$data, suscetiveis_norte, suscetiveis_centro, suscetiveis_lisboa, suscetiveis_alentejo, suscetiveis_algarve, suscetiveis_acores, suscetiveis_madeira)
 names(suscetiveis) <- c("Data", "Norte", "Centro", "Lisboa", "Alentejo", "Algarve", "Açores", "Madeira")
@@ -127,18 +128,55 @@ names(suscetiveis_dia)[1] <- "Data"
 
 infetados <- cbind(covid19pt$data, covid19pt[, 4:10])
 names(infetados) <- c("Data", "Norte", "Centro", "Lisboa", "Alentejo", "Algarve", "Açores", "Madeira")
+infetados_melt <- melt(infetados, id.vars = "Data")
+
+ggplot(infetados_melt, aes(x = Data, y = value, col = variable)) + 
+  geom_line() + 
+  xlab("Data") + 
+  ylab("Infetados") + 
+  scale_x_date(date_breaks = "months", date_labels = "%b")
+
 
 infetados_dia <- cbind(covid19pt$data, (covid19pt[, 4:10]- lag(covid19pt[, 4:10])))
 names(infetados_dia) <- c("Data", "Norte", "Centro", "Lisboa", "Alentejo", "Algarve", "Açores", "Madeira")
+infetados_dia_melt <- melt(infetados_dia, id.vars = "Data")
+
+ggplot(infetados_dia_melt, aes(x = Data, y = value, col = variable)) + 
+  geom_line() + 
+  xlab("Data") + 
+  ylab("Infetados por dia") + 
+  scale_x_date(date_breaks = "months", date_labels = "%b")
+
+##R0 até 1 de Maio
+casos_maio <- as.data.frame(t(as.data.frame(lapply(covid19pt[1:65, 4:10], last))))
+obitos_maio <- as.data.frame(t(as.data.frame(lapply(covid19pt[1:65, 49:55], last))))
+pop_susc_maio <- as.data.frame(populacao_regioes_invertido[,1] - obitos_maio[,1])
+ic_maio <- as.data.frame(casos_maio[, 1] / pop_susc_maio[,1] *100)
+
+#R0 Portugal - SIR
+
+ic_pt <- as.data.frame((covid19pt$confirmados - lag(covid19pt$confirmados)) /  (portugal - covid19pt$confirmados)*100)
+ic_pt <- cbind(covid19pt$data, ic_pt)
+ic_pt$observation <- 1:nrow(ic_pt)                       
+ic_pt <- ic_pt[, c(3,1,2)]                       
+names(ic_pt) <- c("Dias", "Data", "Incidencia")
+                       
+  
+ggplot(ic_pt, aes(x=Dias , y=Incidencia)) + 
+  geom_line() + 
+  xlab("Dias desde o início") + 
+  ylab("Taxa de incidencia (por 100 habitantes)") +
+  scale_x_continuous(breaks = c(20, 40,60,80,100,120,140,160,180,200,220,240))
+
+lm(formula = log(Incidencia) ~ Dias, data = ic_pt)
 
 
-##Taxa de recuperação
+##Suscetiveis = -r.I.S
+S <- 
 
-##Nº de infetados recuperados
 
-##Taxa de contacto
 
-##Nº de suscetíveis infetados
 
-##Coeficiente de transmissão
 
+
+       
