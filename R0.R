@@ -153,8 +153,7 @@ obitos_maio <- as.data.frame(t(as.data.frame(lapply(covid19pt[1:65, 49:55], last
 pop_susc_maio <- as.data.frame(populacao_regioes_invertido[,1] - obitos_maio[,1])
 ic_maio <- as.data.frame(casos_maio[, 1] / pop_susc_maio[,1] *100)
 
-#R0 Portugal - SIR
-
+#Incidência
 ic_pt <- as.data.frame((covid19pt$confirmados - lag(covid19pt$confirmados)) /  (portugal - covid19pt$confirmados)*100)
 ic_pt <- cbind(covid19pt$data, ic_pt)
 ic_pt$observation <- 1:nrow(ic_pt)                       
@@ -163,16 +162,44 @@ names(ic_pt) <- c("Dias", "Data", "Incidencia")
                        
   
 ggplot(ic_pt, aes(x=Dias , y=Incidencia)) + 
-  geom_line() + 
+  geom_line() +
   xlab("Dias desde o início") + 
   ylab("Taxa de incidencia (por 100 habitantes)") +
   scale_x_continuous(breaks = c(20, 40,60,80,100,120,140,160,180,200,220,240))
 
-lm(formula = log(Incidencia) ~ Dias, data = ic_pt)
+
+##Suscetíveis = -B.S.I (B = p.k, p é a probabilidade de ficar infetado com 1 contacto, k é a contact rate)
+##Infetados = B.S.I - y.I
+##Recuperados = y.I (y é taxa de recuperação, ou seja, o inverso do nº de dias até recuperação)
 
 
-##Suscetiveis = -r.I.S
-S <- 
+##R0 = (I(t)-I(t-1)+R(t)-R(t-1)+D(t)-D(t-1)) / (R(t)-R(t-1)+D(t)-D(t-1))
+
+infetados <- as.data.frame(covid19pt$confirmados - covid19pt$obitos - covid19pt$recuperados)
+infetados <- cbind(covid19pt$data, infetados)
+names(infetados) <- c("Data", "Infetados")
+
+var_inf <- as.data.frame(infetados[,2] - lag(infetados[,2]))
+var_inf <- cbind(covid19pt$data, var_inf)
+
+var_obit <- as.data.frame(covid19pt$obitos - lag(covid19pt$obitos))
+var_obit <- cbind(covid19pt$data, var_obit)
+
+var_recup <- as.data.frame(covid19pt$recuperados - lag(covid19pt$recuperados))
+var_recup <- cbind(covid19pt$data, var_recup)
+
+
+r0 <- as.data.frame((var_inf[,2] + var_recup[,2] + var_obit[,2]) / (var_recup[,2] + var_obit[,2]))
+r0 <- cbind(covid19pt$data, r0)
+names(r0) <- c("Data", "R0")
+
+ggplot(r0, aes(x=Data , y=R0)) + 
+  geom_line() + 
+  xlab("Data") + 
+  ylab("R0") + 
+  scale_x_date(date_breaks = "months", date_labels = "%b")
+
+
 
 
 
