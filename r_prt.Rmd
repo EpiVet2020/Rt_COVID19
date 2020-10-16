@@ -135,9 +135,9 @@ Rt_nonparam_si <-
         config = sens_configs
         )
 ### inspect R_e estimate
-#plot(Re_nonparam_si, legend = FALSE)
-## Posterio sample R_e estimate
-## Posterio sample R_e estimate
+plot(Rt_nonparam_si, legend = FALSE)
+
+## Posterior sample R_e estimate
 sample_windows <- seq(length(Rt_nonparam_si$R$t_start))
 
 posterior_R_t <- 
@@ -1136,8 +1136,6 @@ plot(lambda_covid_pt)
 ```
 
 ```{r}
-
-
 covid_pt %>% 
   mutate(week = (year(Order_Date) - year(min(Order_Date)))*52 + 
                  week(Order_Date) - week(min(Order_Date)),

@@ -99,9 +99,7 @@ R0 <- est.R0.AR(AR = ic_regiao[,2], pop.size =  populacao_regioes[,1], S0 = 1)
 
 
 #Taxa de incidência 
-pop_rep <- as.data.frame(t(populacao_regioes[rep(seq_len(ncol(populacao_regioes)), each=nrow(covid19pt))]))
-
-incidencia_região <- as.data.frame(covid19pt[, 4:10] - lag(covid19pt[, 4:10]))*100 / (pop_rep - covid19pt[, 4:10] - covid19pt[, 49:55])
+incidencia_região <- as.data.frame(covid19pt[, 4:10] - lag(covid19pt[, 4:10]))
 
 
 
