@@ -83,10 +83,6 @@ covid19pt_var <- covid19pt %>%
     )
 
 # Previsão da evolução
-
-library(purrr)
-library(incidence)
-
 covid_pt_var <- covid19pt_var  %>%
     filter(covid19pt_var$data > as.Date("2020-02-28")) %>%       
     dplyr::mutate(t_start = dplyr::row_number())
@@ -204,11 +200,11 @@ Rt_nonparam_si1 <-
 plot(Rt_nonparam_si1, legend = FALSE)
 
 ## Posterior sample Rt estimate
-sample_windows <- seq(length(Rt_nonparam_si1$R$t_start))
+sample_windows1 <- seq(length(Rt_nonparam_si1$R$t_start))
 
 posterior_R_t1 <- 
     map(
-        .x = sample_windows,
+        .x = sample_windows1,
         .f = function(x) {
             
             posterior_sample_obj1 <- 
@@ -282,11 +278,11 @@ Rt_nonparam_si2 <-
 plot(Rt_nonparam_si2, legend = FALSE)
 
 ## Posterior sample Rt estimate
-sample_windows <- seq(length(Rt_nonparam_si2$R$t_start))
+sample_windows2 <- seq(length(Rt_nonparam_si2$R$t_start))
 
 posterior_R_t2 <- 
     map(
-        .x = sample_windows,
+        .x = sample_windows2,
         .f = function(x) {
             
             posterior_sample_obj2 <- 
@@ -359,11 +355,11 @@ Rt_nonparam_si3 <-
 plot(Rt_nonparam_si3, legend = FALSE)
 
 ## Posterior sample Rt estimate
-sample_windows <- seq(length(Rt_nonparam_si3$R$t_start))
+sample_windows3 <- seq(length(Rt_nonparam_si3$R$t_start))
 
 posterior_R_t3 <- 
     map(
-        .x = sample_windows,
+        .x = sample_windows3,
         .f = function(x) {
             
             posterior_sample_obj3 <- 
@@ -414,7 +410,7 @@ highchart() %>%
     
     hc_add_series(posterior_R_e3, 
                   hcaes( low = lwr, high = upr),     
-                  #                id = "ForecastRange-FL", 
+                  #id = "ForecastRange-FL", 
                   type = "arearange", 
                   name = "Incerteza", 
                   color = "#d9d9d9") %>% 
@@ -436,11 +432,11 @@ Rt_nonparam_si4 <-
 plot(Rt_nonparam_si4, legend = FALSE)
 
 ## Posterior sample Rt estimate
-sample_windows <- seq(length(Rt_nonparam_si4$R$t_start))
+sample_windows4 <- seq(length(Rt_nonparam_si4$R$t_start))
 
 posterior_R_t4 <- 
     map(
-        .x = sample_windows,
+        .x = sample_windows4,
         .f = function(x) {
             
             posterior_sample_obj4 <- 
@@ -513,11 +509,11 @@ Rt_nonparam_si5 <-
 plot(Rt_nonparam_si5, legend = FALSE)
 
 ## Posterior sample Rt estimate
-sample_windows <- seq(length(Rt_nonparam_si5$R$t_start))
+sample_windows5 <- seq(length(Rt_nonparam_si5$R$t_start))
 
 posterior_R_t5 <- 
     map(
-        .x = sample_windows,
+        .x = sample_windows5,
         .f = function(x) {
             
             posterior_sample_obj5 <- 
@@ -537,7 +533,7 @@ posterior_R_t5 <-
                     R_e_q0025 = quantile(posterior_sample_obj5, probs = 0.025),
                     R_e_q0975 = quantile(posterior_sample_obj5, probs = 0.975)
                 )
-            
+
             return(posterior_sample_estim5)
             
         }
@@ -590,11 +586,11 @@ Rt_nonparam_si6 <-
 plot(Rt_nonparam_si6, legend = FALSE)
 
 ## Posterior sample Rt estimate
-sample_windows <- seq(length(Rt_nonparam_si6$R$t_start))
+sample_windows6 <- seq(length(Rt_nonparam_si6$R$t_start))
 
 posterior_R_t <- 
     map(
-        .x = sample_windows,
+        .x = sample_windows6,
         .f = function(x) {
             
             posterior_sample_obj6 <- 
@@ -667,11 +663,11 @@ Rt_nonparam_si7 <-
 plot(Rt_nonparam_si7, legend = FALSE)
 
 ## Posterior sample Rt estimate
-sample_windows <- seq(length(Rt_nonparam_si7$R$t_start))
+sample_windows7 <- seq(length(Rt_nonparam_si7$R$t_start))
 
 posterior_R_t7 <- 
     map(
-        .x = sample_windows,
+        .x = sample_windows7,
         .f = function(x) {
             
             posterior_sample_obj7 <- 
