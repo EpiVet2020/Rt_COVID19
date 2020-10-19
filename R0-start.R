@@ -5,24 +5,12 @@ library(rlang)
 library(dplyr)
 library(ggplot2)
 library(data.table)
-library(reshape2)
-library(grid)
-library(tibble)
 library(ggpubr)
-library(ggiraph)
-library(gganimate)
-library(plotly)
-library(RColorBrewer)
-library(grid)
-library(gridExtra)
-library(htmltools)
 library(devtools)
 install_github("holtzy/epuRate")
 library(epuRate)
 library(EpiEstim)
 library(tidyr)
-library(readr)
-library(forcats)
 library(lubridate)
 library(googlesheets)
 require(RCurl)
@@ -528,12 +516,12 @@ posterior_R_t5 <-
                     window_index = x,
                     window_t_start = Rt_nonparam_si5$R$t_start[x],
                     window_t_end = Rt_nonparam_si5$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si5$R$t_end[x], "Data"],
+                    date_point = covid19pt_var[covid_pt_var$t_start == Rt_nonparam_si5$R$t_end[x], "data"],
                     R_e_median = median(posterior_sample_obj5),
                     R_e_q0025 = quantile(posterior_sample_obj5, probs = 0.025),
                     R_e_q0975 = quantile(posterior_sample_obj5, probs = 0.975)
                 )
-
+            
             return(posterior_sample_estim5)
             
         }
@@ -564,7 +552,7 @@ highchart() %>%
     
     hc_add_series(posterior_R_e5, 
                   hcaes( low = lwr, high = upr),     
-                  #                id = "ForecastRange-FL", 
+                  # id = "ForecastRange-FL", 
                   type = "arearange", 
                   name = "Incerteza", 
                   color = "#d9d9d9") %>% 
@@ -588,7 +576,7 @@ plot(Rt_nonparam_si6, legend = FALSE)
 ## Posterior sample Rt estimate
 sample_windows6 <- seq(length(Rt_nonparam_si6$R$t_start))
 
-posterior_R_t <- 
+posterior_R_t6 <- 
     map(
         .x = sample_windows6,
         .f = function(x) {
@@ -605,7 +593,7 @@ posterior_R_t <-
                     window_index = x,
                     window_t_start = Rt_nonparam_si6$R$t_start[x],
                     window_t_end = Rt_nonparam_si6$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si6$R$t_end[x], "Data"],
+                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si6$R$t_end[x], "data"],
                     R_e_median = median(posterior_sample_obj6),
                     R_e_q0025 = quantile(posterior_sample_obj6, probs = 0.025),
                     R_e_q0975 = quantile(posterior_sample_obj6, probs = 0.975)
@@ -682,7 +670,7 @@ posterior_R_t7 <-
                     window_index = x,
                     window_t_start = Rt_nonparam_si7$R$t_start[x],
                     window_t_end = Rt_nonparam_si7$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si7$R$t_end[x], "Data"],
+                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si7$R$t_end[x], "data"],
                     R_e_median = median(posterior_sample_obj7),
                     R_e_q0025 = quantile(posterior_sample_obj7, probs = 0.025),
                     R_e_q0975 = quantile(posterior_sample_obj7, probs = 0.975)
