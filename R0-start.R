@@ -25,10 +25,12 @@ library(here)
 library(incidence)
 library(purrr)
 library(magrittr)
+library(readr)
+library(readxl)
 
 
 # Set working directory
-setwd("C:/Users/teres/Desktop/EPIVET/COVID19/R0")
+setwd("C:/Users/ines/Documents/Estágio Epidemiologia/COVID19/R0")
 
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -45,6 +47,22 @@ belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.cs
 
 japan <- 
 
+nzealand <- read_excel(url="https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details.xlsx")
+
+czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
+
+#suica - nao consigo descarregar
+#
+uk <- fromJSON("https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json")
+uk <- uk$data
+
+USA <- read.csv("https://data.cdc.gov/api/views/vbim-akqf/rows.csv")
+
+
+#mexico <- read.csv("https://datos.covid-19.conacyt.mx/Downloads/Files/Casos_Diarios_Estado_Nacional_Confirmados_20201019.csv")
+#so me aparece ate fevereiro
+
+
 #Transformar para formato de data
 covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
@@ -54,6 +72,10 @@ names(italy)[1] <- "Date"
 germany <- cbind(as.data.frame(strftime(germany$properties$Meldedatum, format = "%Y-%m-%d")), germany)
 names(germany)[1] <- "Date"
 
+czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d")
+names(czechr)[1] <- "Date"
+
+uk$date <- as.Date(uk$date, "%Y-%m-%d")
 
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
 covid19pt <- mutate(covid19pt, 
@@ -751,6 +773,10 @@ names(spa_var)[2] <- "Casos"
 bel_var <- as.data.frame(aggregate(belgium$CASES, by = list(Data = belgium$DATE), FUN = sum))
 names(bel_var)[2] <- "Casos"
 
+#Czech Republic 
+czech_var <- as.data.frame(aggregate(czechr$prirustkovy_pocet_nakazenych, by = list(Data=czechr$Date), FUN = sum))
+names(czech_var)[2] <- "Casos"
 
-
-
+#United Kingdom 
+uk_var <- as.data.frame(aggregate(uk$newCasesBySpecimenDate, by = list(Data = uk$date), FUN = sum))
+names(uk_var)[2]<- "Casos"
