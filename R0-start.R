@@ -28,13 +28,31 @@ library(magrittr)
 
 
 # Set working directory
-setwd("~/Desktop/Treino Estágio 2020-2021")
+setwd("C:/Users/teres/Desktop/EPIVET/COVID19/R0")
 
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
 
+##Data outros países
+italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv", stringsAsFactors = FALSE)
+
+germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
+germany <- germany$features
+
+spain <- read.csv("https://cnecovid.isciii.es/covid19/resources/datos_ccaas.csv")
+
+belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
+
+japan <- 
+
 #Transformar para formato de data
 covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
+
+italy <- cbind(as.data.frame(strftime(italy$data, format = "%Y-%m-%d")), italy)
+names(italy)[1] <- "Date"
+
+germany <- cbind(as.data.frame(strftime(germany$properties$Meldedatum, format = "%Y-%m-%d")), germany)
+names(germany)[1] <- "Date"
 
 
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
@@ -712,5 +730,27 @@ highchart() %>%
     hc_add_series(data = posterior_R_e7$fit,
                   name = "Rt", 
                   color = "#e6550d")
+
+#Tabela novos casos
+##Italy
+it_var <- as.data.frame(cbind(italy$Date, italy$nuovi_positivi))
+names(it_var) <- c("Data", "Novos")
+
+##Germany
+germany <- as.data.frame(germany[order(germany$Date), ])
+nrow(germany$Date)
+ger_var <- as.data.frame(aggregate(x = germany, list(germany$Date), FUN = length))
+ger_var <- ger_var[,1:2]
+names(ger_var) <- c("Date", "Casos")
+
+##Spain
+spa_var <- as.data.frame(aggregate(spain$num_casos, by = list(Data = spain$fecha), FUN = sum))
+names(spa_var)[2] <- "Casos"
+
+##Belgium
+bel_var <- as.data.frame(aggregate(belgium$CASES, by = list(Data = belgium$DATE), FUN = sum))
+names(bel_var)[2] <- "Casos"
+
+
 
 
