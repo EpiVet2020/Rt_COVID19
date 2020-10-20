@@ -1,5 +1,4 @@
 #Libraries
-
 library(testthat)
 library(rlang)
 library(dplyr)
@@ -28,7 +27,7 @@ library(incidence)
 library(purrr)
 library(magrittr)
 library(RColorBrewer)
-library()
+library(rjson)
 
 
 # Set working directory
@@ -437,7 +436,6 @@ highchart() %>%
                   name = "Rt", 
                   color = "#e6550d")
 
-## GGPLOT
 ## GRÁFICO GGPLOT
 
 graph_PT2<- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
