@@ -32,13 +32,31 @@ library()
 
 
 # Set working directory
-setwd("~/Desktop/Treino Estágio 2020-2021")
+setwd("C:/Users/teres/Desktop/EPIVET/COVID19/R0")
 
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
 
+##Data outros países
+italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv", stringsAsFactors = FALSE)
+
+germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
+germany <- germany$features
+
+spain <- read.csv("https://cnecovid.isciii.es/covid19/resources/datos_ccaas.csv")
+
+belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
+
+japan <- 
+
 #Transformar para formato de data
 covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
+
+italy <- cbind(as.data.frame(strftime(italy$data, format = "%Y-%m-%d")), italy)
+names(italy)[1] <- "Date"
+
+germany <- cbind(as.data.frame(strftime(germany$properties$Meldedatum, format = "%Y-%m-%d")), germany)
+names(germany)[1] <- "Date"
 
 
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
@@ -1013,6 +1031,7 @@ highchart() %>%
                   name = "Rt", 
                   color = "#e6550d")
 
+<<<<<<< HEAD
 ## GGPLOT
 ## GRÁFICO GGPLOT
 
@@ -1056,321 +1075,29 @@ ggplotly(graph_PT7) %>%
                                        collapse = "")))
 
 
-# Método Paramétrico
-## Cálculo do Rt ou Re
-
-confirmados_var <- as.data.frame(covid_pt_var$confirmados_var)
-confirmados_var <-cbind(covid_pt_var$data, confirmados_var)
-names(confirmados_var)[1]<-"Data"
-names(confirmados_var)[2]<-"I"
-
-res_parametric_si <- 
-    estimate_R(
-        confirmados_var, 
-        method ="parametric_si",
-        config = make_config(
-            list(
-                mean_si = 4.7, 
-                std_si = 2.9
-            )
-        )
-    )
-
-plot(res_parametric_si, legend = FALSE)
-
-r_prt <- as.data.frame(res_parametric_si$R)
-
-r_prt <- left_join(covid_pt_var, r_prt, by="t_start")
-
-### join by t-end
-left_join(
-    x = covid_pt_var, 
-    y = dplyr::select(
-        r_prt,
-        c("t_end", "Mean(R)", "Quantile.0.025(R)", "Quantile.0.975(R)")
-    ), 
-    by = c("t_start" = "t_end")
-)
-
-r_prt %>% 
-    rename(
-        r_efect = "Mean(R)",
-        r_low = "Quantile.0.025(R)",
-        r_high = "Quantile.0.975(R)"
-    )
 
 
-r_efect <- r_prt$`Mean(R)`
-r_low <- r_prt$`Quantile.0.025(R)`
-r_high <- r_prt$`Quantile.0.975(R)`
+#Tabela novos casos
+##Italy
+it_var <- as.data.frame(cbind(italy$Date, italy$nuovi_positivi))
+names(it_var) <- c("Data", "Novos")
 
-ggplot() +
-    
-    geom_line(
-        data = r_prt,                 
-        aes(
-            x = data,               
-            y = r_efect
-        ),
-        alpha = 0.7,
-        size = 1
-    ) +
-    
-    geom_hline(
-        yintercept=1, 
-        linetype="dashed", 
-        color = "black"
-    ) +
-    
-    geom_hline(
-        yintercept=0, 
-        color = "black"
-    ) +
-    
-    geom_ribbon(
-        data = r_prt, 
-        aes(
-            ymin = r_low, 
-            ymax = r_high,
-            x = data
-        ), 
-        alpha=0.5,
-        fill = "grey70"
-    ) +
-    
-    scale_x_date(
-        breaks = "2 day", 
-        date_labels = "%b %d"
-    ) +
-    
-    labs(
-        title = "COVID-19 Effective reproduction",
-        subtitle = "Portugal",
-        y = "Effective reproduction n",
-        x = "", 
-        caption = "Fonte: Dados da DGS |Modelo dos autores"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(
-        panel.grid.minor = element_blank(),
-        # panel.grid.major.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        axis.text = element_text(face = "bold", size = 8, color = "black"),
-        axis.title = element_text(size = 10),
-        plot.title = element_text(face = "bold", size = 12),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "bottom"
-    )
+##Germany
+germany <- as.data.frame(germany[order(germany$Date), ])
+nrow(germany$Date)
+ger_var <- as.data.frame(aggregate(x = germany, list(germany$Date), FUN = length))
+ger_var <- ger_var[,1:2]
+names(ger_var) <- c("Date", "Casos")
+
+##Spain
+spa_var <- as.data.frame(aggregate(spain$num_casos, by = list(Data = spain$fecha), FUN = sum))
+names(spa_var)[2] <- "Casos"
+
+##Belgium
+bel_var <- as.data.frame(aggregate(belgium$CASES, by = list(Data = belgium$DATE), FUN = sum))
+names(bel_var)[2] <- "Casos"
 
 
-
-
-r estim-Re-uncertain-si-imported}
-### the model can account for imported cases at the beginning of the outbreak
-### perhaps consider the first 2 ??? or 4 on the first two days
-### if so, it will most likely decrease the initial R_e but increase it afterwards due to undiagnosed community transmission
-
-
-
-
-{r log-linear-growth}
-covid_r_inc <- 
-    rep(
-        x = unlist(covid_pt_var$data), 
-        times = unlist(covid_pt_var$confirmados_var)
-    ) %>% 
-    incidence(
-        dates = .,
-        interval = "1 day",
-        standard = TRUE,
-        first_date = min(covid_pt_var$data),
-        last_date = max(covid_pt_var$data)
-    )
-
-### find peak for adjustment of trend on model by the split argument    
-covid_r_inc_peak <- find_peak(covid_r_inc)
-
-### fit log-linear model
-### fits two exponential models to incidence data, 
-### of the form: log(y) = r * t + b , where
-### 'y' is the incidence,
-### 't' is time (in days)
-### 'r' is the growth rate
-### 'b' is the origin
-### function fit will fit one model by default, 
-### but will fit two models on either side of a splitting date 
-### (typically the peak of the epidemic) if the argument split is provided
-covid_r_inc_model <- 
-    fit(
-        x = covid_r_inc,
-        # split = covid_r_inc_peak,
-        NULL
-    )
-
-# check object entirely
-covid_r_inc_model
-
-# (daily growth rate)
-covid_r_inc_model$info$r
-covid_r_inc_model$info$r.conf
-
-# (doubling time in days)
-covid_r_inc_model$info$doubling
-covid_r_inc_model$info$doubling.conf
-
-# incidence predictions (fitted vs observed data)
-plot(covid_r_inc, fit = covid_r_inc_model)
-```
-
-
-```{r 3-day-prediction-log-linear-growth}
-### predict number cases next 3 days maintaing current exponential growth
-### model elements for forecast are in covid_r_inc_model$model
-### structure of dataset for prediction can be checked with
-# head(covid_r_inc_model$info$pred)
-### must provide x-axis data as a mid-point from t_0
-### create x vector for forecasting on the next 3 days (reasonable amount time)
-case_pred_3_day <- 
-    data.frame(
-        dates = covid_r_inc_model$info$pred$dates[nrow(covid_r_inc_model$info$pred)] + 1:3,
-        dates.x = covid_r_inc_model$info$pred$dates.x[nrow(covid_r_inc_model$info$pred)] + 1:3
-    )
-
-n_case_pred_3_day <- 
-    predict(
-        object = covid_r_inc_model$model, 
-        newdata = case_pred_3_day, 
-        se.fit = TRUE, 
-        # type = "response",
-        interval = "prediction"
-    )
-
-### log-linear model
-### predictions are in log scale
-### anti-log to get final count predictions
-n_case_pred_3_day <- 
-    exp(x = n_case_pred_3_day[["fit"]])
-
-case_pred_3_day <- 
-    dplyr::bind_cols(
-        case_pred_3_day,
-        as.data.frame(n_case_pred_3_day)
-    ) %>% 
-    mutate(
-        type = "predict"
-    )
-
-case_obs_fit <- covid_r_inc_model$info$pred %>% 
-    mutate(type = "fit")
-
-### final prediction
-covid_pred_3_day <- 
-    bind_rows(
-        case_obs_fit,
-        case_pred_3_day
-    )
-
-### plot not perfect
-### points and lines not coinciding on the x axis with the geom_col
-plot_pred_3_day <- 
-    ggplot() +
-    # geom_col(
-    #     data = covid_r, 
-    #     mapping = aes(x = Data, y = Confirmados_var), 
-    #     fill = "grey90"
-    #     ) + 
-    geom_point(
-        data = covid_pred_3_day, 
-        mapping = aes(x = dates, y = fit, colour = type), 
-        alpha = 0.7, 
-        size = 1.5
-    ) +
-    geom_line(
-        data = covid_pred_3_day, 
-        mapping = aes(x = dates, y = fit, colour = type), 
-        alpha = 0.7, 
-        size = 1.5
-    ) + 
-    geom_ribbon(
-        data = covid_pred_3_day, 
-        mapping = aes(x = dates, ymin = lwr, ymax = upr, fill = type), 
-        alpha = 0.25
-    ) +
-    scale_x_date(breaks = "1 day") + 
-    scale_y_continuous(
-        limits = c(0, max(covid_pred_3_day$upr)), 
-        breaks = pretty(covid_pred_3_day$upr),
-        labels = pretty(covid_pred_3_day$upr), 
-        name = "Medida"
-    ) +
-    theme_classic() + 
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    labs(
-        y = "Casos (n)", 
-        x = "Data (dias)", 
-        fill = "Medida"
-    )
-
-### display plot
-plot_pred_3_day
-
-```
-
-
-
-
-
-
-
-```{r lambda-overall-infectivity}
-### computes the overall infectivity (lambda) due to previously infected individuals
-### λ_t = ∑_{k=1}^{t-1}I_{t-k}w_k 
-lambda_covid_pt <- 
-    overall_infectivity(
-        incid = data.frame(I = covid_r_inc$counts), 
-        si_distr = discr_si(k = c(100, 1:100), mu = 4.7, sigma = 2.9)
-    )
-
-plot(lambda_covid_pt)
-
-```
-
-```{r}
-covid_pt %>% 
-    mutate(week = (year(Order_Date) - year(min(Order_Date)))*52 + 
-               week(Order_Date) - week(min(Order_Date)),
-           week2 = (as.numeric(Order_Date) %/% 7) - (as.numeric(min(Order_Date))
-                                                     %/% 7)) %>%
-    arrange(Order_Date)
-
-
-
-
-
-covid_r<-covid_pt  %>%
-    group_by(epiweek) %>%
-    summarise(
-        incidence=sum(Confirmados_var)
-    ) %>%
-    filter(
-        epiweek>6
-    )
-
-covid_r<-covid_pt  %>%
-    select(
-        Data,Confirmados_var
-    )  %>%
-    filter(
-        Data>as.Date("2020-02-28")
-    ) %>%
-    dplyr::mutate(
-        t_start = dplyr::row_number() %>% as.numeric(),
-        t_end = t_start + 6
-    )
-
-```
+>>>>>>> 524185d18bc0551361b66f42b6d56edb05c1b78d
 
 
