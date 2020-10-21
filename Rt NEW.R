@@ -32,8 +32,9 @@ library(readr)
 library(readxl)
 
 
+
 # Set working directory
-setwd("C:/Users/ines/Documents/Estágio Epidemiologia/COVID19/R0")
+setwd("C:/Users/teres/Desktop/EPIVET/COVID19/R0")
 
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -1065,7 +1066,7 @@ italy <- cbind(as.data.frame(as.Date(italy$data,  "%Y-%m-%d")), italy)
 names(italy)[1] <- "Date"
 
 # Tabela
-it_var <- as.data.frame(cbind(italy$Date, italy$nuovi_positivi))
+it_var <- as.data.frame(cbind(italy[, c(1, 10)]))
 names(it_var) <- c("data", "confirmados_novos")
 
 # Previsão da evolução
@@ -1171,9 +1172,10 @@ ggplotly(graph_it) %>%
 # ALEMANHA
 germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
 germany <- germany$features
-
-germany <- cbind(as.data.frame(as.Date(germany$properties$Meldedatum, "%Y-%m-%d")), germany)
+germany <- cbind(as.data.frame(strftime(germany$properties$Meldedatum, format = "%Y-%m-%d")), germany)
 names(germany)[1] <- "Date"
+germany <- cbind(as.Date(germany$Date, "%Y-%m-%d"), germany)
+names(germany)[1] <- "As.Date"
 
 
 
@@ -1189,7 +1191,7 @@ belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.cs
 nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-21oct20_0.xlsx"
 nzealand <- rio::import(file = nzealand)
 nzealand <- nzealand[-c(1,2), ]
-nzealand <- cbind ((openxlsx::convertToDate(nzealand$Date)), nzealand)
+nzealand <- cbind ((openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`)), nzealand)
 names(nzealand) <- c("Date", "Datecode", "Gender", "Age group", "DHB", "Overseas travel")
 
 
@@ -1210,22 +1212,39 @@ uk <- uk$data
 
 uk$date <- as.Date(uk$date, "%Y-%m-%d")
 
+#Sweden
+sweden <- "https://fohm.maps.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data"
+sweden <- rio::import(file = sweden)
+
+sweden$Statistikdatum <- as.Date(sweden$Statistikdatum, "%Y-%m-%d" )
+
 # Estados Unidos da América
 usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
 usa <- rio::import(file = usa)
 
-usa <- cbind(as.data.frame(as.Date(usa$cdc_report_dt, "%Y-%m-%d")), usa)
+usa$cdc_report_dt <- as.Date(usa$cdc_report_dt, "%Y-%m-%d")
 names(usa)[1] <- "Date"
 
-#Brasil
-brasil <- read.csv("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/SRAG/2020/INFLUD-12-10-2020.csv")
+#Brasil - buscar API!!!
+
+#Hong Kong
+hk <- read.csv("http://www.chp.gov.hk/files/misc/enhanced_sur_covid_19_eng.csv")
+
+#Australia
+australia <- read.csv("https://raw.githubusercontent.com/M3IT/COVID-19_Data/master/Data/COVID_AU_national_daily_change.csv")
+
+australia$date <- as.Date(australia$date, "%Y-%m-%d")
+
+#India
+india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv")
+
+india$Date_YMD <- as.Date(india$Date_YMD, "%Y-%m-%d")
 
 
 
 ##Germany
-germany <- as.data.frame(germany[order(germany$Date), ])
-nrow(germany$Date)
-ger_var <- as.data.frame(aggregate(x = germany, list(germany$Date), FUN = length))
+germany <- as.data.frame(germany[order(germany$As.Date), ])
+ger_var <- as.data.frame(aggregate(x = germany, list(germany$As.Date), FUN = length))
 ger_var <- ger_var[,1:2]
 names(ger_var) <- c("Date", "Casos")
 
@@ -1255,6 +1274,11 @@ swi_var <- switzerland %>%
     filter(Outcome_tests == "Positive") %>%
     select(Datum, Number_of_tests)
 
+##Sweden
+swe_var <- sweden %>%
+    select(Statistikdatum, Totalt_antal_fall)
+names(swe_var) <- c("Date", "Cases")
+
 ##USA
 usa <- as.data.frame(usa[order(usa$Date), ])
 usa_var <- usa %>%
@@ -1262,3 +1286,25 @@ usa_var <- usa %>%
 usa_var <- as.data.frame(aggregate(x = usa_var, list(usa_var$Date), FUN = length))
 usa_var <- usa_var[, 1:2]
 names(usa_var) <- c("Date", "Cases")
+
+##Hong Kong 
+hk <- as.data.frame(hk[order(hk$Report.date), ])
+hk_var <- hk %>%
+    filter(Confirmed.probable == "Confirmed")
+hk_var <- as.data.frame(aggregate( x = hk_var, list(hk_var$Report.date), FUN = length))
+hk_var <- hk_var %>%
+    select(Group.1, Report.date)
+names(hk_var) <- c("Date", "Cases")
+
+##Australia
+aus_var <- australia %>%
+    select(date, confirmed)
+names(aus_var) <- c("Date", "Cases")
+
+##India
+ind_var <- india %>%
+    select(Date_YMD, Daily.Confirmed)
+names(ind_var) <- c("Date", "Cases")
+
+
+
