@@ -24,13 +24,10 @@ library(here)
 library(incidence)
 library(purrr)
 library(magrittr)
-<<<<<<< HEAD
 library(RColorBrewer)
 library(rjson)
-=======
 library(readr)
 library(readxl)
->>>>>>> 5855f6bde6a93abd3df602777d7325f40a456f8a
 
 
 # Set working directory
@@ -51,12 +48,12 @@ belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.cs
 
 japan <- 
 
-nzealand <- read_excel(url="https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details.xlsx")
+nzealand <- fread("https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details.xlsx")
 
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 #suica - nao consigo descarregar
-#
+
 uk <- fromJSON("https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json")
 uk <- uk$data
 
@@ -761,10 +758,66 @@ highchart() %>%
                   name = "Rt", 
                   color = "#e6550d")
 
-#Tabela novos casos
+#TABELA E GRÁFICO (NOVOS CASOS)
 ##Italy
 it_var <- as.data.frame(cbind(italy$Date, italy$nuovi_positivi))
 names(it_var) <- c("Data", "Novos")
+
+# Previsão da evolução
+covid_it_var <- it_var  %>%
+    filter(it_var$Data > as.Date("2020-02-25")) %>%       
+    dplyr::mutate(t_start = dplyr::row_number())
+
+
+### Cálculo do Rt Itália- Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_it <- estimate_R(covid_it_var, 
+                             method = "uncertain_si",
+                             config = sens_configs
+)
+
+sample_windows <- seq(length(Rt_nonparam_si_it$R$t_start))
+
+# Criar um data frame com valores de R
+posterior_Rt_it <- 
+    map(.x = sample_windows,
+        .f = function(x) {
+            
+            posterior_sample_obj <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si$R$t_start[x],
+                    window_t_end = Rt_nonparam_si$R$t_end[x],
+                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj),
+                    R_e_q0025 = quantile(posterior_sample_obj, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj, probs = 0.975))
+            
+            return(posterior_sample_estim)}
+    ) %>% 
+    
+    reduce(bind_rows)
 
 ##Germany
 germany <- as.data.frame(germany[order(germany$Date), ])
