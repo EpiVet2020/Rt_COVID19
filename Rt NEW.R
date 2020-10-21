@@ -48,22 +48,24 @@ spain <- read.csv("https://cnecovid.isciii.es/covid19/resources/datos_ccaas.csv"
 
 belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
 
-japan <- 
-
-nzealand <- fread("https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details.xlsx")
+nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-21oct20_0.xlsx"
+nzealand <- rio::import(file = nzealand)
+nzealand <- nzealand[-c(1,2), ]
+nzealand <- cbind ((openxlsx::convertToDate(nzealand$Date)), nzealand)
+names(nzealand) <- c("Date", "Datecode", "Gender", "Age group", "DHB", "Overseas travel")
 
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
-#suica - nao consigo descarregar
+switzerland <- "https://www.bag.admin.ch/dam/bag/en/dokumente/mt/k-und-i/aktuelle-ausbrueche-pandemien/2019-nCoV/covid-19-basisdaten-labortests.xlsx.download.xlsx/Dashboard_3_COVID19_labtests_positivity.xlsx"
+switzerland <- rio::import(file = switzerland)
 
 uk <- fromJSON("https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json")
 uk <- uk$data
 
-USA <- read.csv("https://data.cdc.gov/api/views/vbim-akqf/rows.csv")
+usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
+usa <- rio::import(file = usa)
 
-
-#mexico <- read.csv("https://datos.covid-19.conacyt.mx/Downloads/Files/Casos_Diarios_Estado_Nacional_Confirmados_20201019.csv")
-#so me aparece ate fevereiro
+brasil <- read.csv("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/SRAG/2020/INFLUD-12-10-2020.csv")
 
 
 #Transformar para formato de data
@@ -79,6 +81,9 @@ czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d")
 names(czechr)[1] <- "Date"
 
 uk$date <- as.Date(uk$date, "%Y-%m-%d")
+
+usa <- cbind(as.data.frame(strftime(usa$cdc_report_dt, format = "%Y-%m-%d")), usa)
+names(usa)[1] <- "Date"
 
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
 covid19pt <- mutate(covid19pt, 
@@ -1169,10 +1174,28 @@ names(spa_var)[2] <- "Casos"
 bel_var <- as.data.frame(aggregate(belgium$CASES, by = list(Data = belgium$DATE), FUN = sum))
 names(bel_var)[2] <- "Casos"
 
-#Czech Republic 
-czech_var <- as.data.frame(aggregate(czechr$prirustkovy_pocet_nakazenych, by = list(Data=czechr$Date), FUN = sum))
-names(czech_var)[2] <- "Casos"
+##New Zealand
+nze_var <- as.data.frame(aggregate(x = nzealand, list(nzealand$Date), FUN = length))
+nze_var <- nze_var[, 1:2]
+names(nze_var) <- c("Date", "Cases")
 
-#United Kingdom 
-uk_var <- as.data.frame(aggregate(uk$newCasesBySpecimenDate, by = list(Data = uk$date), FUN = sum))
-names(uk_var)[2]<- "Casos"
+##Czech Republic 
+czech_var <- czechr[,1:2]
+names(czech_var) <- c("Date", "Cases")
+
+##United Kingdom 
+uk_var <- uk[, 4:5]
+names(uk_var)[2]<- "Cases"
+
+##Switzerland 
+swi_var <- switzerland %>%
+    filter(Outcome_tests == "Positive") %>%
+    select(Datum, Number_of_tests)
+
+##USA
+usa <- as.data.frame(usa[order(usa$Date), ])
+usa_var <- usa %>%
+    filter(current_status == "Laboratory-confirmed case")
+usa_var <- as.data.frame(aggregate(x = usa_var, list(usa_var$Date), FUN = length))
+usa_var <- usa_var[, 1:2]
+names(usa_var) <- c("Date", "Cases")
