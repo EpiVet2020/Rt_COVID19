@@ -1,5 +1,4 @@
 #Libraries
-
 library(testthat)
 library(rlang)
 library(dplyr)
@@ -25,8 +24,13 @@ library(here)
 library(incidence)
 library(purrr)
 library(magrittr)
+<<<<<<< HEAD
+library(RColorBrewer)
+library(rjson)
+=======
 library(readr)
 library(readxl)
+>>>>>>> 5855f6bde6a93abd3df602777d7325f40a456f8a
 
 
 # Set working directory
@@ -368,6 +372,10 @@ highchart() %>%
                   name = "Rt", 
                   color = "#e6550d")
 
+<<<<<<< HEAD
+## GRÁFICO GGPLOT
+=======
+>>>>>>> 5855f6bde6a93abd3df602777d7325f40a456f8a
 
 
 # Rt ARS Lisboa e Vale do Tejo
