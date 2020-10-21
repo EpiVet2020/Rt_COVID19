@@ -38,52 +38,9 @@ setwd("C:/Users/ines/Documents/Estágio Epidemiologia/COVID19/R0")
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
 
-##Data outros países
-italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv", stringsAsFactors = FALSE)
-
-germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
-germany <- germany$features
-
-spain <- read.csv("https://cnecovid.isciii.es/covid19/resources/datos_ccaas.csv")
-
-belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
-
-nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-21oct20_0.xlsx"
-nzealand <- rio::import(file = nzealand)
-nzealand <- nzealand[-c(1,2), ]
-nzealand <- cbind ((openxlsx::convertToDate(nzealand$Date)), nzealand)
-names(nzealand) <- c("Date", "Datecode", "Gender", "Age group", "DHB", "Overseas travel")
-
-czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
-
-switzerland <- "https://www.bag.admin.ch/dam/bag/en/dokumente/mt/k-und-i/aktuelle-ausbrueche-pandemien/2019-nCoV/covid-19-basisdaten-labortests.xlsx.download.xlsx/Dashboard_3_COVID19_labtests_positivity.xlsx"
-switzerland <- rio::import(file = switzerland)
-
-uk <- fromJSON("https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json")
-uk <- uk$data
-
-usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
-usa <- rio::import(file = usa)
-
-brasil <- read.csv("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/SRAG/2020/INFLUD-12-10-2020.csv")
-
 
 #Transformar para formato de data
 covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
-
-italy <- cbind(as.data.frame(strftime(italy$data, format = "%Y-%m-%d")), italy)
-names(italy)[1] <- "Date"
-
-germany <- cbind(as.data.frame(strftime(germany$properties$Meldedatum, format = "%Y-%m-%d")), germany)
-names(germany)[1] <- "Date"
-
-czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d")
-names(czechr)[1] <- "Date"
-
-uk$date <- as.Date(uk$date, "%Y-%m-%d")
-
-usa <- cbind(as.data.frame(strftime(usa$cdc_report_dt, format = "%Y-%m-%d")), usa)
-names(usa)[1] <- "Date"
 
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
 covid19pt <- mutate(covid19pt, 
@@ -1098,14 +1055,22 @@ ggplotly(graph_PT7) %>%
 
 
 
-#TABELA E GRÁFICO (NOVOS CASOS)
-##Italy
+
+#Data OUTROS PAÍSES e transformação para formato de data
+
+# ITÁLIA
+italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv", stringsAsFactors = FALSE)
+
+italy <- cbind(as.data.frame(as.Date(italy$data,  "%Y-%m-%d")), italy)
+names(italy)[1] <- "Date"
+
+# Tabela
 it_var <- as.data.frame(cbind(italy$Date, italy$nuovi_positivi))
-names(it_var) <- c("Data", "Novos")
+names(it_var) <- c("data", "confirmados_novos")
 
 # Previsão da evolução
 covid_it_var <- it_var  %>%
-    filter(it_var$Data > as.Date("2020-02-25")) %>%       
+    filter(it_var$data > as.Date("2020-02-24")) %>%       
     dplyr::mutate(t_start = dplyr::row_number())
 
 
@@ -1126,38 +1091,136 @@ sens_configs <-
     )
 
 ## Aplicar a função Estimate_R
-Rt_nonparam_si_it <- estimate_R(covid_it_var, 
+Rt_nonparam_si_it <- estimate_R(as.numeric(covid_it_var$confirmados_novos), 
                              method = "uncertain_si",
                              config = sens_configs
 )
 
-sample_windows <- seq(length(Rt_nonparam_si_it$R$t_start))
+
+sample_windows_it <- seq(length(Rt_nonparam_si_it$R$t_start))
 
 # Criar um data frame com valores de R
 posterior_Rt_it <- 
-    map(.x = sample_windows,
+    map(.x = sample_windows_it,
         .f = function(x) {
             
-            posterior_sample_obj <- 
+            posterior_sample_obj_it <- 
                 sample_posterior_R(
-                    R = Rt_nonparam_si,
+                    R = Rt_nonparam_si_it,
                     n = 1000, 
                     window = x )
             
-            posterior_sample_estim <- 
+            posterior_sample_estim_it <- 
                 data.frame(
                     window_index = x,
-                    window_t_start = Rt_nonparam_si$R$t_start[x],
-                    window_t_end = Rt_nonparam_si$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj),
-                    R_e_q0025 = quantile(posterior_sample_obj, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj, probs = 0.975))
+                    window_t_start = Rt_nonparam_si_it$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_it$R$t_end[x],
+                    date_point = as.numeric(covid_it_var[covid_it_var$t_start == Rt_nonparam_si_it$R$t_end[x], "data"]),
+                    R_e_median = median(posterior_sample_obj_it),
+                    R_e_q0025 = quantile(posterior_sample_obj_it, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_it, probs = 0.975))
             
-            return(posterior_sample_estim)}
+            return(posterior_sample_estim_it)}
     ) %>% 
     
     reduce(bind_rows)
+
+
+## Gráfico Itália ggplot
+
+graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "indianred",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "indianred3") +
+    
+    labs( title = " Evolução do Número Efetivo Reprodutivo de Itália ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_it_var$data), max((posterior_Rt_it$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_it$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+
+
+### Tornar gráfico interativo
+ggplotly(graph_it) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+
+
+# ALEMANHA
+germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
+germany <- germany$features
+
+germany <- cbind(as.data.frame(as.Date(germany$properties$Meldedatum, "%Y-%m-%d")), germany)
+names(germany)[1] <- "Date"
+
+
+
+# Espanha
+spain <- read.csv("https://cnecovid.isciii.es/covid19/resources/datos_ccaas.csv")
+
+
+# Bélgica
+belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
+
+
+# Nova Zelândia
+nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-21oct20_0.xlsx"
+nzealand <- rio::import(file = nzealand)
+nzealand <- nzealand[-c(1,2), ]
+nzealand <- cbind ((openxlsx::convertToDate(nzealand$Date)), nzealand)
+names(nzealand) <- c("Date", "Datecode", "Gender", "Age group", "DHB", "Overseas travel")
+
+
+# República Checa
+czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
+
+czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d")
+names(czechr)[1] <- "Date"
+
+# Suiça
+switzerland <- "https://www.bag.admin.ch/dam/bag/en/dokumente/mt/k-und-i/aktuelle-ausbrueche-pandemien/2019-nCoV/covid-19-basisdaten-labortests.xlsx.download.xlsx/Dashboard_3_COVID19_labtests_positivity.xlsx"
+switzerland <- rio::import(file = switzerland)
+
+
+# Reino Unido
+uk <- fromJSON("https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json")
+uk <- uk$data
+
+uk$date <- as.Date(uk$date, "%Y-%m-%d")
+
+# Estados Unidos da América
+usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
+usa <- rio::import(file = usa)
+
+usa <- cbind(as.data.frame(as.Date(usa$cdc_report_dt, "%Y-%m-%d")), usa)
+names(usa)[1] <- "Date"
+
+#Brasil
+brasil <- read.csv("https://s3-sa-east-1.amazonaws.com/ckan.saude.gov.br/SRAG/2020/INFLUD-12-10-2020.csv")
+
+
 
 ##Germany
 germany <- as.data.frame(germany[order(germany$Date), ])
