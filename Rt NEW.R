@@ -1059,20 +1059,20 @@ ggplotly(graph_PT7) %>%
 #Data OUTROS PAÍSES e transformação para formato de data
 
 # ITÁLIA
-italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv", stringsAsFactors = FALSE)
+ italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv", stringsAsFactors = FALSE)
 
-italy <- cbind(as.data.frame(as.Date(italy$data,  "%Y-%m-%d")), italy)
-names(italy)[1] <- "Date"
-
+ italy <- cbind(as.data.frame(as.Date(italy$data, "%Y-%m-%d")), italy)
+ names(italy)[1] <- "Date"
+ 
 # Tabela
-it_var <- as.data.frame(cbind(italy$Date, italy$nuovi_positivi))
-names(it_var) <- c("data", "confirmados_novos")
+it_var <- italy %>%
+    select(
+        Date, nuovi_positivi
+    )
 
 # Previsão da evolução
 covid_it_var <- it_var  %>%
-    filter(it_var$data > as.Date("2020-02-24")) %>%       
     dplyr::mutate(t_start = dplyr::row_number())
-
 
 ### Cálculo do Rt Itália- Uncertainty method --> "uncertain_si"
 ### Serial Interval (c/ base nos valores anteriores)
@@ -1091,11 +1091,10 @@ sens_configs <-
     )
 
 ## Aplicar a função Estimate_R
-Rt_nonparam_si_it <- estimate_R(as.numeric(covid_it_var$confirmados_novos), 
+Rt_nonparam_si_it <- estimate_R(as.numeric(covid_it_var$nuovi_positivi), 
                              method = "uncertain_si",
                              config = sens_configs
 )
-
 
 sample_windows_it <- seq(length(Rt_nonparam_si_it$R$t_start))
 
@@ -1115,7 +1114,7 @@ posterior_Rt_it <-
                     window_index = x,
                     window_t_start = Rt_nonparam_si_it$R$t_start[x],
                     window_t_end = Rt_nonparam_si_it$R$t_end[x],
-                    date_point = as.numeric(covid_it_var[covid_it_var$t_start == Rt_nonparam_si_it$R$t_end[x], "data"]),
+                    date_point = covid_it_var[covid_it_var$t_start == Rt_nonparam_si_it$R$t_end[x], "Date"],
                     R_e_median = median(posterior_sample_obj_it),
                     R_e_q0025 = quantile(posterior_sample_obj_it, probs = 0.025),
                     R_e_q0975 = quantile(posterior_sample_obj_it, probs = 0.975))
@@ -1128,7 +1127,7 @@ posterior_Rt_it <-
 
 ## Gráfico Itália ggplot
 
-graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
+ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "indianred",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "indianred3") +
     
@@ -1148,17 +1147,16 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
     
     scale_x_date(
         date_breaks = "1 month",
-        limits = c(min(covid_it_var$data), max((posterior_Rt_it$date_point)))
+        limits = c(min(covid_it_var$Date), max((posterior_Rt_it$date_point)))
     ) +
     
     scale_y_continuous(
         breaks = 0:ceiling(max(posterior_Rt_it$R_e_q0975)),
         limits = c(0, NA)
     ) +
+        geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
     
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
-
-
 ### Tornar gráfico interativo
 ggplotly(graph_it) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
