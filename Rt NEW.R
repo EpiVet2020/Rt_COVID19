@@ -1171,8 +1171,12 @@ ggplotly(graph_it) %>%
                                        collapse = "")))
 
 
+<<<<<<< HEAD
 
 # ALEMANHA
+=======
+# Alemanha
+>>>>>>> 66f0bbbf5638b705771419617a71867bc4c2c40d
 germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
 germany <- germany$features
 
@@ -1863,18 +1867,18 @@ nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirm
 usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
 usa <- rio::import(file = usa)
 
-usa$cdc_report_dt <- as.Date(usa$cdc_report_dt, "%Y-%m-%d") ##VER O QUE SE PASSA!!!
+usa <- as.data.frame(cbind(as.Date(usa$cdc_report_dt, "%Y-%m-%d")), usa) ##VER O QUE SE PASSA!!!
 
-#Brasil
+#Japan - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
+japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-10-22.json")
+japan <- japan$daily
 
-
-
-
+japan$date <- as.Date(japan$date, "%Y-%m-%d")
 
 #Hong Kong
 hk <- read.csv("http://www.chp.gov.hk/files/misc/enhanced_sur_covid_19_eng.csv")
 
-hk$Report.date <- as.Date(hk$Report.date, "%Y-%m-%d")  ##VER O QUE SE PASSA!!!
+hk$Report.date <- as.data.frame(cbind(as.Date(hk$Report.date, "%Y-%m-%d")), hk) ##VER O QUE SE PASSA!!!
 
 #Australia
 australia <- read.csv("https://raw.githubusercontent.com/M3IT/COVID-19_Data/master/Data/COVID_AU_national_daily_change.csv")
@@ -1886,7 +1890,13 @@ india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv"
 
 india$Date_YMD <- as.Date(india$Date_YMD, "%Y-%m-%d")
 
+#Mexico (https://www.gob.mx/salud/documentos/datos-abiertos-152127)
+MEXDATA <- tempfile() #criar pasta temporária para guardar zip do mexico
+download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip", MEXDATA) #download do zip para a pasta temporária
+mexico <- read.csv(unz(MEXDATA, "201021COVID19MEXICO.csv")) #fazer unzip do cvs 
+unlink(MEXDATA) #eliminar pasta temporária
 
+mexico$FECHA_INGRESO <- as.Date(mexico$FECHA_INGRESO, "%Y-%m-%d")
 
 
 
@@ -1915,11 +1925,16 @@ usa_var <- as.data.frame(aggregate(x = usa_var, list(usa_var$Date), FUN = length
 usa_var <- usa_var[, 1:2]
 names(usa_var) <- c("data", "confirmados_novos")
 
+##Japan
+jap_var <- japan %>%
+    select(confirmed, date)
+jap_var <- jap_var[, c(2,1)] #trocar posição das colunas
+
 ##Hong Kong 
 hk <- as.data.frame(hk[order(hk$Report.date), ]) #ordenar por data
 hk_var <- hk %>%
     filter(Confirmed.probable == "Confirmed") #selecionar apenas casos confirmados
-hk_var <- as.data.frame(aggregate( x = hk_var, list(hk_var$Report.date), FUN = length)) #nº registos por dia
+hk_var <- as.data.frame(aggregate(x = hk_var, list(hk_var$Report.date), FUN = length)) #nº registos por dia
 hk_var <- hk_var %>%
     select(Group.1, Report.date)
 names(hk_var) <- c("data", "confirmados_novos")
@@ -1933,3 +1948,13 @@ names(aus_var) <- c("data", "confirmados_novos")
 ind_var <- india %>%
     select(Date_YMD, Daily.Confirmed)
 names(ind_var) <- c("data", "confirmados_novos")
+
+##Mexico
+mexico <- as.data.frame(mexico[order(mexico$FECHA_INGRESO),])
+mex_var <- mexico %>%
+    filter(RESULTADO_LAB == "1") #selecionar apenas casos confirmados, que correspondem aos nº 1 na coluna do resultado lab
+mex_var <- as.data.frame(aggregate(x = mex_var , list(mex_var$FECHA_INGRESO), FUN = length)) #nº registos por dia
+mex_var <- mex_var %>%
+    select(Group.1, FECHA_INGRESO)
+names(mex_var) <- c("data", "confirmados_novos")
+
