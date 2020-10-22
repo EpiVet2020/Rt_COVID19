@@ -1751,7 +1751,7 @@ covid_uk_var <- uk_var  %>%
     filter(uk_var$data > as.Date("2020-02-28")) %>% 
     dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Rép. Checa - Uncertainty method --> "uncertain_si"
+## Cálculo do Rt Reino Unido - Uncertainty method --> "uncertain_si"
 ### Serial Interval (c/ base nos valores anteriores)
 
 sens_configs <- 
@@ -1802,7 +1802,7 @@ posterior_Rt_uk <-
     reduce(bind_rows)
 
 
-## Gráfico Républica Checa ggplot
+## Gráfico Reino Unido ggplot
 
 graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "rosybrown3",  alpha = 0.65, size = 1.5) +
@@ -1841,8 +1841,6 @@ ggplotly(graph_uk) %>%
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
-
-
 
 
 
