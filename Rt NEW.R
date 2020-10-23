@@ -901,7 +901,7 @@ graph_PT6<- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
-    labs( title = " ARS Norte - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+    labs( title = " ARS Açores - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: DGS ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1019,7 +1019,7 @@ graph_PT7<- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
-    labs( title = " ARS Norte - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+    labs( title = " ARS Madeira - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: DGS ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1136,7 +1136,7 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "indianred",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "indianred3") +
     
-    labs( title = " Evolução do Número Efetivo Reprodutivo de Itália ao longo do tempo", size= 10,
+    labs( title = "Itália - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1171,12 +1171,9 @@ ggplotly(graph_it) %>%
                                        collapse = "")))
 
 
-<<<<<<< HEAD
+
 
 # ALEMANHA
-=======
-# Alemanha
->>>>>>> 66f0bbbf5638b705771419617a71867bc4c2c40d
 germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
 germany <- germany$features
 
@@ -1185,7 +1182,6 @@ germany$properties$Meldedatum <- strftime(germany$properties$Meldedatum, format 
 ## Alterar para formato de data
 germany$properties$Meldedatum <- as.Date(germany$properties$Meldedatum, format = "%Y-%m-%d")
 
-## Alterar o formato para data
 ### Ordenar por data
 germany <- as.data.frame(germany[order(germany$properties$Meldedatum), ])
 
@@ -1256,7 +1252,7 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "goldenrod",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "goldenrod1") +
     
-    labs( title = " Evolução do Número Efetivo Reprodutivo da Alemanha ao longo do tempo", size= 10,
+    labs( title = "Alemanha - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1365,7 +1361,7 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "thistle3",  alpha = 0.8, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "thistle2") +
     
-    labs( title = " Evolução do Número Efetivo Reprodutivo de Espanha ao longo do tempo", size= 10,
+    labs( title = "Espanha - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1438,30 +1434,30 @@ Rt_nonparam_si_bel <- estimate_R(as.numeric(covid_bel_var$confirmados_novos),
                                  config = sens_configs
 )
 
-sample_windows_spa <- seq(length(Rt_nonparam_si_spa$R$t_start))
+sample_windows_bel <- seq(length(Rt_nonparam_si_bel$R$t_start))
 
 ## Criar um data frame com valores de R
-posterior_Rt_spa <- 
-    map(.x = sample_windows_spa,
+posterior_Rt_bel <- 
+    map(.x = sample_windows_bel,
         .f = function(x) {
             
-            posterior_sample_obj_spa <- 
+            posterior_sample_obj_bel <- 
                 sample_posterior_R(
-                    R = Rt_nonparam_si_spa,
+                    R = Rt_nonparam_si_bel,
                     n = 1000, 
                     window = x )
             
-            posterior_sample_estim_spa <- 
+            posterior_sample_estim_bel <- 
                 data.frame(
                     window_index = x,
-                    window_t_start = Rt_nonparam_si_spa$R$t_start[x],
-                    window_t_end = Rt_nonparam_si_spa$R$t_end[x],
-                    date_point = covid_spa_var[covid_spa_var$t_start == Rt_nonparam_si_spa$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj_spa),
-                    R_e_q0025 = quantile(posterior_sample_obj_spa, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj_spa, probs = 0.975))
+                    window_t_start = Rt_nonparam_si_bel$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_bel$R$t_end[x],
+                    date_point = covid_spa_bel[covid_bel_var$t_start == Rt_nonparam_si_bel$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_bel),
+                    R_e_q0025 = quantile(posterior_sample_obj_bel, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_bel, probs = 0.975))
             
-            return(posterior_sample_estim_spa)}
+            return(posterior_sample_estim_bel)}
     ) %>% 
     
     reduce(bind_rows)
@@ -1469,11 +1465,11 @@ posterior_Rt_spa <-
 
 ## Gráfico Bélgica ggplot
 
-graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
+graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "royalblue2",  alpha = 0.65, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "royalblue1") +
     
-    labs( title = " Evolução do Número Efetivo Reprodutivo da Bélgica ao longo do tempo", size= 10,
+    labs( title = "Bélgica - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1489,18 +1485,18 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
     
     scale_x_date(
         date_breaks = "1 month",
-        limits = c(min(covid_spa_var$data), max((posterior_Rt_spa$date_point)))
+        limits = c(min(covid_bel_var$data), max((posterior_Rt_bel$date_point)))
     ) +
     
     scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_Rt_spa$R_e_q0975)),
+        breaks = 0:ceiling(max(posterior_Rt_bel$R_e_q0975)),
         limits = c(0, NA)
     ) +
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_spa) %>%
+ggplotly(graph_bel) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -1580,7 +1576,7 @@ posterior_Rt_cz <-
 
 ## Gráfico Républica Checa ggplot
 
-graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
+graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "steelblue3",  alpha = 0.65, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "steelblue1") +
     
@@ -1600,18 +1596,18 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
     
     scale_x_date(
         date_breaks = "1 month",
-        limits = c(min(covid_spa_var$data), max((posterior_Rt_spa$date_point)))
+        limits = c(min(covid_cz_var$data), max((posterior_Rt_cz$date_point)))
     ) +
     
     scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_Rt_spa$R_e_q0975)),
+        breaks = 0:ceiling(max(posterior_Rt_cz$R_e_q0975)),
         limits = c(0, NA)
     ) +
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_spa) %>%
+ggplotly(graph_cz) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -1689,13 +1685,13 @@ posterior_Rt_swi <-
     reduce(bind_rows)
 
 
-## Gráfico Républica Checa ggplot
+## Gráfico Suíça ggplot
 
 graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "antiquewhite4",  alpha = 0.65, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "antiquewhite3") +
     
-    labs( title = " Evolução do Número Efetivo Reprodutivo da Suiça ao longo do tempo", size= 10,
+    labs( title = "Suiça - Evolução do Número Efetivo Reprodutivo longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1808,7 +1804,7 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "rosybrown3",  alpha = 0.65, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.2, fill = "rosybrown2") +
     
-    labs( title = " Evolução do Número Efetivo Reprodutivo do Reino Unido ao longo do tempo", size= 10,
+    labs( title = "Reino Unido - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1844,13 +1840,15 @@ ggplotly(graph_uk) %>%
 
 
 
-#SUECIA
+
+#SUÉCIA
 sweden <- "https://fohm.maps.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data"
 sweden <- rio::import(file = sweden)
 
+## Alterar formato de Data
 sweden$Statistikdatum <- as.Date(sweden$Statistikdatum, "%Y-%m-%d")
 
-#Tabela 
+## Tabela de confirmados novos
 sweden <- mutate(sweden, 
                  Totalt_antal_fall-lag(sweden$Totalt_antal_fall))
 names(sweden) <- c("data", "confirmados_novos")
@@ -1858,11 +1856,12 @@ names(sweden) <- c("data", "confirmados_novos")
 sc_var <- sweden %>%
     select(data, confirmados_novos)
 
-#Previsao da evoluçao
+## Previsão da evolução
 covid_sc_var <- sc_var  %>%
+    filter(sc_var$data > as.Date("2020-02-28")) %>% 
     dplyr::mutate(t_start = dplyr::row_number())
 
-### Cálculo do Rt Suecia- Uncertainty method --> "uncertain_si"
+## Cálculo do Rt Suécia- Uncertainty method --> "uncertain_si"
 ### Serial Interval (c/ base nos valores anteriores)
 sens_configs <- 
     make_config(
@@ -1882,7 +1881,6 @@ Rt_nonparam_si_sc <- estimate_R(as.numeric(covid_sc_var$confirmados_novos),
                                 method = "uncertain_si",
                                 config = sens_configs)
 
-plot(Rt_nonparam_si_sc, legend = FALSE)
 sample_windows_sc <- seq(length(Rt_nonparam_si_sc$R$t_start))
 
 # Criar um data frame com valores de R
@@ -1920,12 +1918,12 @@ posterior_Re_sc <- posterior_Rt_sc %>%
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
 
-#Grafico Suecia 
+#Grafico Suécia 
 graph_sc<- ggplot(posterior_Rt_sc, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    geom_line(colour = "yellow4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "yellow3") +
     
-    labs( title = " Suécia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+    labs( title = "Suécia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:FOHM ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1961,21 +1959,24 @@ ggplotly(graph_sc) %>%
 
 
 
-#AUSTRALIA
+
+#AUSTRÁLIA
 australia <- read.csv("https://raw.githubusercontent.com/M3IT/COVID-19_Data/master/Data/COVID_AU_national_daily_change.csv")
 
+## Alterar para formato Data
 australia$date <- as.Date(australia$date, "%Y-%m-%d")
 
-# Tabela
+## Tabela confirmados novos
 aus_var <- australia %>%
     select(date, confirmed)
 names(aus_var) <- c("data", "confirmados_novos")
 
-# Previsão da evolução - acrescentar coluna numerada 
+## Previsão da evolução
 covid_aus_var <- aus_var  %>%
+    filter(aus_var$data > as.Date("2020-02-28")) %>% 
     dplyr::mutate(t_start = dplyr::row_number())
 
-### Cálculo do Rt Australia- Uncertainty method --> "uncertain_si"
+## Cálculo do Rt Australia- Uncertainty method --> "uncertain_si"
 ### Serial Interval (c/ base nos valores anteriores)
 
 sens_configs <- 
@@ -1991,16 +1992,11 @@ sens_configs <-
         )
     )
 
-
-
-
-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_aus <- estimate_R(as.numeric(covid_aus_var$confirmados_novos),
                                  method = "uncertain_si",
                                  config = sens_configs)
 
-plot(Rt_nonparam_si_aus, legend = FALSE)
 sample_windows_aus <- seq(length(Rt_nonparam_si_aus$R$t_start))
 
 # Criar um data frame com valores de R
@@ -2040,8 +2036,8 @@ posterior_Re_aus <- posterior_Rt_aus %>%
 
 #Grafico Australia
 graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    geom_line(colour = "cyan4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "cyan3") +
     
     labs( title = " Austrália - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: ",
@@ -2076,6 +2072,9 @@ ggplotly(graph_aus) %>%
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
+
+
+
 #INDIA
 india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv")
 
@@ -2088,6 +2087,7 @@ names(india_var) <- c("data", "confirmados_novos")
 
 # Previsão da evolução - acrescentar coluna numerada 
 covid_india_var <- india_var  %>%
+    filter(india_var$data > as.Date("2020-02-28")) %>% 
     dplyr::mutate(t_start = dplyr::row_number())
 
 ### Cálculo do Rt India- Uncertainty method --> "uncertain_si"
@@ -2112,7 +2112,6 @@ Rt_nonparam_si_india <- estimate_R(as.numeric(covid_india_var$confirmados_novos)
                                    method = "uncertain_si",
                                    config = sens_configs)
 
-plot(Rt_nonparam_si_india, legend = FALSE)
 sample_windows_india <- seq(length(Rt_nonparam_si_india$R$t_start))
 
 # Criar um data frame com valores de R
@@ -2150,12 +2149,12 @@ posterior_Re_india <- posterior_Rt_india %>%
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
 
-#Grafico Australia
+#Grafico Índia
 graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    geom_line(colour = "coral3",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "coral") +
     
-    labs( title = " India - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+    labs( title = "Índia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -2192,13 +2191,6 @@ ggplotly(graph_india) %>%
 
 
 
-
-
-
-
-
-
-
 # Nova Zelândia (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
 nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-22oct20.xlsx"
 nzealand <- rio::import(file = nzealand)
@@ -2206,11 +2198,18 @@ nzealand <- nzealand[-c(1,2), ]
 
 nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
 
+
+
+
 # Estados Unidos da América
 usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
 usa <- rio::import(file = usa)
 
 usa <- as.data.frame(cbind(as.Date(usa$cdc_report_dt, "%Y-%m-%d")), usa) ##VER O QUE SE PASSA!!!
+
+
+
+
 
 #Japan - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
 japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-10-22.json")
@@ -2218,10 +2217,125 @@ japan <- japan$daily
 
 japan$date <- as.Date(japan$date, "%Y-%m-%d")
 
-#Hong Kong
+
+
+
+# HONG KONG
 hk <- read.csv("http://www.chp.gov.hk/files/misc/enhanced_sur_covid_19_eng.csv")
 
-hk$Report.date <- as.data.frame(cbind(as.Date(hk$Report.date, "%Y-%m-%d")), hk) ##VER O QUE SE PASSA!!!
+## Alterar formato de Data
+hk$Report.date <- as.Date(hk$Report.date, format = "%d/%m/%Y")
+
+## Selecionar apenas os casos confirmados
+hk_var <- hk %>%
+    filter(Confirmed.probable == "Confirmed")
+
+## Agrupar o nº de registos por dia
+hk_var <- as.data.frame(aggregate(x = hk_var, list(hk_var$Report.date), FUN = length))
+
+## Criar tabela de confirmados novos
+hk_var <- hk_var %>%
+    select(Group.1, Report.date)
+names(hk_var) <- c("data", "confirmados_novos")
+
+## Previsão da evolução
+covid_hk_var <- hk_var  %>%
+    filter(hk_var$data > as.Date("2020-02-28")) %>% 
+    dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt HK - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_hk <- estimate_R(as.numeric(covid_hk_var$confirmados_novos), 
+                                method = "uncertain_si",
+                                config = sens_configs
+)
+
+sample_windows_hk <- seq(length(Rt_nonparam_si_hk$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_hk <- 
+    map(.x = sample_windows_hk,
+        .f = function(x) {
+            
+            posterior_sample_obj_hk <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_hk,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim_hk <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_hk$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_hk$R$t_end[x],
+                    date_point = covid_hk_var[covid_hk_var$t_start == Rt_nonparam_si_hk$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_hk),
+                    R_e_q0025 = quantile(posterior_sample_obj_hk, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_hk, probs = 0.975))
+            
+            return(posterior_sample_estim_hk)}
+    ) %>% 
+    
+    reduce(bind_rows)
+
+
+## Gráfico Hong Kong ggplot
+
+graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palevioletred1") +
+    
+    labs( title = " Evolução do Número Efetivo Reprodutivo de Hong Kong ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_hk_var$data), max((posterior_Rt_hk$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_hk$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+
+### Tornar gráfico interativo
+ggplotly(graph_hk) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+
+
+
 
 
 #Mexico (https://www.gob.mx/salud/documentos/datos-abiertos-152127)
