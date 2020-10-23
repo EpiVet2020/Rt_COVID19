@@ -1844,15 +1844,360 @@ ggplotly(graph_uk) %>%
 
 
 
-
-
-
-
-#Sweden
+#SUECIA
 sweden <- "https://fohm.maps.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data"
 sweden <- rio::import(file = sweden)
 
 sweden$Statistikdatum <- as.Date(sweden$Statistikdatum, "%Y-%m-%d")
+
+#Tabela 
+sweden <- mutate(sweden, 
+                 Totalt_antal_fall-lag(sweden$Totalt_antal_fall))
+names(sweden) <- c("data", "confirmados_novos")
+
+sc_var <- sweden %>%
+    select(data, confirmados_novos)
+
+#Previsao da evoluçao
+covid_sc_var <- sc_var  %>%
+    dplyr::mutate(t_start = dplyr::row_number())
+
+### Cálculo do Rt Suecia- Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_sc <- estimate_R(as.numeric(covid_sc_var$confirmados_novos),
+                                method = "uncertain_si",
+                                config = sens_configs)
+
+plot(Rt_nonparam_si_sc, legend = FALSE)
+sample_windows_sc <- seq(length(Rt_nonparam_si_sc$R$t_start))
+
+# Criar um data frame com valores de R
+posterior_Rt_sc <- 
+    map(
+        .x = sample_windows_sc,
+        .f = function(x) {
+            
+            posterior_sample_obj_sc <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_sc,
+                    n = 1000, 
+                    window = x
+                )
+            
+            posterior_sample_estim_sc <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_sc$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_sc$R$t_end[x],
+                    date_point = covid_sc_var[covid_sc_var$t_start == Rt_nonparam_si_sc$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_sc),
+                    R_e_q0025 = quantile(posterior_sample_obj_sc, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_sc, probs = 0.975)
+                )
+            
+            return(posterior_sample_estim_sc)
+            
+        }
+    ) %>% 
+    reduce(bind_rows)
+
+posterior_Re_sc <- posterior_Rt_sc %>%
+    mutate(fit = round(R_e_median, 2),
+           lwr=round(R_e_q0025, 2),
+           upr=round(R_e_q0975, 2))
+
+#Grafico Suecia 
+graph_sc<- ggplot(posterior_Rt_sc, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    
+    labs( title = " Suécia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:FOHM ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_sc_var$data), max(posterior_Rt_sc$date_point))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_sc$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+#Tornar o grafico interativo
+ggplotly(graph_sc) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+
+
+
+#AUSTRALIA
+australia <- read.csv("https://raw.githubusercontent.com/M3IT/COVID-19_Data/master/Data/COVID_AU_national_daily_change.csv")
+
+australia$date <- as.Date(australia$date, "%Y-%m-%d")
+
+# Tabela
+aus_var <- australia %>%
+    select(date, confirmed)
+names(aus_var) <- c("data", "confirmados_novos")
+
+# Previsão da evolução - acrescentar coluna numerada 
+covid_aus_var <- aus_var  %>%
+    dplyr::mutate(t_start = dplyr::row_number())
+
+### Cálculo do Rt Australia- Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+
+
+
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_aus <- estimate_R(as.numeric(covid_aus_var$confirmados_novos),
+                                 method = "uncertain_si",
+                                 config = sens_configs)
+
+plot(Rt_nonparam_si_aus, legend = FALSE)
+sample_windows_aus <- seq(length(Rt_nonparam_si_aus$R$t_start))
+
+# Criar um data frame com valores de R
+posterior_Rt_aus <- 
+    map(
+        .x = sample_windows_aus,
+        .f = function(x) {
+            
+            posterior_sample_obj_aus <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_aus,
+                    n = 1000, 
+                    window = x
+                )
+            
+            posterior_sample_estim_aus <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_aus$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_aus$R$t_end[x],
+                    date_point = covid_aus_var[covid_aus_var$t_start == Rt_nonparam_si_aus$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_aus),
+                    R_e_q0025 = quantile(posterior_sample_obj_aus, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_aus, probs = 0.975)
+                )
+            
+            return(posterior_sample_estim_aus)
+            
+        }
+    ) %>% 
+    reduce(bind_rows)
+
+posterior_Re_aus <- posterior_Rt_aus %>%
+    mutate(fit = round(R_e_median, 2),
+           lwr=round(R_e_q0025, 2),
+           upr=round(R_e_q0975, 2))
+
+#Grafico Australia
+graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    
+    labs( title = " Austrália - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados: ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_aus_var$data), max(posterior_Rt_aus$date_point))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_aus$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+#Tornar o grafico interativo
+ggplotly(graph_aus) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+#INDIA
+india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv")
+
+india$Date_YMD <- as.Date(india$Date_YMD, "%Y-%m-%d")
+
+# Tabela
+india_var <- india %>%
+    select(Date_YMD, Daily.Confirmed)
+names(india_var) <- c("data", "confirmados_novos")
+
+# Previsão da evolução - acrescentar coluna numerada 
+covid_india_var <- india_var  %>%
+    dplyr::mutate(t_start = dplyr::row_number())
+
+### Cálculo do Rt India- Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_india <- estimate_R(as.numeric(covid_india_var$confirmados_novos),
+                                   method = "uncertain_si",
+                                   config = sens_configs)
+
+plot(Rt_nonparam_si_india, legend = FALSE)
+sample_windows_india <- seq(length(Rt_nonparam_si_india$R$t_start))
+
+# Criar um data frame com valores de R
+posterior_Rt_india <- 
+    map(
+        .x = sample_windows_india,
+        .f = function(x) {
+            
+            posterior_sample_obj_india <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_india,
+                    n = 1000, 
+                    window = x
+                )
+            
+            posterior_sample_estim_india <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_india$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_india$R$t_end[x],
+                    date_point = covid_india_var[covid_india_var$t_start == Rt_nonparam_si_india$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_india),
+                    R_e_q0025 = quantile(posterior_sample_obj_india, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_india, probs = 0.975)
+                )
+            
+            return(posterior_sample_estim_india)
+            
+        }
+    ) %>% 
+    reduce(bind_rows)
+
+posterior_Re_india <- posterior_Rt_india %>%
+    mutate(fit = round(R_e_median, 2),
+           lwr=round(R_e_q0025, 2),
+           upr=round(R_e_q0975, 2))
+
+#Grafico Australia
+graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    
+    labs( title = " India - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados: ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_india_var$data), max(posterior_Rt_india$date_point))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_india$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+#Tornar o grafico interativo
+ggplotly(graph_india) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+
+
+
+
+
+
+
+
+
+
 
 # Nova Zelândia (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
 nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-22oct20.xlsx"
@@ -1878,15 +2223,6 @@ hk <- read.csv("http://www.chp.gov.hk/files/misc/enhanced_sur_covid_19_eng.csv")
 
 hk$Report.date <- as.data.frame(cbind(as.Date(hk$Report.date, "%Y-%m-%d")), hk) ##VER O QUE SE PASSA!!!
 
-#Australia
-australia <- read.csv("https://raw.githubusercontent.com/M3IT/COVID-19_Data/master/Data/COVID_AU_national_daily_change.csv")
-
-australia$date <- as.Date(australia$date, "%Y-%m-%d")
-
-#India
-india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv")
-
-india$Date_YMD <- as.Date(india$Date_YMD, "%Y-%m-%d")
 
 #Mexico (https://www.gob.mx/salud/documentos/datos-abiertos-152127)
 MEXDATA <- tempfile() #criar pasta temporária para guardar zip do mexico
@@ -1902,13 +2238,6 @@ mexico$FECHA_INGRESO <- as.Date(mexico$FECHA_INGRESO, "%Y-%m-%d")
 
 
 
-
-
-
-##Sweden
-swe_var <- sweden %>%
-    select(Statistikdatum, Totalt_antal_fall)
-names(swe_var) <- c("data", "confirmados_novos")
 
 ##New Zealand
 nze_var <- as.data.frame(aggregate(x = nzealand, list(nzealand$`Confirmed Covid-19 cases`), FUN = length)) #nº registos por dia
@@ -1937,15 +2266,7 @@ hk_var <- hk_var %>%
     select(Group.1, Report.date)
 names(hk_var) <- c("data", "confirmados_novos")
 
-##Australia
-aus_var <- australia %>%
-    select(date, confirmed)
-names(aus_var) <- c("data", "confirmados_novos")
 
-##India
-ind_var <- india %>%
-    select(Date_YMD, Daily.Confirmed)
-names(ind_var) <- c("data", "confirmados_novos")
 
 ##Mexico
 mexico <- as.data.frame(mexico[order(mexico$FECHA_INGRESO),])
