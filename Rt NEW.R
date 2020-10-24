@@ -45,29 +45,29 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
 covid19pt <- mutate(covid19pt, 
-                   confirmados_lag = lag(confirmados),
-                   confirmados_var=confirmados-confirmados_lag,
-                   
-                   confirmados_lag_n = lag(confirmados_arsnorte),
-                   confirmados_var_norte=confirmados_arsnorte-confirmados_lag_n,
-                   
-                   confirmados_lag_centro = lag(x = confirmados_arscentro),
-                   confirmados_var_centro=confirmados_arscentro-confirmados_lag_centro,                   
-                   
-                   confirmados_lag_lvt = lag(confirmados_arslvt),
-                   confirmados_var_lvt=confirmados_arslvt-confirmados_lag_lvt, 
-                   
-                   confirmados_lag_alentejo = lag(confirmados_arsalentejo),
-                   confirmados_var_alentejo=confirmados_arsalentejo-confirmados_lag_alentejo, 
-                   
-                   confirmados_lag_algarve = lag(confirmados_arsalgarve),
-                   confirmados_var_algarve=confirmados_arsalgarve-confirmados_lag_algarve, 
-                   
-                   confirmados_lag_acores = lag(confirmados_acores ),
-                   confirmados_var_acores=confirmados_acores-confirmados_lag_acores, 
-                   
-                   confirmados_lag_madeira = lag(x = confirmados_madeira),
-                   confirmados_var_madeira=confirmados_madeira-confirmados_lag_madeira,
+                    confirmados_lag = lag(confirmados),
+                    confirmados_var=confirmados-confirmados_lag,
+                    
+                    confirmados_lag_n = lag(confirmados_arsnorte),
+                    confirmados_var_norte=confirmados_arsnorte-confirmados_lag_n,
+                    
+                    confirmados_lag_centro = lag(x = confirmados_arscentro),
+                    confirmados_var_centro=confirmados_arscentro-confirmados_lag_centro,                   
+                    
+                    confirmados_lag_lvt = lag(confirmados_arslvt),
+                    confirmados_var_lvt=confirmados_arslvt-confirmados_lag_lvt, 
+                    
+                    confirmados_lag_alentejo = lag(confirmados_arsalentejo),
+                    confirmados_var_alentejo=confirmados_arsalentejo-confirmados_lag_alentejo, 
+                    
+                    confirmados_lag_algarve = lag(confirmados_arsalgarve),
+                    confirmados_var_algarve=confirmados_arsalgarve-confirmados_lag_algarve, 
+                    
+                    confirmados_lag_acores = lag(confirmados_acores ),
+                    confirmados_var_acores=confirmados_acores-confirmados_lag_acores, 
+                    
+                    confirmados_lag_madeira = lag(x = confirmados_madeira),
+                    confirmados_var_madeira=confirmados_madeira-confirmados_lag_madeira,
 )
 
 # Criar tabela
@@ -108,9 +108,9 @@ sens_configs <-
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si <- estimate_R(covid_pt_var$confirmados_var, 
-        method = "uncertain_si",
-        config = sens_configs
-    )
+                             method = "uncertain_si",
+                             config = sens_configs
+)
 
 
 ### Caracterização dos valores em gráfico 
@@ -143,9 +143,9 @@ posterior_R_t <-
                     R_e_q0975 = quantile(posterior_sample_obj, probs = 0.975))
             
             return(posterior_sample_estim)}
-        ) %>% 
-   ##Combines elements into a single value
-     reduce(bind_rows)
+    ) %>% 
+    ##Combines elements into a single value
+    reduce(bind_rows)
 
 ##GRÁFICO
 ### Nº Reprodutivo Diário (Rt) para Portugal
@@ -699,8 +699,8 @@ ggplotly(graph_PT4) %>%
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
 
- 
- # Rt ARS Algarve
+
+# Rt ARS Algarve
 
 Rt_nonparam_si5 <- 
     estimate_R(
@@ -1097,8 +1097,8 @@ sens_configs <-
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_it <- estimate_R(as.numeric(covid_it_var$confirmados_novos), 
-                             method = "uncertain_si",
-                             config = sens_configs
+                                method = "uncertain_si",
+                                config = sens_configs
 )
 
 sample_windows_it <- seq(length(Rt_nonparam_si_it$R$t_start))
@@ -1159,9 +1159,9 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
         breaks = 0:ceiling(max(posterior_Rt_it$R_e_q0975)),
         limits = c(0, NA)
     ) +
-        geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
 
-    
+
 ### Tornar gráfico interativo
 ggplotly(graph_it) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
@@ -1213,8 +1213,8 @@ sens_configs <-
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_ger <- estimate_R(as.numeric(covid_ger_var$confirmados_novos), 
-                                method = "uncertain_si",
-                                config = sens_configs
+                                 method = "uncertain_si",
+                                 config = sens_configs
 )
 
 sample_windows_ger <- seq(length(Rt_nonparam_si_ger$R$t_start))
@@ -1397,6 +1397,9 @@ ggplotly(graph_spa) %>%
 
 
 
+
+
+
 # Bélgica
 belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
 
@@ -1452,7 +1455,7 @@ posterior_Rt_bel <-
                     window_index = x,
                     window_t_start = Rt_nonparam_si_bel$R$t_start[x],
                     window_t_end = Rt_nonparam_si_bel$R$t_end[x],
-                    date_point = covid_spa_bel[covid_bel_var$t_start == Rt_nonparam_si_bel$R$t_end[x], "data"],
+                    date_point = covid_bel_var[covid_bel_var$t_start == Rt_nonparam_si_bel$R$t_end[x], "data"],
                     R_e_median = median(posterior_sample_obj_bel),
                     R_e_q0025 = quantile(posterior_sample_obj_bel, probs = 0.025),
                     R_e_q0975 = quantile(posterior_sample_obj_bel, probs = 0.975))
@@ -1506,6 +1509,10 @@ ggplotly(graph_bel) %>%
 
 
 
+
+
+
+
 # República Checa
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
@@ -1541,8 +1548,8 @@ sens_configs <-
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_cz <- estimate_R(as.numeric(covid_cz_var$confirmados_novos), 
-                                 method = "uncertain_si",
-                                 config = sens_configs
+                                method = "uncertain_si",
+                                config = sens_configs
 )
 
 sample_windows_cz <- seq(length(Rt_nonparam_si_cz$R$t_start))
@@ -1580,7 +1587,7 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "steelblue3",  alpha = 0.65, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "steelblue1") +
     
-    labs( title = " Evolução do Número Efetivo Reprodutivo da Républica Checa ao longo do tempo", size= 10,
+    labs( title = "Républica Checa - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -1613,6 +1620,12 @@ ggplotly(graph_cz) %>%
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
+
+
+
+
+
+
 
 
 # Suiça
@@ -1652,8 +1665,8 @@ sens_configs <-
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_swi <- estimate_R(as.numeric(covid_swi_var$confirmados_novos), 
-                                method = "uncertain_si",
-                                config = sens_configs
+                                 method = "uncertain_si",
+                                 config = sens_configs
 )
 
 sample_windows_swi <- seq(length(Rt_nonparam_si_swi$R$t_start))
@@ -1724,6 +1737,9 @@ ggplotly(graph_swi) %>%
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
+
+
+
 
 
 
@@ -1837,6 +1853,10 @@ ggplotly(graph_uk) %>%
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
+
+
+
+
 
 
 
@@ -1960,6 +1980,11 @@ ggplotly(graph_sc) %>%
 
 
 
+
+
+
+
+
 #AUSTRÁLIA
 australia <- read.csv("https://raw.githubusercontent.com/M3IT/COVID-19_Data/master/Data/COVID_AU_national_daily_change.csv")
 
@@ -2075,7 +2100,11 @@ ggplotly(graph_aus) %>%
 
 
 
-#INDIA
+
+
+
+
+#ÍNDIA
 india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv")
 
 india$Date_YMD <- as.Date(india$Date_YMD, "%Y-%m-%d")
@@ -2191,32 +2220,6 @@ ggplotly(graph_india) %>%
 
 
 
-# Nova Zelândia (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
-nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-22oct20.xlsx"
-nzealand <- rio::import(file = nzealand)
-nzealand <- nzealand[-c(1,2), ]
-
-nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
-
-
-
-
-# Estados Unidos da América
-usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
-usa <- rio::import(file = usa)
-
-usa <- as.data.frame(cbind(as.Date(usa$cdc_report_dt, "%Y-%m-%d")), usa) ##VER O QUE SE PASSA!!!
-
-
-
-
-
-#Japan - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
-japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-10-22.json")
-japan <- japan$daily
-
-japan$date <- as.Date(japan$date, "%Y-%m-%d")
-
 
 
 
@@ -2300,7 +2303,7 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palevioletred1") +
     
-    labs( title = " Evolução do Número Efetivo Reprodutivo de Hong Kong ao longo do tempo", size= 10,
+    labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
           x = "Tempo",
           y = "Nº de reprodução efetivo (Rt)"
@@ -2338,6 +2341,266 @@ ggplotly(graph_hk) %>%
 
 
 
+
+
+# Estados Unidos da América
+usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
+usa <- as.data.frame(rio::import(file = usa))
+
+## Alterar para formato Data
+usa$cdc_report_dt <- as.Date(usa$cdc_report_dt, "%Y/%m/%d")
+
+## Ordenar por data
+usa <- as.data.frame(usa[order(usa$cdc_report_dt), ])
+
+## Agrupar confirmados diários
+usa_var <- usa %>%
+    filter(current_status == "Laboratory-confirmed case") #selecionar apenas casos confirmados
+usa_var <- as.data.frame(aggregate(x = usa_var, list(usa_var$cdc_report_dt), FUN = length)) #nº registos por dia
+
+## Criar tabela confirmados novos
+usa_var <- usa_var[, 1:2]
+names(usa_var) <- c("data", "confirmados_novos")
+
+## Previsão da evolução
+covid_usa_var <- usa_var  %>%
+    filter(usa_var$data > as.Date("2020-02-28")) %>% 
+    dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt USA - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_usa <- estimate_R(as.numeric(covid_usa_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_usa <- seq(length(Rt_nonparam_si_usa$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_usa <- 
+    map(.x = sample_windows_usa,
+        .f = function(x) {
+            
+            posterior_sample_obj_usa <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_usa,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim_usa <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_usa$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_usa$R$t_end[x],
+                    date_point = covid_usa_var[covid_usa_var$t_start == Rt_nonparam_si_usa$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_usa),
+                    R_e_q0025 = quantile(posterior_sample_obj_usa, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_usa, probs = 0.975))
+            
+            return(posterior_sample_estim_usa)}
+    ) %>% 
+    
+    reduce(bind_rows)
+
+
+## Gráfico USA ggplot
+
+graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "royalblue4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "royalblue2") +
+    
+    labs( title = " Estados Unidos da América - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_usa_var$data), max((posterior_Rt_usa$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_usa$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+
+### Tornar gráfico interativo
+ggplotly(graph_usa) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+
+
+
+
+
+
+
+
+
+#Japan - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
+japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-10-22.json")
+japan <- japan$daily
+
+## Alterar formato para data
+japan$date <- as.Date(japan$date, "%Y-%m-%d")
+
+## Criar tabela confirmados novos
+jap_var <- japan %>%
+    select(confirmed, date)
+jap_var <- jap_var[, c(2,1)] #trocar posição das colunas
+names(jap_var) <- c("data", "confirmados_novos")
+
+## Previsão da evolução
+covid_jap_var <- jap_var  %>%
+    filter(jap_var$data > as.Date("2020-02-28")) %>% 
+    dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt Japão - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_jap <- estimate_R(as.numeric(covid_jap_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_jap <- seq(length(Rt_nonparam_si_jap$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_jap <- 
+    map(.x = sample_windows_jap,
+        .f = function(x) {
+            
+            posterior_sample_obj_jap <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_jap,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim_jap <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_jap$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_jap$R$t_end[x],
+                    date_point = covid_jap_var[covid_jap_var$t_start == Rt_nonparam_si_jap$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_jap),
+                    R_e_q0025 = quantile(posterior_sample_obj_jap, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_jap, probs = 0.975))
+            
+            return(posterior_sample_estim_jap)}
+    ) %>% 
+    
+    reduce(bind_rows)
+
+
+## Gráfico Japão ggplot
+
+graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+    
+    labs( title = " Japão - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_jap_var$data), max((posterior_Rt_jap$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_jap$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+
+### Tornar gráfico interativo
+ggplotly(graph_jap) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+
+
+
+
+
+
+
+
+
+
+# Nova Zelândia (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
+nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-22oct20.xlsx"
+nzealand <- rio::import(file = nzealand)
+nzealand <- nzealand[-c(1,2), ]
+
+nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
+
+
+nze_var <- as.data.frame(aggregate(x = nzealand, list(nzealand$`Confirmed Covid-19 cases`), FUN = length)) #nº registos por dia
+nze_var <- nze_var[, 1:2]
+names(nze_var) <- c("data", "confirmados_novos")
+
+
+
+
+
+
 #Mexico (https://www.gob.mx/salud/documentos/datos-abiertos-152127)
 MEXDATA <- tempfile() #criar pasta temporária para guardar zip do mexico
 download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip", MEXDATA) #download do zip para a pasta temporária
@@ -2347,42 +2610,6 @@ unlink(MEXDATA) #eliminar pasta temporária
 mexico$FECHA_INGRESO <- as.Date(mexico$FECHA_INGRESO, "%Y-%m-%d")
 
 
-
-
-
-
-
-
-##New Zealand
-nze_var <- as.data.frame(aggregate(x = nzealand, list(nzealand$`Confirmed Covid-19 cases`), FUN = length)) #nº registos por dia
-nze_var <- nze_var[, 1:2]
-names(nze_var) <- c("data", "confirmados_novos")
-
-##USA
-usa <- as.data.frame(usa[order(usa$Date), ]) #ordenar por data
-usa_var <- usa %>%
-    filter(current_status == "Laboratory-confirmed case") #selecionar apenas casos confirmados
-usa_var <- as.data.frame(aggregate(x = usa_var, list(usa_var$Date), FUN = length)) #nº registos por dia
-usa_var <- usa_var[, 1:2]
-names(usa_var) <- c("data", "confirmados_novos")
-
-##Japan
-jap_var <- japan %>%
-    select(confirmed, date)
-jap_var <- jap_var[, c(2,1)] #trocar posição das colunas
-
-##Hong Kong 
-hk <- as.data.frame(hk[order(hk$Report.date), ]) #ordenar por data
-hk_var <- hk %>%
-    filter(Confirmed.probable == "Confirmed") #selecionar apenas casos confirmados
-hk_var <- as.data.frame(aggregate(x = hk_var, list(hk_var$Report.date), FUN = length)) #nº registos por dia
-hk_var <- hk_var %>%
-    select(Group.1, Report.date)
-names(hk_var) <- c("data", "confirmados_novos")
-
-
-
-##Mexico
 mexico <- as.data.frame(mexico[order(mexico$FECHA_INGRESO),])
 mex_var <- mexico %>%
     filter(RESULTADO_LAB == "1") #selecionar apenas casos confirmados, que correspondem aos nº 1 na coluna do resultado lab
@@ -2390,4 +2617,23 @@ mex_var <- as.data.frame(aggregate(x = mex_var , list(mex_var$FECHA_INGRESO), FU
 mex_var <- mex_var %>%
     select(Group.1, FECHA_INGRESO)
 names(mex_var) <- c("data", "confirmados_novos")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
