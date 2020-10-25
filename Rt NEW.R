@@ -1173,6 +1173,8 @@ ggplotly(graph_it) %>%
 
 
 
+
+
 # ALEMANHA (https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0/data)
 germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
 germany <- germany$features
@@ -1289,7 +1291,9 @@ ggplotly(graph_ger) %>%
 
 
 
-# Espanha (https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos)
+
+
+# ESPANHA (https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos)
 spain <- read.csv("https://cnecovid.isciii.es/covid19/resources/datos_ccaas.csv")
 
 ## Alterar para formato Data
@@ -1400,7 +1404,7 @@ ggplotly(graph_spa) %>%
 
 
 
-# Bélgica (https://epistat.wiv-isp.be/covid/)
+# BÉLGICA (https://epistat.wiv-isp.be/covid/)
 belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
 
 ## Alterar para formato de data
@@ -1511,9 +1515,7 @@ ggplotly(graph_bel) %>%
 
 
 
-
-
-# República Checa (https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19)
+# REPÚBLICA CHECA (https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19)
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 ## Alterar formato para data
@@ -1626,12 +1628,8 @@ ggplotly(graph_cz) %>%
 
 
 
-
-
-# Suiça (https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html#-640157857)
-switzerland <- rio::import(
-    file ="https://www.bag.admin.ch/dam/bag/en/dokumente/mt/k-und-i/aktuelle-ausbrueche-pandemien/2019-nCoV/covid-19-basisdaten-labortests.xlsx.download.xlsx/Dashboard_3_COVID19_labtests_positivity.xlsx"
-)
+# SUIÇA (https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html#-640157857)
+switzerland <- rio::import(file ="https://www.bag.admin.ch/dam/bag/en/dokumente/mt/k-und-i/aktuelle-ausbrueche-pandemien/2019-nCoV/covid-19-basisdaten-labortests.xlsx.download.xlsx/Dashboard_3_COVID19_labtests_positivity.xlsx")
 
 ## Alterar formato para Data
 switzerland$Datum <- as.Date(switzerland$Datum, "%Y-%m-%d")
@@ -1743,8 +1741,7 @@ ggplotly(graph_swi) %>%
 
 
 
-
-# Reino Unido (https://coronavirus.data.gov.uk/cases)
+# REINO UNIDO (https://coronavirus.data.gov.uk/cases)
 uk <- fromJSON("https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json")
 uk <- uk$data
 
@@ -1859,8 +1856,6 @@ ggplotly(graph_uk) %>%
 
 
 
-
-
 #SUÉCIA (https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/)
 sweden <- "https://fohm.maps.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data"
 sweden <- rio::import(file = sweden)
@@ -1869,16 +1864,13 @@ sweden <- rio::import(file = sweden)
 sweden$Statistikdatum <- as.Date(sweden$Statistikdatum, "%Y-%m-%d")
 
 ## Tabela de confirmados novos
-sweden <- mutate(sweden, 
-                 Totalt_antal_fall-lag(sweden$Totalt_antal_fall))
-names(sweden) <- c("data", "confirmados_novos")
-
-sc_var <- sweden %>%
-    select(data, confirmados_novos)
+swe_var <- sweden %>%
+    select(Statistikdatum, Totalt_antal_fall)
+names(swe_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
-covid_sc_var <- sc_var  %>%
-    filter(sc_var$data > as.Date("2020-02-28")) %>% 
+covid_swe_var <- swe_var  %>%
+    filter(swe_var$data > as.Date("2020-02-28")) %>% 
     dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Suécia- Uncertainty method --> "uncertain_si"
@@ -1897,49 +1889,49 @@ sens_configs <-
     )
 
 ## Aplicar a função Estimate_R
-Rt_nonparam_si_sc <- estimate_R(as.numeric(covid_sc_var$confirmados_novos),
+Rt_nonparam_si_sc <- estimate_R(as.numeric(covid_swe_var$confirmados_novos),
                                 method = "uncertain_si",
                                 config = sens_configs)
 
-sample_windows_sc <- seq(length(Rt_nonparam_si_sc$R$t_start))
+sample_windows_sc <- seq(length(Rt_nonparam_si_swe$R$t_start))
 
 # Criar um data frame com valores de R
-posterior_Rt_sc <- 
+posterior_Rt_swe <- 
     map(
-        .x = sample_windows_sc,
+        .x = sample_windows_swe,
         .f = function(x) {
             
-            posterior_sample_obj_sc <- 
+            posterior_sample_obj_swe <- 
                 sample_posterior_R(
-                    R = Rt_nonparam_si_sc,
+                    R = Rt_nonparam_si_swe,
                     n = 1000, 
                     window = x
                 )
             
-            posterior_sample_estim_sc <- 
+            posterior_sample_estim_swe <- 
                 data.frame(
                     window_index = x,
-                    window_t_start = Rt_nonparam_si_sc$R$t_start[x],
-                    window_t_end = Rt_nonparam_si_sc$R$t_end[x],
-                    date_point = covid_sc_var[covid_sc_var$t_start == Rt_nonparam_si_sc$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj_sc),
-                    R_e_q0025 = quantile(posterior_sample_obj_sc, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj_sc, probs = 0.975)
+                    window_t_start = Rt_nonparam_si_swe$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_swe$R$t_end[x],
+                    date_point = covid_swe_var[covid_swe_var$t_start == Rt_nonparam_si_swe$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_swe),
+                    R_e_q0025 = quantile(posterior_sample_obj_swe, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_swe, probs = 0.975)
                 )
             
-            return(posterior_sample_estim_sc)
+            return(posterior_sample_estim_swe)
             
         }
     ) %>% 
     reduce(bind_rows)
 
-posterior_Re_sc <- posterior_Rt_sc %>%
+posterior_Re_swe <- posterior_Rt_swe %>%
     mutate(fit = round(R_e_median, 2),
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
 
 #Grafico Suécia 
-graph_sc<- ggplot(posterior_Rt_sc, aes(x = date_point, y = R_e_median)) +
+graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "yellow4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "yellow3") +
     
@@ -1959,26 +1951,23 @@ graph_sc<- ggplot(posterior_Rt_sc, aes(x = date_point, y = R_e_median)) +
     
     scale_x_date(
         date_breaks = "1 month",
-        limits = c(min(covid_sc_var$data), max(posterior_Rt_sc$date_point))
+        limits = c(min(covid_swe_var$data), max(posterior_Rt_swe$date_point))
     ) +
     
     scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_Rt_sc$R_e_q0975)),
+        breaks = 0:ceiling(max(posterior_Rt_swe$R_e_q0975)),
         limits = c(0, NA)
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
 
 #Tornar o grafico interativo
-ggplotly(graph_sc) %>%
+ggplotly(graph_swe) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
-
-
-
 
 
 
@@ -2103,7 +2092,6 @@ ggplotly(graph_aus) %>%
 
 
 
-
 #ÍNDIA (https://api.covid19india.org/documentation/csv/)
 india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv")
 
@@ -2216,7 +2204,6 @@ ggplotly(graph_india) %>%
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
-
 
 
 
@@ -2336,7 +2323,6 @@ ggplotly(graph_hk) %>%
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
-
 
 
 
@@ -2463,9 +2449,6 @@ ggplotly(graph_usa) %>%
 
 
 
-
-
-
 #JAPÃO - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
 japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-10-24.json")
 japan <- japan$daily
@@ -2577,6 +2560,9 @@ ggplotly(graph_jap) %>%
 
 
 
+
+
+
 # NOVA ZELÂNDIA (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
 nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-24oct20_0.xlsx"
 nzealand <- rio::import(file = nzealand)
@@ -2683,6 +2669,9 @@ ggplotly(graph_nze) %>%
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
+
+
+
 
 
 
