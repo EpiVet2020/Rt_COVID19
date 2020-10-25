@@ -1059,7 +1059,7 @@ ggplotly(graph_PT7) %>%
 
 #Data OUTROS PAÍSES e transformação para formato de data
 
-# ITÁLIA
+# ITÁLIA (https://github.com/pcm-dpc/COVID-19/blob/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv)
 italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv", stringsAsFactors = FALSE)
 
 ## Remover horas e minutos
@@ -1173,7 +1173,7 @@ ggplotly(graph_it) %>%
 
 
 
-# ALEMANHA
+# ALEMANHA (https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0/data)
 germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
 germany <- germany$features
 
@@ -1289,7 +1289,7 @@ ggplotly(graph_ger) %>%
 
 
 
-# Espanha
+# Espanha (https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos)
 spain <- read.csv("https://cnecovid.isciii.es/covid19/resources/datos_ccaas.csv")
 
 ## Alterar para formato Data
@@ -1400,7 +1400,7 @@ ggplotly(graph_spa) %>%
 
 
 
-# Bélgica
+# Bélgica (https://epistat.wiv-isp.be/covid/)
 belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
 
 ## Alterar para formato de data
@@ -1513,7 +1513,7 @@ ggplotly(graph_bel) %>%
 
 
 
-# República Checa
+# República Checa (https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19)
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 ## Alterar formato para data
@@ -1628,7 +1628,7 @@ ggplotly(graph_cz) %>%
 
 
 
-# Suiça
+# Suiça (https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html#-640157857)
 switzerland <- rio::import(
     file ="https://www.bag.admin.ch/dam/bag/en/dokumente/mt/k-und-i/aktuelle-ausbrueche-pandemien/2019-nCoV/covid-19-basisdaten-labortests.xlsx.download.xlsx/Dashboard_3_COVID19_labtests_positivity.xlsx"
 )
@@ -1744,7 +1744,7 @@ ggplotly(graph_swi) %>%
 
 
 
-# Reino Unido
+# Reino Unido (https://coronavirus.data.gov.uk/cases)
 uk <- fromJSON("https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json")
 uk <- uk$data
 
@@ -1861,7 +1861,7 @@ ggplotly(graph_uk) %>%
 
 
 
-#SUÉCIA
+#SUÉCIA (https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/)
 sweden <- "https://fohm.maps.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data"
 sweden <- rio::import(file = sweden)
 
@@ -1985,7 +1985,7 @@ ggplotly(graph_sc) %>%
 
 
 
-#AUSTRÁLIA
+#AUSTRÁLIA (https://github.com/M3IT/COVID-19_Data/blob/master/Data/COVID_AU_national_daily_change.csv)
 australia <- read.csv("https://raw.githubusercontent.com/M3IT/COVID-19_Data/master/Data/COVID_AU_national_daily_change.csv")
 
 ## Alterar para formato Data
@@ -2104,7 +2104,7 @@ ggplotly(graph_aus) %>%
 
 
 
-#ÍNDIA
+#ÍNDIA (https://api.covid19india.org/documentation/csv/)
 india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv")
 
 india$Date_YMD <- as.Date(india$Date_YMD, "%Y-%m-%d")
@@ -2223,7 +2223,7 @@ ggplotly(graph_india) %>%
 
 
 
-# HONG KONG
+# HONG KONG (https://data.gov.hk/en-data/dataset/hk-dh-chpsebcddr-novel-infectious-agent)
 hk <- read.csv("http://www.chp.gov.hk/files/misc/enhanced_sur_covid_19_eng.csv")
 
 ## Alterar formato de Data
@@ -2343,7 +2343,7 @@ ggplotly(graph_hk) %>%
 
 
 
-# Estados Unidos da América
+# EUA (https://covid.cdc.gov/covid-data-tracker/#cases_casesinlast7days ou https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data/vbim-akqf)
 usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
 usa <- as.data.frame(rio::import(file = usa))
 
@@ -2466,8 +2466,8 @@ ggplotly(graph_usa) %>%
 
 
 
-#Japan - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
-japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-10-22.json")
+#JAPÃO - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
+japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-10-24.json")
 japan <- japan$daily
 
 ## Alterar formato para data
@@ -2577,48 +2577,236 @@ ggplotly(graph_jap) %>%
 
 
 
-
-
-
-
-
-
-
-# Nova Zelândia (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
-nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-22oct20.xlsx"
+# NOVA ZELÂNDIA (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
+nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-24oct20_0.xlsx"
 nzealand <- rio::import(file = nzealand)
 nzealand <- nzealand[-c(1,2), ]
 
+## Alterar formato para data
 nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
 
-
+## Criar tabela confirmados novos
 nze_var <- as.data.frame(aggregate(x = nzealand, list(nzealand$`Confirmed Covid-19 cases`), FUN = length)) #nº registos por dia
 nze_var <- nze_var[, 1:2]
 names(nze_var) <- c("data", "confirmados_novos")
 
+## Previsão da evolução
+covid_nze_var <- nze_var  %>%
+    filter(nze_var$data > as.Date("2020-02-28")) %>% 
+    dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt Nova Zelândia - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_nze <- estimate_R(as.numeric(covid_nze_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_nze <- seq(length(Rt_nonparam_si_nze$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_nze <- 
+    map(.x = sample_windows_nze,
+        .f = function(x) {
+            
+            posterior_sample_obj_nze <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_nze,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim_nze <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_nze$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_nze$R$t_end[x],
+                    date_point = covid_nze_var[covid_nze_var$t_start == Rt_nonparam_si_nze$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_nze),
+                    R_e_q0025 = quantile(posterior_sample_obj_nze, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_nze, probs = 0.975))
+            
+            return(posterior_sample_estim_nze)}
+    ) %>% 
+    
+    reduce(bind_rows)
+
+## Gráfico Nova Zelândia ggplot
+
+graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+    
+    labs( title = " Nova Zelândia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_nze_var$data), max((posterior_Rt_nze$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_nze$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+### Tornar gráfico interativo
+ggplotly(graph_nze) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
 
 
 
+# MÉXICO (https://www.gob.mx/salud/documentos/datos-abiertos-152127)
+## Criar pasta temporária para guardar zip do mexico
+MEXDATA <- tempfile() 
 
+## Download do zip para a pasta temporária
+download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip", MEXDATA)
 
-#Mexico (https://www.gob.mx/salud/documentos/datos-abiertos-152127)
-MEXDATA <- tempfile() #criar pasta temporária para guardar zip do mexico
-download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip", MEXDATA) #download do zip para a pasta temporária
-mexico <- read.csv(unz(MEXDATA, "201021COVID19MEXICO.csv")) #fazer unzip do cvs 
-unlink(MEXDATA) #eliminar pasta temporária
+## Fazer unzip do cvs 
+mexico <- read.csv(unz(MEXDATA, "201024COVID19MEXICO.csv")) 
 
+## Eliminar pasta temporária
+unlink(MEXDATA) 
+
+## Alterar formato para data
 mexico$FECHA_INGRESO <- as.Date(mexico$FECHA_INGRESO, "%Y-%m-%d")
 
-
+## Criar tabela confirmados novos
+### Ordenar por data
 mexico <- as.data.frame(mexico[order(mexico$FECHA_INGRESO),])
+### Selecionar apenas casos confirmados, que correspondem aos nº 1 na coluna do resultado lab
 mex_var <- mexico %>%
-    filter(RESULTADO_LAB == "1") #selecionar apenas casos confirmados, que correspondem aos nº 1 na coluna do resultado lab
+    filter(RESULTADO_LAB == "1") 
+
 mex_var <- as.data.frame(aggregate(x = mex_var , list(mex_var$FECHA_INGRESO), FUN = length)) #nº registos por dia
 mex_var <- mex_var %>%
     select(Group.1, FECHA_INGRESO)
 names(mex_var) <- c("data", "confirmados_novos")
 
+## Previsão da evolução
+covid_mex_var <- mex_var  %>%
+    filter(mex_var$data > as.Date("2020-02-28")) %>% 
+    dplyr::mutate(t_start = dplyr::row_number())
 
+## Cálculo do Rt México - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_mex <- estimate_R(as.numeric(covid_mex_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_mex <- seq(length(Rt_nonparam_si_mex$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_mex <- 
+    map(.x = sample_windows_mex,
+        .f = function(x) {
+            
+            posterior_sample_obj_mex <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_mex,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim_mex <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_mex$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_mex$R$t_end[x],
+                    date_point = covid_mex_var[covid_mex_var$t_start == Rt_nonparam_si_mex$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_mex),
+                    R_e_q0025 = quantile(posterior_sample_obj_mex, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_mex, probs = 0.975))
+            
+            return(posterior_sample_estim_mex)}
+    ) %>% 
+    
+    reduce(bind_rows)
+
+## Gráfico México ggplot
+
+graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+    
+    labs( title = " México - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_mex_var$data), max((posterior_Rt_mex$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_mex$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+### Tornar gráfico interativo
+ggplotly(graph_mex) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
 
 
 
