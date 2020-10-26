@@ -3,6 +3,7 @@ library(testthat)
 library(rlang)
 library(dplyr)
 library(ggplot2)
+library(ggpubr)
 library(ggthemes)
 library(plotly)
 library(data.table)
@@ -23,7 +24,6 @@ library(jsonlite)
 library(RCurl)
 library(highcharter)
 library(here)
-library(incidence)
 library(purrr)
 library(magrittr)
 library(RColorBrewer)
@@ -31,10 +31,6 @@ library(rjson)
 library(readr)
 library(readxl)
 
-
-
-# Set working directory
-setwd("C:/Users/teres/Desktop/EPIVET/COVID19/R0")
 
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -213,7 +209,7 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT) %>%
+PT <- ggplotly(graph_PT) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -307,7 +303,7 @@ highchart() %>%
 
 ## GRÁFICO GGPLOT
 
-graph_PT1<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
+graph_Norte<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
@@ -339,7 +335,7 @@ graph_PT1<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT1) %>%
+Norte <- ggplotly(graph_Norte) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -392,13 +388,14 @@ posterior_R_t2 <-
     ) %>% 
     reduce(bind_rows)
 
+
+## Gráfico Rt diário
 posterior_R_e2 <- posterior_R_t2 %>%
     mutate(fit = round(R_e_median, 2),
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
 
 
-## Gráfico Rt diário
 highchart() %>%
     hc_add_theme(hc_theme_smpl()) %>% 
     hc_title(text = "Número Reprodutivo Rt ARS Centro - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
@@ -425,7 +422,7 @@ highchart() %>%
                   color = "#e6550d")
 
 ## GRÁFICO GGPLOT
-graph_PT2<- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
+graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
@@ -456,13 +453,12 @@ graph_PT2<- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT2) %>%
+Centro <- ggplotly(graph_Centro) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
-
 
 # Rt ARS Lisboa e Vale do Tejo
 
@@ -508,13 +504,13 @@ posterior_R_t3 <-
     ) %>% 
     reduce(bind_rows)
 
+
+## Gráfico Rt Diário
 posterior_R_e3 <- posterior_R_t3 %>%
     mutate(fit = round(R_e_median, 2),
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
 
-
-## Gráfico Rt Diário
 highchart() %>%
     hc_add_theme(hc_theme_smpl()) %>% 
     hc_title(text = "Número Reprodutivo Rt ARS LVT - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
@@ -542,7 +538,7 @@ highchart() %>%
 
 ## GRÁFICO GGPLOT
 
-graph_PT3<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
+graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
@@ -574,12 +570,13 @@ graph_PT3<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT3) %>%
+LVT <- ggplotly(graph_LVT) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
+
 
 
 # Rt ARS Alentejo
@@ -626,13 +623,13 @@ posterior_R_t4 <-
     ) %>% 
     reduce(bind_rows)
 
+
+## Gráfico Rt Diário
 posterior_R_e4 <- posterior_R_t4 %>%
     mutate(fit = round(R_e_median, 2),
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
 
-
-## Gráfico Rt Diário
 highchart() %>%
     hc_add_theme(hc_theme_smpl()) %>% 
     hc_title(text = "Número Reprodutivo Rt ARS Alentejo - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
@@ -660,7 +657,7 @@ highchart() %>%
 
 ## GRÁFICO GGPLOT
 
-graph_PT4<- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
+graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
@@ -692,7 +689,7 @@ graph_PT4<- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT4) %>%
+Alentejo <- ggplotly(graph_Alentejo) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -745,12 +742,12 @@ posterior_R_t5 <-
     reduce(bind_rows)
 
 
+## Gráfico Rt Diário
 posterior_R_e5 <- posterior_R_t5 %>%
     mutate(fit = round(R_e_median, 2),
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
 
-## Gráfico Rt Diário
 highchart() %>%
     hc_add_theme(hc_theme_smpl()) %>% 
     hc_title(text = "Número Reprodutivo Rt ARS Algarve - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
@@ -779,7 +776,7 @@ highchart() %>%
 
 ## GRÁFICO GGPLOT
 
-graph_PT5<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
+graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
@@ -811,7 +808,7 @@ graph_PT5<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT5) %>%
+Algarve <- ggplotly(graph_Algarve) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -864,12 +861,12 @@ posterior_R_t6 <-
     reduce(bind_rows)
 
 
+## Gráfico Rt Diário
 posterior_R_e6 <- posterior_R_t6 %>%
     mutate(fit = round(R_e_median, 2),
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
 
-## Gráfico Rt Diário
 highchart() %>%
     hc_add_theme(hc_theme_smpl()) %>% 
     hc_title(text = "Número Reprodutivo Rt  Acores - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
@@ -897,7 +894,7 @@ highchart() %>%
 
 ## GRÁFICO GGPLOT
 
-graph_PT6<- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
+graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
@@ -929,14 +926,12 @@ graph_PT6<- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT6) %>%
+Açores <- ggplotly(graph_Açores) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
-
-
 
 # Rt ARS Madeira
 
@@ -983,6 +978,7 @@ posterior_R_t7 <-
     reduce(bind_rows)
 
 
+## Gráfico Rt diário
 posterior_R_e7 <- posterior_R_t7 %>%
     mutate(fit = round(R_e_median, 2),
            lwr=round(R_e_q0025, 2),
@@ -1013,9 +1009,10 @@ highchart() %>%
                   name = "Rt", 
                   color = "#e6550d")
 
+
 ## GRÁFICO GGPLOT
 
-graph_PT7<- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
+graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
@@ -1047,12 +1044,22 @@ graph_PT7<- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT7) %>%
+Madeira <- ggplotly(graph_Madeira) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
+
+
+ggarrange(PT, Norte, Centro, LVT, Alentejo, Algarve, Açores, Madeira,
+          labels = "Portugal", "Norte", "Lisboa e Vale do Tejo", "Alentejo", "Algarve", "Açores", "Madeira",
+          ncol = 4, nrow = 2)
+
+
+
+
+
 
 
 
