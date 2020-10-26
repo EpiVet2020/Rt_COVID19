@@ -3176,3 +3176,261 @@ sens_configs <-
 
 
 
+#BRASIL (https://covid19.who.int/table)
+brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+
+## Alterar formato para data
+brasil$ï..Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
+
+## Criar tabela confirmados novos
+bra_var <- brasil %>%
+    filter(Country == "Brazil") %>%
+    select(ï..Date_reported, New_cases)
+names(bra_var) <- c("data", "confirmados_novos")
+
+## Previsão da evolução
+covid_bra_var <- bra_var  %>%
+    filter(bra_var$data > as.Date("2020-02-28")) %>% 
+    dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt Brasil - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_bra <- estimate_R(as.numeric(covid_bra_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_bra <- seq(length(Rt_nonparam_si_bra$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_bra <- 
+    map(.x = sample_windows_bra,
+        .f = function(x) {
+            
+            posterior_sample_obj_bra <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_bra,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim_bra <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_bra$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_bra$R$t_end[x],
+                    date_point = covid_bra_var[covid_bra_var$t_start == Rt_nonparam_si_bra$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_bra),
+                    R_e_q0025 = quantile(posterior_sample_obj_bra, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_bra, probs = 0.975))
+            
+            return(posterior_sample_estim_bra)}
+    ) %>% 
+    
+    reduce(bind_rows)
+
+## Gráfico Brasil ggplot
+
+graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+    
+    labs( title = " Brasil - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_bra_var$data), max((posterior_Rt_bra$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_bra$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+### Tornar gráfico interativo
+ggplotly(graph_bra) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+
+# Serial Interval específico
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = , std_mean_si = ,
+            min_mean_si = , max_mean_si = ,
+            std_si = , std_std_si = ,
+            min_std_si = , max_std_si = ,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+
+
+
+
+
+
+
+
+
+#CHINA (https://covid19.who.int/table)
+china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+
+## Alterar formato para data
+china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
+
+## Criar tabela confirmados novos
+chi_var <- china %>%
+    filter(Country == "China") %>%
+    select(ï..Date_reported, New_cases)
+names(chi_var) <- c("data", "confirmados_novos")
+
+## Previsão da evolução
+covid_chi_var <- chi_var  %>%
+    filter(chi_var$data > as.Date("2020-02-28")) %>% 
+    dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt China - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_chi <- estimate_R(as.numeric(covid_chi_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_chi <- seq(length(Rt_nonparam_si_chi$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_chi <- 
+    map(.x = sample_windows_chi,
+        .f = function(x) {
+            
+            posterior_sample_obj_chi <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_chi,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim_chi <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_chi$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_chi$R$t_end[x],
+                    date_point = covid_chi_var[covid_chi_var$t_start == Rt_nonparam_si_chi$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_chi),
+                    R_e_q0025 = quantile(posterior_sample_obj_chi, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_chi, probs = 0.975))
+            
+            return(posterior_sample_estim_chi)}
+    ) %>% 
+    
+    reduce(bind_rows)
+
+## Gráfico China ggplot
+
+graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+    
+    labs( title = " China - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_chi_var$data), max((posterior_Rt_chi$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_chi$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+### Tornar gráfico interativo
+ggplotly(graph_chi) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+
+# Serial Interval específico
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = , std_mean_si = ,
+            min_mean_si = , max_mean_si = ,
+            std_si = , std_std_si = ,
+            min_std_si = , max_std_si = ,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+
+
+
+
+
+
+
+
+
