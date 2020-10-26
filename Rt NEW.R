@@ -2802,9 +2802,110 @@ ggplotly(graph_mex) %>%
 
 
 
+# COREIA DO SUL (https://github.com/owid/covid-19-data/blob/master/public/data/ecdc/new_cases.csv)
+korea <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/ecdc/new_cases.csv")
 
+## Alterar formato para data
+korea$date <- as.Date(korea$date, "%Y-%m-%d")
 
+## Criar tabela confirmados novos
+kor_var <- korea %>% 
+    select(date, South.Korea)
+names(kor_var) <- c("data", "confirmados_novos")
 
+## Previsão da evolução
+covid_kor_var <- kor_var  %>%
+    filter(kor_var$data > as.Date("2020-02-28")) %>% 
+    dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt Coreia do Sul - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+    make_config(
+        list(
+            mean_si = 4.7, std_mean_si = 0.7,
+            min_mean_si = 3.7, max_mean_si = 6.0,
+            std_si = 2.9, std_std_si = 0.5,
+            min_std_si = 1.9, max_std_si = 4.9,
+            n1 = 1000,
+            n2 = 100,
+            seed = 123456789
+        )
+    )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_kor <- estimate_R(as.numeric(covid_kor_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_kor <- seq(length(Rt_nonparam_si_kor$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_kor <- 
+    map(.x = sample_windows_kor,
+        .f = function(x) {
+            
+            posterior_sample_obj_kor <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_kor,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim_kor <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_kor$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_kor$R$t_end[x],
+                    date_point = covid_kor_var[covid_kor_var$t_start == Rt_nonparam_si_kor$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_kor),
+                    R_e_q0025 = quantile(posterior_sample_obj_kor, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_kor, probs = 0.975))
+            
+            return(posterior_sample_estim_kor)}
+    ) %>% 
+    
+    reduce(bind_rows)
+
+## Gráfico Coreia do Sul ggplot
+
+graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+    
+    labs( title = " Coreia do Sul - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_kor_var$data), max((posterior_Rt_kor$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_kor$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+### Tornar gráfico interativo
+ggplotly(graph_kor) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
 
 
 
