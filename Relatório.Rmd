@@ -26,7 +26,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{r, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
@@ -42,21 +42,23 @@ body{
 
 ## **Introdução**
 ***
-O Número Básico de Reprodução (R0) indica, em média, quantas pessoas serão infetadas por um único doente. Ou seja, é o número médio de casos secundários originados a partir de um caso primário, quando o vírus é introduzido numa população que consiste somente em indivíduos suscetíveis.
+O Número Básico de Reprodução (R0) indica, em média, quantas pessoas são infetadas por um único doente. Ou seja, é o número médio de casos secundários originados a partir de um caso primário, quando o vírus é introduzido numa população que consiste somente em indivíduos suscetíveis.
 
 Por outro lado, o Número Efetivo de Reprodução (Re ou Rt) indica, em média, o nº de infeções que cada doente provoca, mas tem como ponto de partida uma população que já esteve exposta ao vírus. Ou seja, leva em conta as medidas postas em prática para travar a disseminação.
 
-Desta forma, quando Rt = 1, ocorre o limiar da transmissão (abaixo deste valor a doença é incapaz de se manter numa população). O objetivo mais importante será manter um R0 inferior ou igual a 1 até à disponibilidade de uma vacina eficaz.
+Desta forma, quando Rt = 1, ocorre o limiar da transmissão (abaixo deste valor a doença é incapaz de se manter numa população). O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disponibilidade de uma vacina eficaz.
 
 Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em Portugal e, mais especificamente, em cada região do país. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data.
 <br>
+<br>
 
 <ul>
-  <li>Portugal e ARS's</li>
-  <li>Outros países</li>
+  <li>Portugal</li>
+  <li>Administrações Regionais de Saúde (ARS's)<li>
+  <li>Análise comparativa entre regiões</li>
 </ul>
 
-
+<br>
 ```{r warning=FALSE, message=FALSE}
 #Libraries
 library(testthat)
@@ -100,19 +102,18 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
 ```
 
+<br>
 
-## **Evolução do Rt em Portugal e ARS's** {.tabset .tabset-fade .tabset-pills}
+## **Portugal**
 ***
 
-Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de infeção em Portugal e em cada Administração Regional de Saúde.
+Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de infeção em Portugal com base na evolução do Rt.
 
-<br><br>
-
-### Portugal
 <br>
 
 TEXTO
 
+<br>
 ```{r pressure, fig.align='center', warning=FALSE}
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
 covid19pt <- mutate(covid19pt, 
@@ -182,10 +183,6 @@ Rt_nonparam_si <- estimate_R(covid_pt_var$confirmados_var,
                              method = "uncertain_si",
                              config = sens_configs
 )
-
-
-### Caracterização dos valores em gráfico 
-plot(Rt_nonparam_si, legend = FALSE)
 
 ## Determinação do Rt (sample from the posterior R distribution)
 ### Definir a nossa janela com base no t_start
@@ -260,6 +257,13 @@ ggplotly(graph_PT) %>%
 
 <br>
 
+## **Administrações Regionais de Saúde (ARS's)** {.tabset .tabset-fade .tabset-pills}
+***
+
+Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de infeção nas ARS's de Portugal.
+
+<br><br>
+
 ### ARS Norte
 <br>
 
@@ -278,9 +282,6 @@ Rt_nonparam_si1 <-
         method = "uncertain_si",
         config = sens_configs
     )
-
-## Gráfico
-plot(Rt_nonparam_si1, legend = FALSE)
 
 ## Posterior sample Rt estimate
 sample_windows1 <- seq(length(Rt_nonparam_si1$R$t_start))
@@ -362,7 +363,6 @@ ggplotly(graph_PT1) %>%
                                        collapse = "")))
 ```
 
-<br>
 <br>
 
 ### ARS Centro
