@@ -1,4 +1,4 @@
-# **Estimativa do Número de Reprodução Efetivo (Rt) da COVID19**
+# **Estimativa do Número de Reprodução Efetivo (Rt) da COVID19** 😷
 ## Estudo comparativo entre Portugal e outros países
 
 Com o código presente neste repositório pretendemos responder às seguintes questões: 
