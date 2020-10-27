@@ -1063,7 +1063,6 @@ ggarrange(PT, Norte, Centro, LVT, Alentejo, Algarve, Açores, Madeira,
 
 
 
-
 #Data OUTROS PAÍSES e transformação para formato de data
 
 # ITÁLIA (https://github.com/pcm-dpc/COVID-19/blob/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv)
