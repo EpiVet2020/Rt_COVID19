@@ -9,10 +9,8 @@ output:
     df_print: paged
     theme: lumen
     toc: yes
-    toc_float: yes
     toc_depth: 3
-    includes:
-      before_body: header.Rhtml
+
   html_notebook:
     code_folding: hide
     theme: lumen
