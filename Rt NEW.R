@@ -2253,18 +2253,94 @@ ggplotly(graph_hk) %>%
 
 
 # Serial Interval específico
-sens_configs <- 
+## Comparar Rt conforme SI
+sens_configs2 <- 
     make_config(
         list(
-            mean_si = 6.75, std_mean_si = 3.76,
-            min_mean_si = 5.98, max_mean_si = 13.17,
-            std_si = 2.9, std_std_si = 0.5,
-            min_std_si = 1.9, max_std_si = 4.9,
+            mean_si = 4.9, std_mean_si = 0.7,
+            min_mean_si = 3.6, max_mean_si = 6.2,
+            std_si = 4.4, std_std_si = 0.5,
+            min_std_si = 2.9, max_std_si = 8.3,
             n1 = 1000,
             n2 = 100,
             seed = 123456789
         )
     )
+
+### Aplicar a função Estimate_R
+Rt_nonparam_si_hk2 <- estimate_R(as.numeric(covid_hk_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs2
+)
+
+sample_windows_hk2 <- seq(length(Rt_nonparam_si_hk2$R$t_start))
+
+### Criar um data frame com valores de R
+posterior_Rt_hk2 <- 
+    map(.x = sample_windows_hk2,
+        .f = function(x) {
+            
+            posterior_sample_obj_hk2 <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si_hk2,
+                    n = 1000, 
+                    window = x )
+            
+            posterior_sample_estim_hk2 <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si_hk2$R$t_start[x],
+                    window_t_end = Rt_nonparam_si_hk2$R$t_end[x],
+                    date_point = covid_hk_var[covid_hk_var$t_start == Rt_nonparam_si_hk2$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj_hk2),
+                    R_e_q0025 = quantile(posterior_sample_obj_hk2, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj_hk2, probs = 0.975))
+            
+            return(posterior_sample_estim_hk2)}
+    ) %>% 
+    
+    reduce(bind_rows)
+
+
+## Gráfico Hong Kong ggplot 2
+
+graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "paleturquoise4",  alpha = 0.5, size = 1) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "paleturquoise1") +
+    
+    labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados:  ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_hk_var$data), max((posterior_Rt_hk2$date_point)))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_Rt_hk2$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+
+
+### Tornar gráfico interativo
+ggplotly(graph_hk2) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
 
 
 
