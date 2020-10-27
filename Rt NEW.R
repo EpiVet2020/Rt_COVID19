@@ -2252,6 +2252,7 @@ ggplotly(graph_hk) %>%
                                        collapse = "")))
 
 
+
 # Serial Interval específico
 ## Comparar Rt conforme SI
 sens_configs2 <- 
