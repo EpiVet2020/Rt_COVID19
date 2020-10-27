@@ -48,7 +48,7 @@ Por outro lado, o Número Efetivo de Reprodução (Re ou Rt) indica, em média, 
 
 O valor do Rt é um indicador essencial para o estudo da evolução de um surto epidémico, que pode ser usado para medir a efetividade das medidas de contenção e atraso e ainda avaliar o momento mais adequado para o levantamento das restrições implementadas.
 
-Desta forma, quando Rt = 1, ocorre o limiar da transmissão (abaixo deste valor a doença é incapaz de se manter numa população). O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disponibilidade de uma vacina eficaz.
+Quando o valor do R se encontra acima de 1, significa que a epidemia continua a crescer e que o número de novos casos será superior ao número de casos atuais; por outro lado, quando Rt é igual a 1, ocorre o limiar da transmissão (abaixo deste valor a doença é incapaz de se manter numa população). O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disponibilidade de uma vacina eficaz.
 
 Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em Portugal e, mais especificamente, em cada região do país. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data.
 <br>
@@ -115,27 +115,11 @@ Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de inf
 
 Através deste gráfico, podemos observar que o número médio de pessoas contagiadas por cada infetado chegou a assumir valores de Rt de 4,97 no início da pandemia (07/03/2020), tento posteriormente diminuído na sequência do encerramento das escolas em Portugal (dia 16 de Março) e a entrada do país em estado de emergência (dia 18 de Março).
 
+A média do R(t) para o período entre 16 de Abril e 6 de Maio manteve-se abaixo de 1, significando que, neste período, um caso infetado originou em média menos de 1 caso secundário, o que indica uma redução expressiva da transmissão da infeção desde a implementação das medidas de contenção em Portugal. 
+
+O QUE ACONTECEU DEPOIS? descrever.
+
 Em termos gerais, podemos dizer que o valor do R tem vindo a descer gradualmente desde o início do surto em Portugal.
-
-
-
-----------
-De 17 de abril até agora, segundo os dados mais recentes — ainda não incluídos no relatório —, o Rt voltou a subir, estando a cima de 1 na média nacional. Em termos regionais, sabe-se que, no Norte, está nos 1,01. Na região de Lisboa, subiu até aos 1,18.
-
-
-Quando o valor do R se encontra acima de 1, significa que a epidemia continua a crescer e que o número de novos casos será superior ao número de casos atuais; por outro lado, se o valor do R se encontrar abaixo de 1, isto significa que a epidemia caminha para o seu fim.
-
- Essa mesma conclusão é retirada pelo Governo no relatório divulgado esta terça-feira. “A média do R(t) para o período entre 12 e 16 de abril foi de 0,98, significando que, neste período, um caso infetado originou em média menos de 1 caso secundário, o que indica uma redução expressiva da transmissão da infeção desde a implementação das medidas de contenção em Portugal”, lê-se no relatório.
-
-Os especialistas têm sido unânimes no entendimento de que as medidas de restrição só devem ser levantadas com o valor do R abaixo de 1 — ou seja, com a epidemia já em rota descendente. Mais concretamente, e à boleia do exemplo de países como a Noruega, os peritos têm apontado para o valor de 0,7 como um requisito mínimo para que se possa reabrir gradualmente a economia.
-
-Porém, no último domingo, a ministra da Saúde, Marta Temido, anunciou que o valor médio do R em Portugal, que há cerca de duas semanas estava estagnado em torno dos 0,9, havia subido para 1,04. Isto significa que, de acordo com os números mais recentes, o R está acima de 1 e a epidemia se encontra em crescimento em Portugal.
-
-
-
-
-
-
 
 <br>
 
