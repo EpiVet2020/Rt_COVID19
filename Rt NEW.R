@@ -31,6 +31,7 @@ library(rjson)
 library(readr)
 library(readxl)
 
+setwd("~/Desktop/Treino Estágio 2020-2021/Rt Project")
 
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
