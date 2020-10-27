@@ -49,6 +49,7 @@ Por outro lado, o Número Efetivo de Reprodução (Re ou Rt) indica, em média, 
 Desta forma, quando Rt = 1, ocorre o limiar da transmissão (abaixo deste valor a doença é incapaz de se manter numa população). O objetivo mais importante será manter um R0 inferior ou igual a 1 até à disponibilidade de uma vacina eficaz.
 
 Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em Portugal e, mais especificamente, em cada região do país. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data.
+<br>
 
 <ul>
   <li>Portugal e ARS's</li>
@@ -354,6 +355,560 @@ graph_PT1<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_PT1) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+```
+
+<br>
+<br>
+
+### ARS Centro
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r}
+Rt_nonparam_si2 <- 
+    estimate_R(
+        covid_pt_var$confirmados_var_centro, 
+        method = "uncertain_si",
+        config = sens_configs
+    )
+
+## Posterior sample Rt estimate
+sample_windows2 <- seq(length(Rt_nonparam_si2$R$t_start))
+
+posterior_R_t2 <- 
+    map(
+        .x = sample_windows2,
+        .f = function(x) {
+            
+            posterior_sample_obj2 <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si2,
+                    n = 1000, 
+                    window = x
+                )
+            
+            posterior_sample_estim2 <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si2$R$t_start[x],
+                    window_t_end = Rt_nonparam_si2$R$t_end[x],
+                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si2$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj2),
+                    R_e_q0025 = quantile(posterior_sample_obj2, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj2, probs = 0.975)
+                )
+            
+            return(posterior_sample_estim2)
+        }
+    ) %>% 
+    reduce(bind_rows)
+
+
+## GRÁFICO GGPLOT
+graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    
+    labs( title = " ARS Centro - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados: DGS ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_pt_var$data), max(posterior_R_t2$date_point))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_R_t2$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+
+### Tornar gráfico interativo
+Centro <- ggplotly(graph_Centro) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+```
+
+
+<br>
+
+### ARS Lisboa e Vale do Tejo
+<br>
+
+TEXTO
+
+<br>
+```{r}
+Rt_nonparam_si3 <- 
+    estimate_R(
+        covid_pt_var$confirmados_var_lvt, 
+        method = "uncertain_si",
+        config = sens_configs
+    )
+
+## Posterior sample Rt estimate
+sample_windows3 <- seq(length(Rt_nonparam_si3$R$t_start))
+
+posterior_R_t3 <- 
+    map(
+        .x = sample_windows3,
+        .f = function(x) {
+            
+            posterior_sample_obj3 <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si3,
+                    n = 1000, 
+                    window = x
+                )
+            
+            posterior_sample_estim3 <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si3$R$t_start[x],
+                    window_t_end = Rt_nonparam_si3$R$t_end[x],
+                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si3$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj3),
+                    R_e_q0025 = quantile(posterior_sample_obj3, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj3, probs = 0.975)
+                )
+            
+            return(posterior_sample_estim3)
+            
+        }
+    ) %>% 
+    reduce(bind_rows)
+
+
+## GRÁFICO GGPLOT
+
+graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    
+    labs( title = " ARS LVT - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados: DGS ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_pt_var$data), max(posterior_R_t3$date_point))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_R_t3$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+
+
+### Tornar gráfico interativo
+LVT <- ggplotly(graph_LVT) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+```
+
+<br>
+
+### ARS Alentejo
+
+<br>
+
+TEXTO
+
+<br>
+```{r}
+Rt_nonparam_si4 <- 
+    estimate_R(
+        covid_pt_var$confirmados_var_alentejo, 
+        method = "uncertain_si",
+        config = sens_configs
+    )
+
+## Posterior sample Rt estimate
+sample_windows4 <- seq(length(Rt_nonparam_si4$R$t_start))
+
+posterior_R_t4 <- 
+    map(
+        .x = sample_windows4,
+        .f = function(x) {
+            
+            posterior_sample_obj4 <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si4,
+                    n = 1000, 
+                    window = x
+                )
+            
+            posterior_sample_estim4 <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si4$R$t_start[x],
+                    window_t_end = Rt_nonparam_si4$R$t_end[x],
+                    date_point = covid19pt_var[covid_pt_var$t_start == Rt_nonparam_si4$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj4),
+                    R_e_q0025 = quantile(posterior_sample_obj4, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj4, probs = 0.975)
+                )
+            
+            return(posterior_sample_estim4)
+            
+        }
+    ) %>% 
+    reduce(bind_rows)
+
+
+## GRÁFICO GGPLOT
+
+graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    
+    labs( title = " ARS Alentejo - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados: DGS ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_pt_var$data), max(posterior_R_t4$date_point))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_R_t4$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+
+
+### Tornar gráfico interativo
+Alentejo <- ggplotly(graph_Alentejo) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+```
+
+<br>
+
+
+### ARS Algarve
+<br>
+
+TEXTO
+
+<br>
+
+```{r}
+Rt_nonparam_si5 <- 
+    estimate_R(
+        covid_pt_var$confirmados_var_algarve, 
+        method = "uncertain_si",
+        config = sens_configs
+    )
+
+
+## Posterior sample Rt estimate
+sample_windows5 <- seq(length(Rt_nonparam_si5$R$t_start))
+
+posterior_R_t5 <- 
+    map(
+        .x = sample_windows5,
+        .f = function(x) {
+            
+            posterior_sample_obj5 <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si5,
+                    n = 1000, 
+                    window = x
+                )
+            
+            posterior_sample_estim5 <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si5$R$t_start[x],
+                    window_t_end = Rt_nonparam_si5$R$t_end[x],
+                    date_point = covid19pt_var[covid_pt_var$t_start == Rt_nonparam_si5$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj5),
+                    R_e_q0025 = quantile(posterior_sample_obj5, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj5, probs = 0.975)
+                )
+            
+            return(posterior_sample_estim5)
+            
+        }
+    ) %>% 
+    reduce(bind_rows)
+
+
+## GRÁFICO GGPLOT
+
+graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    
+    labs( title = " ARS Algarve - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados: DGS ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_pt_var$data), max(posterior_R_t5$date_point))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_R_t5$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+
+
+### Tornar gráfico interativo
+Algarve <- ggplotly(graph_Algarve) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+
+```
+
+<br>
+
+### ARS Açores
+
+<br>
+
+TEXTO
+
+<br>
+```{r}
+Rt_nonparam_si6 <- 
+    estimate_R(
+        covid_pt_var$confirmados_var_acores, 
+        method = "uncertain_si",
+        config = sens_configs
+    )
+
+## Posterior sample Rt estimate
+sample_windows6 <- seq(length(Rt_nonparam_si6$R$t_start))
+
+posterior_R_t6 <- 
+    map(
+        .x = sample_windows6,
+        .f = function(x) {
+            
+            posterior_sample_obj6 <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si6,
+                    n = 1000, 
+                    window = x
+                )
+            
+            posterior_sample_estim6 <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si6$R$t_start[x],
+                    window_t_end = Rt_nonparam_si6$R$t_end[x],
+                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si6$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj6),
+                    R_e_q0025 = quantile(posterior_sample_obj6, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj6, probs = 0.975)
+                )
+            
+            return(posterior_sample_estim6)
+            
+        }
+    ) %>% 
+    reduce(bind_rows)
+
+## GRÁFICO GGPLOT
+
+graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    
+    labs( title = " ARS Açores - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados: DGS ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_pt_var$data), max(posterior_R_t6$date_point))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_R_t6$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+
+
+### Tornar gráfico interativo
+Açores <- ggplotly(graph_Açores) %>%
+    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
+                                         "Nº de reprodução efetivo (Rt)",
+                                         rep("&nbsp;", 20),
+                                         rep("\n&nbsp;", 2)),
+                                       collapse = "")))
+```
+
+<br>
+
+### ARS Madeira
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r}
+Rt_nonparam_si7 <- 
+    estimate_R(
+        covid_pt_var$confirmados_var_madeira, 
+        method = "uncertain_si",
+        config = sens_configs
+    )
+
+## Posterior sample Rt estimate
+sample_windows7 <- seq(length(Rt_nonparam_si7$R$t_start))
+
+posterior_R_t7 <- 
+    map(
+        .x = sample_windows7,
+        .f = function(x) {
+            
+            posterior_sample_obj7 <- 
+                sample_posterior_R(
+                    R = Rt_nonparam_si7,
+                    n = 1000, 
+                    window = x
+                )
+            
+            posterior_sample_estim7 <- 
+                data.frame(
+                    window_index = x,
+                    window_t_start = Rt_nonparam_si7$R$t_start[x],
+                    window_t_end = Rt_nonparam_si7$R$t_end[x],
+                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si7$R$t_end[x], "data"],
+                    R_e_median = median(posterior_sample_obj7),
+                    R_e_q0025 = quantile(posterior_sample_obj7, probs = 0.025),
+                    R_e_q0975 = quantile(posterior_sample_obj7, probs = 0.975)
+                )
+            
+            return(posterior_sample_estim7)
+            
+        }
+    ) %>% 
+    reduce(bind_rows)
+
+
+## GRÁFICO GGPLOT
+
+graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    
+    labs( title = " ARS Madeira - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+          subtitle = "Fonte de dados: DGS ",
+          x = "Tempo",
+          y = "Nº de reprodução efetivo (Rt)"
+    ) +
+    
+    theme_minimal() +
+    
+    theme(axis.title = element_text(size = 10, hjust = 0.5),
+          plot.subtitle = element_text(size= 8),
+          axis.title.x = element_text(size = 7),
+          axis.title.y = element_text(size = 7),
+    ) +
+    
+    scale_x_date(
+        date_breaks = "1 month",
+        limits = c(min(covid_pt_var$data), max(posterior_R_t7$date_point))
+    ) +
+    
+    scale_y_continuous(
+        breaks = 0:ceiling(max(posterior_R_t7$R_e_q0975)),
+        limits = c(0, NA)
+    ) +
+    
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+
+
+### Tornar gráfico interativo
+Madeira <- ggplotly(graph_Madeira) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
