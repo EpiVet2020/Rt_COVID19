@@ -3,23 +3,25 @@ title: "Estimativa do Número de Reprodução Efetivo (Rt) da COVID19"
 subtitle: "Portugal e Administrações Regionais de Saúde"
 author: "By: Estagiárias de Epidemiologia da FMV"
 date: "Outubro, 2020"
-output: 
-html_document:
-  toc: true
-  toc_depth: 3
-  toc_float:
-  code_folding: hide
-  df_print: paged
-  theme: cosmo
-pdf_document:
-  toc: yes
-  toc_depth: '3'
-html_notebook:
-  code_folding: hide
-  theme: lumen
-  toc: yes
-  toc_depth: 3
-  toc_float: yes
+output:
+  html_document:
+    code_folding: hide
+    df_print: paged
+    theme: lumen
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    includes:
+      before_body: header.Rhtml
+  html_notebook:
+    code_folding: hide
+    theme: lumen
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
 editor_options: 
   chunk_output_type: inline
 ---
@@ -40,6 +42,11 @@ body{
 
 ## **Introdução**
 ***
+O Número Básico de Reprodução (R0) indica, em média, quantas pessoas serão infetadas por um único doente. Ou seja, é o número médio de casos secundários originados a partir de um caso primário, quando o vírus é introduzido numa população que consiste somente em indivíduos suscetíveis.
+
+Por outro lado, o Número Efetivo de Reprodução (Re ou Rt) indica, em média, o nº de infeções que cada doente provoca, mas tem como ponto de partida uma população que já esteve exposta ao vírus. Ou seja, leva em conta as medidas postas em prática para travar a disseminação.
+
+Desta forma, quando Rt = 1, ocorre o limiar da transmissão (abaixo deste valor a doença é incapaz de se manter numa população). O objetivo mais importante será manter um R0 inferior ou igual a 1 até à disponibilidade de uma vacina eficaz.
 
 Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em Portugal e, mais especificamente, em cada região do país. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data.
 
@@ -96,7 +103,7 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 ## **Evolução do Rt em Portugal e ARS's** {.tabset .tabset-fade .tabset-pills}
 ***
 
-TEXTO
+Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de infeção em Portugal e em cada Administração Regional de Saúde.
 
 <br><br>
 
