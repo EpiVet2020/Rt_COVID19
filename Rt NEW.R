@@ -144,38 +144,6 @@ posterior_R_t <-
     ##Combines elements into a single value
     reduce(bind_rows)
 
-##GRÁFICO
-### Nº Reprodutivo Diário (Rt) para Portugal
-posterior_R_e <- posterior_R_t %>%
-    mutate(fit = round(R_e_median, 2),
-           lwr=round(R_e_q0025, 2),
-           upr=round(R_e_q0975, 2))
-
-highchart() %>%
-    hc_add_theme(hc_theme_smpl()) %>% 
-    hc_title(text = "Número Reprodutivo Rt - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
-    hc_subtitle(text = "Fonte: Autores baseados nos dados da DGS") %>% 
-    hc_xAxis(categories = format(posterior_R_e$date_point, "%b %d"),
-             tickmarkPlacement = "on",
-             title = list(enabled = FALSE)) %>% 
-    hc_yAxis(title = list(text = "Rt"),min = 0, 
-             plotLines = list(
-                 list(label = list(text = "Rt = 1"),
-                      color = "#525252",
-                      width = 2,
-                      value = 1,
-                      dashStyle = "shortdash"))) %>% 
-    
-    hc_add_series(posterior_R_e,
-                  hcaes( low = lwr, high = upr),     
-                  # id = "ForecastRange-FL",
-                  type = "arearange", 
-                  name = "Incerteza", 
-                  color = "#d9d9d9") %>% 
-    hc_add_series(data = posterior_R_e$fit,
-                  name = "Rt", 
-                  color = "#e6550d")
-
 
 ## GRÁFICO ggplot
 graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
@@ -206,8 +174,12 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
         limits = c(0, NA)
     ) +
     
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    
+    geom_vline(xintercept = as.numeric(as.Date("2020-04-01")), linetype=4, colour = "grey5", alpha = 0.15) +
+       geom_text(aes(x = as.numeric(as.Date("2020-04-01")), label="Encer", y=20), colour="red", angle=90, vjust = -1)
 
+    
 
 ### Tornar gráfico interativo
 PT <- ggplotly(graph_PT) %>%
@@ -217,8 +189,7 @@ PT <- ggplotly(graph_PT) %>%
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
 
-
-
+PT
 
 # Rt Diário ARS Norte
 
@@ -273,33 +244,6 @@ posterior_R_e1 <- posterior_R_t1 %>%
     mutate(fit = round(R_e_median, 2),
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
-
-
-## Gráfico Rt diário
-highchart() %>%
-    hc_add_theme(hc_theme_smpl()) %>% 
-    hc_title(text = "Número Reprodutivo Rt ARS Norte - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
-    hc_subtitle(text = "Fonte: Autores baseados nos dados da DGS") %>% 
-    hc_xAxis(categories = format(posterior_R_e1$date_point, "%b %d"),
-             tickmarkPlacement = "on",
-             title = list(enabled = FALSE)) %>% 
-    hc_yAxis(title = list(text = "Rt"),min = 0, 
-             plotLines = list(
-                 list(label = list(text = "Rt = 1"),
-                      color = "#525252",
-                      width = 2,
-                      value = 1,
-                      dashStyle = "shortdash"))) %>% 
-    
-    hc_add_series(posterior_R_e1, 
-                  hcaes( low = lwr, high = upr),     
-                  #                id = "ForecastRange-FL", 
-                  type = "arearange", 
-                  name = "Incerteza", 
-                  color = "#d9d9d9") %>% 
-    hc_add_series(data = posterior_R_e1$fit,
-                  name = "Rt", 
-                  color = "#e6550d")
 
 
 ## GRÁFICO GGPLOT
@@ -390,38 +334,6 @@ posterior_R_t2 <-
     reduce(bind_rows)
 
 
-## Gráfico Rt diário
-posterior_R_e2 <- posterior_R_t2 %>%
-    mutate(fit = round(R_e_median, 2),
-           lwr=round(R_e_q0025, 2),
-           upr=round(R_e_q0975, 2))
-
-
-highchart() %>%
-    hc_add_theme(hc_theme_smpl()) %>% 
-    hc_title(text = "Número Reprodutivo Rt ARS Centro - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
-    hc_subtitle(text = "Fonte: Autores baseados nos dados da DGS") %>% 
-    hc_xAxis(categories = format(posterior_R_e2$date_point, "%b %d"),
-             tickmarkPlacement = "on",
-             title = list(enabled = FALSE)) %>% 
-    hc_yAxis(title = list(text = "Rt"),min = 0, 
-             plotLines = list(
-                 list(label = list(text = "Rt = 1"),
-                      color = "#525252",
-                      width = 2,
-                      value = 1,
-                      dashStyle = "shortdash"))) %>% 
-    
-    hc_add_series(posterior_R_e2, 
-                  hcaes( low = lwr, high = upr),     
-                  #                id = "ForecastRange-FL", 
-                  type = "arearange", 
-                  name = "Incerteza", 
-                  color = "#d9d9d9") %>% 
-    hc_add_series(data = posterior_R_e2$fit,
-                  name = "Rt", 
-                  color = "#e6550d")
-
 ## GRÁFICO GGPLOT
 graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
@@ -505,37 +417,6 @@ posterior_R_t3 <-
     ) %>% 
     reduce(bind_rows)
 
-
-## Gráfico Rt Diário
-posterior_R_e3 <- posterior_R_t3 %>%
-    mutate(fit = round(R_e_median, 2),
-           lwr=round(R_e_q0025, 2),
-           upr=round(R_e_q0975, 2))
-
-highchart() %>%
-    hc_add_theme(hc_theme_smpl()) %>% 
-    hc_title(text = "Número Reprodutivo Rt ARS LVT - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
-    hc_subtitle(text = "Fonte: Autores baseados nos dados da DGS") %>% 
-    hc_xAxis(categories = format(posterior_R_e3$date_point, "%b %d"),
-             tickmarkPlacement = "on",
-             title = list(enabled = FALSE)) %>% 
-    hc_yAxis(title = list(text = "Rt"),min = 0, 
-             plotLines = list(
-                 list(label = list(text = "Rt = 1"),
-                      color = "#525252",
-                      width = 2,
-                      value = 1,
-                      dashStyle = "shortdash"))) %>% 
-    
-    hc_add_series(posterior_R_e3, 
-                  hcaes( low = lwr, high = upr),     
-                  #id = "ForecastRange-FL", 
-                  type = "arearange", 
-                  name = "Incerteza", 
-                  color = "#d9d9d9") %>% 
-    hc_add_series(data = posterior_R_e3$fit,
-                  name = "Rt", 
-                  color = "#e6550d")
 
 ## GRÁFICO GGPLOT
 
@@ -625,36 +506,6 @@ posterior_R_t4 <-
     reduce(bind_rows)
 
 
-## Gráfico Rt Diário
-posterior_R_e4 <- posterior_R_t4 %>%
-    mutate(fit = round(R_e_median, 2),
-           lwr=round(R_e_q0025, 2),
-           upr=round(R_e_q0975, 2))
-
-highchart() %>%
-    hc_add_theme(hc_theme_smpl()) %>% 
-    hc_title(text = "Número Reprodutivo Rt ARS Alentejo - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
-    hc_subtitle(text = "Fonte: Autores baseados nos dados da DGS") %>% 
-    hc_xAxis(categories = format(posterior_R_e4$date_point, "%b %d"),
-             tickmarkPlacement = "on",
-             title = list(enabled = FALSE)) %>% 
-    hc_yAxis(title = list(text = "Rt"),min = 0, 
-             plotLines = list(
-                 list(label = list(text = "Rt = 1"),
-                      color = "#525252",
-                      width = 2,
-                      value = 1,
-                      dashStyle = "shortdash"))) %>% 
-    
-    hc_add_series(posterior_R_e4, 
-                  hcaes( low = lwr, high = upr),     
-                  #                id = "ForecastRange-FL", 
-                  type = "arearange", 
-                  name = "Incerteza", 
-                  color = "#d9d9d9") %>% 
-    hc_add_series(data = posterior_R_e4$fit,
-                  name = "Rt", 
-                  color = "#e6550d")
 
 ## GRÁFICO GGPLOT
 
@@ -741,38 +592,6 @@ posterior_R_t5 <-
         }
     ) %>% 
     reduce(bind_rows)
-
-
-## Gráfico Rt Diário
-posterior_R_e5 <- posterior_R_t5 %>%
-    mutate(fit = round(R_e_median, 2),
-           lwr=round(R_e_q0025, 2),
-           upr=round(R_e_q0975, 2))
-
-highchart() %>%
-    hc_add_theme(hc_theme_smpl()) %>% 
-    hc_title(text = "Número Reprodutivo Rt ARS Algarve - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
-    hc_subtitle(text = "Fonte: Autores baseados nos dados da DGS") %>% 
-    hc_xAxis(categories = format(posterior_R_e5$date_point, "%b %d"),
-             tickmarkPlacement = "on",
-             title = list(enabled = FALSE)) %>% 
-    hc_yAxis(title = list(text = "Rt"),min = 0, 
-             plotLines = list(
-                 list(label = list(text = "Rt = 1"),
-                      color = "#525252",
-                      width = 2,
-                      value = 1,
-                      dashStyle = "shortdash"))) %>% 
-    
-    hc_add_series(posterior_R_e5, 
-                  hcaes( low = lwr, high = upr),     
-                  # id = "ForecastRange-FL", 
-                  type = "arearange", 
-                  name = "Incerteza", 
-                  color = "#d9d9d9") %>% 
-    hc_add_series(data = posterior_R_e5$fit,
-                  name = "Rt", 
-                  color = "#e6550d")
 
 
 ## GRÁFICO GGPLOT
@@ -862,37 +681,6 @@ posterior_R_t6 <-
     reduce(bind_rows)
 
 
-## Gráfico Rt Diário
-posterior_R_e6 <- posterior_R_t6 %>%
-    mutate(fit = round(R_e_median, 2),
-           lwr=round(R_e_q0025, 2),
-           upr=round(R_e_q0975, 2))
-
-highchart() %>%
-    hc_add_theme(hc_theme_smpl()) %>% 
-    hc_title(text = "Número Reprodutivo Rt  Acores - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
-    hc_subtitle(text = "Fonte: Autores baseados nos dados da DGS") %>% 
-    hc_xAxis(categories = format(posterior_R_e6$date_point, "%b %d"),
-             tickmarkPlacement = "on",
-             title = list(enabled = FALSE)) %>% 
-    hc_yAxis(title = list(text = "Rt"),min = 0, 
-             plotLines = list(
-                 list(label = list(text = "Rt = 1"),
-                      color = "#525252",
-                      width = 2,
-                      value = 1,
-                      dashStyle = "shortdash"))) %>% 
-    
-    hc_add_series(posterior_R_e6, 
-                  hcaes( low = lwr, high = upr),     
-                  #                id = "ForecastRange-FL", 
-                  type = "arearange", 
-                  name = "Incerteza", 
-                  color = "#d9d9d9") %>% 
-    hc_add_series(data = posterior_R_e6$fit,
-                  name = "Rt", 
-                  color = "#e6550d")
-
 ## GRÁFICO GGPLOT
 
 graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
@@ -978,39 +766,6 @@ posterior_R_t7 <-
     ) %>% 
     reduce(bind_rows)
 
-
-## Gráfico Rt diário
-posterior_R_e7 <- posterior_R_t7 %>%
-    mutate(fit = round(R_e_median, 2),
-           lwr=round(R_e_q0025, 2),
-           upr=round(R_e_q0975, 2))
-
-highchart() %>%
-    hc_add_theme(hc_theme_smpl()) %>% 
-    hc_title(text = "Número Reprodutivo Rt Madeira - número médio de casos secundários por nova infecção (janela temporal de 7 dias)") %>% 
-    hc_subtitle(text = "Fonte: Autores baseados nos dados da DGS") %>% 
-    hc_xAxis(categories = format(posterior_R_e7$date_point, "%b %d"),
-             tickmarkPlacement = "on",
-             title = list(enabled = FALSE)) %>% 
-    hc_yAxis(title = list(text = "Rt"),min = 0, 
-             plotLines = list(
-                 list(label = list(text = "Rt = 1"),
-                      color = "#525252",
-                      width = 2,
-                      value = 1,
-                      dashStyle = "shortdash"))) %>% 
-    
-    hc_add_series(posterior_R_e7, 
-                  hcaes( low = lwr, high = upr),     
-                  #                id = "ForecastRange-FL", 
-                  type = "arearange", 
-                  name = "Incerteza", 
-                  color = "#d9d9d9") %>% 
-    hc_add_series(data = posterior_R_e7$fit,
-                  name = "Rt", 
-                  color = "#e6550d")
-
-
 ## GRÁFICO GGPLOT
 
 graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
@@ -1056,7 +811,6 @@ Madeira <- ggplotly(graph_Madeira) %>%
 ggarrange(PT, Norte, Centro, LVT, Alentejo, Algarve, Açores, Madeira,
           labels = "Portugal", "Norte", "Lisboa e Vale do Tejo", "Alentejo", "Algarve", "Açores", "Madeira",
           ncol = 4, nrow = 2)
-
 
 
 
@@ -2460,7 +2214,7 @@ posterior_Rt_hk <-
 ## Gráfico Hong Kong ggplot
 
 graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1) +
+    geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palevioletred1") +
     
     labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -2497,85 +2251,6 @@ ggplotly(graph_hk) %>%
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
 
-## Comparar Rt conforme SI
-sens_configs2 <- 
-    make_config(
-        list(
-            mean_si = 4.9, std_mean_si = 0.7,
-            min_mean_si = 3.6, max_mean_si = 6.2,
-            std_si = 4.4, std_std_si = 0.5,
-            min_std_si = 2.9, max_std_si = 8.3,
-            n1 = 1000,
-            n2 = 100,
-            seed = 123456789
-        )
-    )
-
-### Aplicar a função Estimate_R
-Rt_nonparam_si_hk2 <- estimate_R(as.numeric(covid_hk_var$confirmados_novos), 
-                                method = "uncertain_si",
-                                config = sens_configs2
-)
-
-sample_windows_hk2 <- seq(length(Rt_nonparam_si_hk2$R$t_start))
-
-### Criar um data frame com valores de R
-posterior_Rt_hk2 <- 
-    map(.x = sample_windows_hk2,
-        .f = function(x) {
-            
-            posterior_sample_obj_hk2 <- 
-                sample_posterior_R(
-                    R = Rt_nonparam_si_hk2,
-                    n = 1000, 
-                    window = x )
-            
-            posterior_sample_estim_hk2 <- 
-                data.frame(
-                    window_index = x,
-                    window_t_start = Rt_nonparam_si_hk2$R$t_start[x],
-                    window_t_end = Rt_nonparam_si_hk2$R$t_end[x],
-                    date_point = covid_hk_var[covid_hk_var$t_start == Rt_nonparam_si_hk2$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj_hk2),
-                    R_e_q0025 = quantile(posterior_sample_obj_hk2, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj_hk2, probs = 0.975))
-            
-            return(posterior_sample_estim_hk2)}
-    ) %>% 
-    
-    reduce(bind_rows)
-
-
-## Gráfico Hong Kong ggplot 2
-
-graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "paleturquoise4",  alpha = 0.5, size = 1) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "paleturquoise1") +
-    
-    labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados:  ",
-          x = "Tempo",
-          y = "Nº de reprodução efetivo (Rt)"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(axis.title = element_text(size = 10, hjust = 0.5),
-          plot.subtitle = element_text(size= 8),
-          axis.title.x = element_text(size = 7),
-          axis.title.y = element_text(size = 7),
-    ) +
-    
-    scale_x_date(
-        date_breaks = "1 month",
-        limits = c(min(covid_hk_var$data), max((posterior_Rt_hk2$date_point)))
-    ) +
-    
-    scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_Rt_hk2$R_e_q0975)),
-        limits = c(0, NA)
-    ) +
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
 
 # Serial Interval específico
 sens_configs <- 
@@ -2595,14 +2270,6 @@ sens_configs <-
 
 
 
-
-### Tornar gráfico interativo
-ggplotly(graph_hk2) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
 
 
 
