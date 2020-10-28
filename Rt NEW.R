@@ -146,14 +146,15 @@ posterior_R_t <-
 ## GRÁFICO ggplot
 
 ## Linhas a adicionar no gráfico
-fecho_escolas <- data.frame(Ref="Encerramento das Escolas", vals=c(as.numeric(as.Date("2020-03-16"))))
-estado_emergencia <- data.frame(Ref="Estado de Emergência", vals=c(as.numeric(as.Date("2020-03-18"))))
-medidas <- rbind(fecho_escolas, estado_emergencia)
+d=data.frame(date=as.Date(c("2020-03-16")), event=c("Encerramento das Escolas"))
+
+d1=data.frame(date1=as.Date(c("2020-03-18")), event1=c("Estado de Emergência"))
 
 
 graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                          '<br>Rt médio: ', R_e_median))) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
     
     labs(title = " Evolução do Número Efetivo Reprodutivo ao longo do tempo",
          subtitle = "Fonte de dados: DGS ",
@@ -163,7 +164,8 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
     
     theme_minimal() +
     
-    theme(axis.title = element_text(size = 10, hjust =0.5),
+    theme(title = element_text(size=15),
+          axis.title = element_text(size = 12, hjust =0.5),
           plot.subtitle = element_text(size= 8),
     ) +
     
@@ -173,27 +175,22 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
     ) +
     
     scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_R_t$R_e_q0975)),
-        limits = c(0, NA)
+        breaks = c(0:15),
+        limits = c(0, 15)
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
     
-    geom_vline(data = medidas, aes(xintercept = vals, color = Ref))
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype =event), size = 1, colour = 'grey5', alpha = 0.15, show.legend = TRUE) +
+    geom_vline(data=d1, mapping =  aes(xintercept = date1, linetype =event1), size = 1, colour = 'grey5', alpha = 0.15, show.legend = TRUE)
 
 ### Tornar gráfico interativo
-PT <- ggplotly(graph_PT) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
+PT <- ggplotly(graph_PT, tooltip = "text")
 
 PT
 
 
 # Rt Diário ARS Norte
-
 ## Substituir valores negativos por 0
 covid_pt_var[-c(2)] <- replace(covid_pt_var[-c(2)], covid_pt_var[-c(2)] < 0, 0)
 
@@ -839,6 +836,13 @@ Madeira
 
 
 
+
+## hipótese de adicionar geom_vline
+#fecho_escolas <- data.frame(Ref="Encerramento das Escolas", vals=c(as.numeric(as.Date("2020-03-16"))))
+#estado_emergencia <- data.frame(Ref="Estado de Emergência", vals=c(as.numeric(as.Date("2020-03-18"))))
+#medidas <- rbind(fecho_escolas, estado_emergencia)
+
+#geom_vline(data = medidas, aes(xintercept = vals, color = Ref))
 
 
 
