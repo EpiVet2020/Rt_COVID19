@@ -31,8 +31,6 @@ library(rjson)
 library(readr)
 library(readxl)
 
-setwd("~/Desktop/Treino Estágio 2020-2021/Rt Project")
-
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
 
@@ -111,7 +109,7 @@ Rt_nonparam_si <- estimate_R(covid_pt_var$confirmados_var,
 
 
 ### Caracterização dos valores em gráfico 
-plot(Rt_nonparam_si, legend = FALSE)
+#plot(Rt_nonparam_si, legend = FALSE)
 
 ## Determinação do Rt (sample from the posterior R distribution)
 ### Definir a nossa janela com base no t_start
@@ -176,8 +174,8 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
     
-    geom_vline(xintercept = as.numeric(as.Date("2020-04-01")), linetype=4, colour = "grey5", alpha = 0.15) +
-       geom_text(aes(x = as.numeric(as.Date("2020-04-01")), label="Encer", y=20), colour="red", angle=90, vjust = -1)
+    geom_vline(xintercept = as.numeric(as.Date("2020-03-16")), linetype=4, colour = "grey5", alpha = 0.15) +
+    geom_vline(xintercept = as.numeric(as.Date("2020-03-18")), linetype=4, colour = "grey5", alpha = 0.15)
 
     
 
@@ -190,6 +188,7 @@ PT <- ggplotly(graph_PT) %>%
                                        collapse = "")))
 
 PT
+
 
 # Rt Diário ARS Norte
 

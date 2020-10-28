@@ -7,13 +7,13 @@ output:
   html_document:
     code_folding: hide
     df_print: paged
-    theme: lumen
+    theme: cosmo
     toc: yes
     toc_depth: 3
 
   html_notebook:
     code_folding: hide
-    theme: lumen
+    theme: cosmo
     toc: yes
     toc_depth: 3
     toc_float: yes
@@ -40,13 +40,22 @@ body{
 
 ## **Introdução**
 ***
-O Número Básico de Reprodução (R0) indica, em média, quantas pessoas são infetadas por um único doente. Ou seja, é o número médio de casos secundários originados a partir de um caso primário, quando o vírus é introduzido numa população que consiste somente em indivíduos suscetíveis.
+O Número Básico de Reprodução (R0) indica o número médio de casos secundários originados a partir de um caso primário, quando o vírus é introduzido numa população que consiste somente em indivíduos suscetíveis.
 
-Por outro lado, o Número Efetivo de Reprodução (Re ou Rt) indica, em média, o nº de infeções que cada doente provoca, mas tem como ponto de partida uma população que já esteve exposta ao vírus. Ou seja, leva em conta as medidas postas em prática para travar a disseminação.
+Por outro lado, o Número Efetivo de Reprodução (Re ou Rt) indica também, em média, o nº de contágios que cada infetado provoca, mas tem como ponto de partida uma população que já esteve exposta ao vírus. Ou seja, leva em conta as medidas postas em prática para travar a disseminação. 
 
-O valor do Rt é um indicador essencial para o estudo da evolução de um surto epidémico, que pode ser usado para medir a efetividade das medidas de contenção e atraso e ainda avaliar o momento mais adequado para o levantamento das restrições implementadas.
+O valor que fomos calcular neste projeto foi o Rt, sendo um indicador essencial para o estudo da evolução de um surto epidémico, permitindo avaliar a efetividade das medidas de contenção e analisar qual o momento mais adequado para o levantamento das restrições implementadas.
 
-Quando o valor do R se encontra acima de 1, significa que a epidemia continua a crescer e que o número de novos casos será superior ao número de casos atuais; por outro lado, quando Rt é igual a 1, ocorre o limiar da transmissão (abaixo deste valor a doença é incapaz de se manter numa população). O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disponibilidade de uma vacina eficaz.
+<br>
+
+### Interpretação dos valores de Rt
+
+* Quando R > 1, significa que a epidemia continua a crescer e que o número de novos casos será superior ao número de casos atuais; 
+* Por outro lado, quando Rt = 1, ocorre o limiar da transmissão (abaixo deste valor a doença é incapaz de se manter numa população). 
+
+O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disponibilidade de uma vacina eficaz.
+
+<br>
 
 Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em Portugal e, mais especificamente, em cada região do país. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data.
 <br>
@@ -54,7 +63,7 @@ Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em 
 
 <ul>
   <li>Portugal</li>
-  <li>Administrações Regionais de Saúde (ARS's)<li>
+  <li>Administrações Regionais de Saúde (ARS's)</li>
   <li>Análise comparativa entre regiões</li>
 </ul>
 
@@ -92,6 +101,7 @@ library(RColorBrewer)
 library(rjson)
 library(readr)
 library(readxl)
+library(prettydoc)
 
 #Importar dados
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -111,16 +121,13 @@ Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de inf
 
 <br>
 
-Através deste gráfico, podemos observar que o número médio de pessoas contagiadas por cada infetado chegou a assumir valores de Rt de 4,97 no início da pandemia (07/03/2020), tento posteriormente diminuído na sequência do encerramento das escolas em Portugal (dia 16 de Março) e a entrada do país em estado de emergência (dia 18 de Março).
+Através do gráfico abaixo, podemos observar que o número médio de pessoas contagiadas por cada infetado chegou a assumir valores de Rt de 4,97 no início da pandemia (07/03/2020), tento posteriormente diminuído na sequência do encerramento das escolas em Portugal (dia 16 de Março) e a entrada do país em estado de emergência (dia 18 de Março).
 
 A média do R(t) para o período entre 16 de Abril e 6 de Maio manteve-se abaixo de 1, significando que, neste período, um caso infetado originou em média menos de 1 caso secundário, o que indica uma redução expressiva da transmissão da infeção desde a implementação das medidas de contenção em Portugal. 
 
-O QUE ACONTECEU DEPOIS? descrever.
-
-Em termos gerais, podemos dizer que o valor do R tem vindo a descer gradualmente desde o início do surto em Portugal.
+Em finais de Outubro, os valores de Rt voltaram a aumentar, possivelmente com a abertura de algumas restrições. Em Setembro, o Rt chegou a atingir valores de 1,358 com o consequente regresso às aulas, tendo atingido o valor mais alto no dia 16 de Outubro de 2020 (Rt = 1,477).
 
 <br>
-
 ```{r pressure, fig.align='center', warning=FALSE}
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
 covid19pt <- mutate(covid19pt, 
@@ -277,7 +284,8 @@ Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de inf
 ### ARS Norte
 <br>
 
-TEXTO
+Através da análise deste gráfico, podemos verificar que a ARS Norte apresentou o valor mais alto de Rt no início da pandemia (6,14 no dia 7 de Março), o que justifica o elevado número de casos nesta região no período inicial. O elevado número de contágios não foi eficazmente controlado até serem implementadas medidas de restrição em todo o país (dias 16 e 18 de Março). 
+Até dia 1 de Junho os valores de Rt foram diminuindo, chegando a apresentar o valor mais baixo desde então (0,33). Desde então, o Rt voltou a apresentar valores acima de 1, tendo apresentado um segundo pico no dia 8 de Junho (1,674).
 
 ```{r,fig.align='center', warning=FALSE}
 # Rt Diário ARS Norte
@@ -292,6 +300,9 @@ Rt_nonparam_si1 <-
         method = "uncertain_si",
         config = sens_configs
     )
+
+## Gráfico
+#plot(Rt_nonparam_si1, legend = FALSE)
 
 ## Posterior sample Rt estimate
 sample_windows1 <- seq(length(Rt_nonparam_si1$R$t_start))
@@ -331,9 +342,10 @@ posterior_R_e1 <- posterior_R_t1 %>%
            lwr=round(R_e_q0025, 2),
            upr=round(R_e_q0975, 2))
 
+
 ## GRÁFICO GGPLOT
 
-graph_PT1<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
+graph_Norte<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
@@ -361,11 +373,14 @@ graph_PT1<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
         limits = c(0, NA)
     ) +
     
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    
+    geom_vline(xintercept = as.numeric(as.Date("2020-03-16")), linetype=4, colour = "grey5", alpha = 0.15) +
+    geom_vline(xintercept = as.numeric(as.Date("2020-03-18")), linetype=4, colour = "grey5", alpha = 0.15)
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT1) %>%
+Norte <- ggplotly(graph_Norte) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -383,7 +398,7 @@ TEXTO
 
 <br>
 
-```{r}
+```{r,fig.align='center', warning=FALSE}
 Rt_nonparam_si2 <- 
     estimate_R(
         covid_pt_var$confirmados_var_centro, 
@@ -472,7 +487,7 @@ Centro <- ggplotly(graph_Centro) %>%
 TEXTO
 
 <br>
-```{r}
+```{r,fig.align='center', warning=FALSE}
 Rt_nonparam_si3 <- 
     estimate_R(
         covid_pt_var$confirmados_var_lvt, 
@@ -564,7 +579,7 @@ LVT <- ggplotly(graph_LVT) %>%
 TEXTO
 
 <br>
-```{r}
+```{r,fig.align='center', warning=FALSE}
 Rt_nonparam_si4 <- 
     estimate_R(
         covid_pt_var$confirmados_var_alentejo, 
@@ -657,7 +672,7 @@ TEXTO
 
 <br>
 
-```{r}
+```{r,fig.align='center', warning=FALSE}
 Rt_nonparam_si5 <- 
     estimate_R(
         covid_pt_var$confirmados_var_algarve, 
@@ -751,7 +766,7 @@ Algarve <- ggplotly(graph_Algarve) %>%
 TEXTO
 
 <br>
-```{r}
+```{r,fig.align='center', warning=FALSE}
 Rt_nonparam_si6 <- 
     estimate_R(
         covid_pt_var$confirmados_var_acores, 
@@ -843,7 +858,7 @@ TEXTO
 
 <br>
 
-```{r}
+```{r,fig.align='center', warning=FALSE}
 Rt_nonparam_si7 <- 
     estimate_R(
         covid_pt_var$confirmados_var_madeira, 
@@ -925,23 +940,3 @@ Madeira <- ggplotly(graph_Madeira) %>%
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
 ```
-
-<br>
-
-## **Outros Países** {.tabset .tabset-fade .tabset-pills}
-***
-
-TEXTO
-
-<br>
-
-### Itália
-<br>
-
-TEXTO
-
-```{r,fig.align='center', warning=FALSE}
-
-```
-
-<br>
