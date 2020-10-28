@@ -59,8 +59,6 @@ O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disp
 
 Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em Portugal e, mais especificamente, em cada região do país. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data.
 <br>
-<br>
-
 <ul>
   <li>Portugal</li>
   <li>Administrações Regionais de Saúde (ARS's)</li>
@@ -118,9 +116,7 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 ***
 
 Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de infeção em Portugal com base na evolução do Rt.
-
 <br>
-
 Através do gráfico abaixo, podemos observar que o número médio de pessoas contagiadas por cada infetado chegou a assumir valores de Rt de 4,97 no início da pandemia (07/03/2020), tento posteriormente diminuído na sequência do encerramento das escolas em Portugal (dia 16 de Março) e a entrada do país em estado de emergência (dia 18 de Março).
 
 A média do R(t) para o período entre 16 de Abril e 6 de Maio manteve-se abaixo de 1, significando que, neste período, um caso infetado originou em média menos de 1 caso secundário, o que indica uma redução expressiva da transmissão da infeção desde a implementação das medidas de contenção em Portugal. 
