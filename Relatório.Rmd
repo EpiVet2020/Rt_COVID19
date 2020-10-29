@@ -99,7 +99,7 @@ library(RColorBrewer)
 library(rjson)
 library(readr)
 library(readxl)
-library(prettydoc)
+library(scales)
 
 #Importar dados
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -242,10 +242,11 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b-%d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t$date_point))
     ) +
     
@@ -255,9 +256,7 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    
-    geom_vline(xintercept = as.numeric(as.Date("2020-03-16")), linetype=4, colour = "grey5", alpha = 0.15) +
-    geom_vline(xintercept = as.numeric(as.Date("2020-03-18")), linetype=4, colour = "grey5", alpha = 0.15)
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
 
 ### Tornar gráfico interativo
 ggplotly(graph_PT) %>%
@@ -281,7 +280,7 @@ Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de inf
 <br>
 
 Através da análise deste gráfico, podemos verificar que a ARS Norte apresentou o valor mais alto de Rt no início da pandemia (6,14 no dia 7 de Março), o que justifica o elevado número de casos nesta região no período inicial. O elevado número de contágios não foi eficazmente controlado até serem implementadas medidas de restrição em todo o país (dias 16 e 18 de Março). 
-Até dia 1 de Junho os valores de Rt foram diminuindo, chegando a apresentar o valor mais baixo desde então (0,33). Desde então, o Rt voltou a apresentar valores acima de 1, tendo apresentado um segundo pico no dia 8 de Junho (1,674).
+Até dia 1 de Junho os valores de Rt foram diminuindo, chegando a apresentar o valor mais baixo desde o início da pandemia (0,33). Desde então, o Rt voltou a apresentar valores acima de 1, tendo apresentado um segundo pico no dia 8 de Junho (1,674).
 
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
 # Rt Diário ARS Norte
@@ -357,10 +356,11 @@ graph_Norte<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b-%d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t1$date_point))
     ) +
     
@@ -370,9 +370,7 @@ graph_Norte<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    
-    geom_vline(xintercept = as.numeric(as.Date("2020-03-16")), linetype=4, colour = "grey5", alpha = 0.15) +
-    geom_vline(xintercept = as.numeric(as.Date("2020-03-18")), linetype=4, colour = "grey5", alpha = 0.15)
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
 
 
 ### Tornar gráfico interativo
@@ -451,10 +449,11 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b-%d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t2$date_point))
     ) +
     
@@ -463,7 +462,8 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
         limits = c(0, NA)
     ) +
     
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15))
 
 ### Tornar gráfico interativo
 ggplotly(graph_Centro) %>%
@@ -542,10 +542,11 @@ graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b-%d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t3$date_point))
     ) +
     
@@ -554,7 +555,8 @@ graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
         limits = c(0, NA)
     ) +
     
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
 
 
 ### Tornar gráfico interativo
@@ -634,19 +636,21 @@ graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b-%d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t4$date_point))
     ) +
     
     scale_y_continuous(
         breaks = 0:ceiling(max(posterior_R_t4$R_e_q0975)),
-        limits = c(0, NA)
+        limits = c(0, 20)
     ) +
     
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
 
 
 ### Tornar gráfico interativo
@@ -728,19 +732,21 @@ graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b-%d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t5$date_point))
     ) +
     
     scale_y_continuous(
         breaks = 0:ceiling(max(posterior_R_t5$R_e_q0975)),
-        limits = c(0, NA)
+        limits = c(0, 20)
     ) +
     
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
 
 
 ### Tornar gráfico interativo
@@ -823,7 +829,7 @@ graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b-%d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t6$date_point))
     ) +
     
@@ -916,7 +922,7 @@ graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b-%d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t7$date_point))
     ) +
     
