@@ -72,6 +72,7 @@ library(testthat)
 library(rlang)
 library(dplyr)
 library(ggplot2)
+library(ggpubr)
 library(ggthemes)
 library(plotly)
 library(data.table)
@@ -92,7 +93,6 @@ library(jsonlite)
 library(RCurl)
 library(highcharter)
 library(here)
-library(incidence)
 library(purrr)
 library(magrittr)
 library(RColorBrewer)
@@ -124,7 +124,9 @@ A média do R(t) para o período entre 16 de Abril e 6 de Maio manteve-se abaixo
 Em finais de Outubro, os valores de Rt voltaram a aumentar, possivelmente com a abertura de algumas restrições. Em Setembro, o Rt chegou a atingir valores de 1,358 com o consequente regresso às aulas, tendo atingido o valor mais alto no dia 16 de Outubro de 2020 (Rt = 1,477).
 
 <br>
-```{r pressure, fig.align='center', warning=FALSE, message= FALSE}
+
+```{r pressure, fig.align='center', warning=FALSE}
+
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
 covid19pt <- mutate(covid19pt, 
                     confirmados_lag = lag(confirmados),
@@ -191,8 +193,7 @@ sens_configs <-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si <- estimate_R(covid_pt_var$confirmados_var, 
                              method = "uncertain_si",
-                             config = sens_configs
-)
+                             config = sens_configs )
 
 ## Determinação do Rt (sample from the posterior R distribution)
 ### Definir a nossa janela com base no t_start
@@ -225,10 +226,22 @@ posterior_R_t <-
     ##Combines elements into a single value
     reduce(bind_rows)
 
+
 ## GRÁFICO ggplot
+
+## Linhas a adicionar no gráfico
+d=data.frame(date=as.Date(c("2020-03-16")), event=c("Encerramento das Escolas"))
+
+d1=data.frame(date1=as.Date(c("2020-03-18")), event1=c("Estado de Emergência"))
+
+d2=data.frame(date2=as.Date(c("2020-10-15")), event2=c("Estado de Calamidade"))
+
+
+
 graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                          '<br>Rt médio: ', R_e_median))) +
+    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
     
     labs(title = " Evolução do Número Efetivo Reprodutivo ao longo do tempo",
          subtitle = "Fonte de dados: DGS ",
@@ -238,33 +251,33 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
     
     theme_minimal() +
     
-    theme(axis.title = element_text(size = 10, hjust =0.5),
+    theme(title = element_text(size=15),
+          axis.title = element_text(size = 12, hjust =0.5),
           plot.subtitle = element_text(size= 8),
-          axis.title.x = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1),
           axis.title.y = element_text(size = 7),
-          axis.text.x = element_text(angle = 60, hjust = 1)
+          axis.title.x = element_text(size = 7),
     ) +
     
     scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b-%d"),
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t$date_point))
     ) +
     
     scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_R_t$R_e_q0975)),
-        limits = c(0, NA)
+        breaks = c(0:15),
+        limits = c(0, 15)
     ) +
     
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
+    geom_vline(data=d1, mapping =  aes(xintercept = date1, linetype =event1), size = 1, colour = 'grey5', alpha = 0.15, show.legend = TRUE) +
+  
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype =event), size = 1, colour = 'grey5', alpha = 0.15, show.legend = TRUE) +
+  
+    geom_vline(data=d2, mapping =  aes(xintercept = date2, linetype =event2), size = 1, colour = 'grey5', alpha = 0.15, show.legend = TRUE) 
+      
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
+PT <- ggplotly(graph_PT, tooltip = "text")
 ```
 
 <br>
@@ -284,7 +297,6 @@ Até dia 1 de Junho os valores de Rt foram diminuindo, chegando a apresentar o v
 
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
 # Rt Diário ARS Norte
-
 ## Substituir valores negativos por 0
 covid_pt_var[-c(2)] <- replace(covid_pt_var[-c(2)], covid_pt_var[-c(2)] < 0, 0)
 
@@ -340,7 +352,7 @@ posterior_R_e1 <- posterior_R_t1 %>%
 
 ## GRÁFICO GGPLOT
 
-graph_Norte<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
+graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
@@ -360,18 +372,18 @@ graph_Norte<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
     ) +
     
     scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b-%d"),
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t1$date_point))
     ) +
     
     scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_R_t1$R_e_q0975)),
-        limits = c(0, NA)
+        breaks = c(0:15),
+        limits = c(0, 15)
     ) +
-    
+  
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
     geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
-
+    
 
 ### Tornar gráfico interativo
 ggplotly(graph_Norte) %>%
@@ -393,12 +405,17 @@ TEXTO
 <br>
 
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
+# Rt Diário ARS Centro 
+
 Rt_nonparam_si2 <- 
     estimate_R(
         covid_pt_var$confirmados_var_centro, 
         method = "uncertain_si",
         config = sens_configs
     )
+
+## Gráfico
+#plot(Rt_nonparam_si2, legend = FALSE)
 
 ## Posterior sample Rt estimate
 sample_windows2 <- seq(length(Rt_nonparam_si2$R$t_start))
@@ -453,17 +470,19 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
     ) +
     
     scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b-%d"),
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t2$date_point))
     ) +
     
     scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_R_t2$R_e_q0975)),
-        limits = c(0, NA)
+        breaks = c(0:15),
+        limits = c(0, 15)
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15))
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
+
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_Centro) %>%
@@ -484,12 +503,17 @@ TEXTO
 
 <br>
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
+# Rt ARS Lisboa e Vale do Tejo
+
 Rt_nonparam_si3 <- 
     estimate_R(
         covid_pt_var$confirmados_var_lvt, 
         method = "uncertain_si",
         config = sens_configs
     )
+
+## Gráfico
+#plot(Rt_nonparam_si3, legend = FALSE)
 
 ## Posterior sample Rt estimate
 sample_windows3 <- seq(length(Rt_nonparam_si3$R$t_start))
@@ -546,17 +570,18 @@ graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
     ) +
     
     scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b-%d"),
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t3$date_point))
     ) +
     
     scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_R_t3$R_e_q0975)),
-        limits = c(0, NA)
+        breaks = c(0:15),
+        limits = c(0, 15)
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
     geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
+
 
 
 ### Tornar gráfico interativo
@@ -578,12 +603,17 @@ TEXTO
 
 <br>
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
+# Rt ARS Alentejo
+
 Rt_nonparam_si4 <- 
     estimate_R(
         covid_pt_var$confirmados_var_alentejo, 
         method = "uncertain_si",
         config = sens_configs
     )
+
+## Gráfico
+#plot(Rt_nonparam_si4, legend = FALSE)
 
 ## Posterior sample Rt estimate
 sample_windows4 <- seq(length(Rt_nonparam_si4$R$t_start))
@@ -618,6 +648,7 @@ posterior_R_t4 <-
     reduce(bind_rows)
 
 
+
 ## GRÁFICO GGPLOT
 
 graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
@@ -640,21 +671,22 @@ graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
     ) +
     
     scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b-%d"),
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t4$date_point))
     ) +
     
     scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_R_t4$R_e_q0975)),
-        limits = c(0, 20)
+        limits = c(0, 15),
+        breaks = c(0:15),
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
     geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
 
 
+
 ### Tornar gráfico interativo
-Alentejo <- ggplotly(graph_Alentejo) %>%
+ggplotly(graph_Alentejo) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -673,6 +705,8 @@ TEXTO
 <br>
 
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
+# Rt ARS Algarve
+
 Rt_nonparam_si5 <- 
     estimate_R(
         covid_pt_var$confirmados_var_algarve, 
@@ -680,6 +714,8 @@ Rt_nonparam_si5 <-
         config = sens_configs
     )
 
+## Gráfico
+#plot(Rt_nonparam_si5, legend = FALSE)
 
 ## Posterior sample Rt estimate
 sample_windows5 <- seq(length(Rt_nonparam_si5$R$t_start))
@@ -736,7 +772,7 @@ graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
     ) +
     
     scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b-%d"),
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t5$date_point))
     ) +
     
@@ -744,9 +780,10 @@ graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
         breaks = 0:ceiling(max(posterior_R_t5$R_e_q0975)),
         limits = c(0, 20)
     ) +
-    
+  
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
     geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
+
 
 
 ### Tornar gráfico interativo
@@ -756,6 +793,7 @@ ggplotly(graph_Algarve) %>%
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
+
 
 ```
 
@@ -769,12 +807,17 @@ TEXTO
 
 <br>
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
+# Rt ARS Açores
+
 Rt_nonparam_si6 <- 
     estimate_R(
         covid_pt_var$confirmados_var_acores, 
         method = "uncertain_si",
         config = sens_configs
     )
+
+## Gráfico
+#plot(Rt_nonparam_si6, legend = FALSE)
 
 ## Posterior sample Rt estimate
 sample_windows6 <- seq(length(Rt_nonparam_si6$R$t_start))
@@ -808,6 +851,7 @@ posterior_R_t6 <-
     ) %>% 
     reduce(bind_rows)
 
+
 ## GRÁFICO GGPLOT
 
 graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
@@ -826,10 +870,11 @@ graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b-%d"),
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t6$date_point))
     ) +
     
@@ -842,12 +887,13 @@ graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_Açores) %>%
+Açores <- ggplotly(graph_Açores) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
                                          rep("\n&nbsp;", 2)),
                                        collapse = "")))
+
 ```
 
 <br>
@@ -867,6 +913,9 @@ Rt_nonparam_si7 <-
         method = "uncertain_si",
         config = sens_configs
     )
+
+## Gráfico
+#plot(Rt_nonparam_si7, legend = FALSE)
 
 ## Posterior sample Rt estimate
 sample_windows7 <- seq(length(Rt_nonparam_si7$R$t_start))
@@ -900,7 +949,6 @@ posterior_R_t7 <-
     ) %>% 
     reduce(bind_rows)
 
-
 ## GRÁFICO GGPLOT
 
 graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
@@ -919,10 +967,11 @@ graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b-%d"),
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_pt_var$data), max(posterior_R_t7$date_point))
     ) +
     
@@ -935,7 +984,7 @@ graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_Madeira) %>%
+Madeira <- ggplotly(graph_Madeira) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
