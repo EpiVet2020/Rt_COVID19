@@ -66,7 +66,7 @@ Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em 
 </ul>
 
 <br>
-```{r warning=FALSE, message=FALSE}
+```{r warning=FALSE, message=FALSE, message= FALSE}
 #Libraries
 library(testthat)
 library(rlang)
@@ -124,7 +124,7 @@ A média do R(t) para o período entre 16 de Abril e 6 de Maio manteve-se abaixo
 Em finais de Outubro, os valores de Rt voltaram a aumentar, possivelmente com a abertura de algumas restrições. Em Setembro, o Rt chegou a atingir valores de 1,358 com o consequente regresso às aulas, tendo atingido o valor mais alto no dia 16 de Outubro de 2020 (Rt = 1,477).
 
 <br>
-```{r pressure, fig.align='center', warning=FALSE}
+```{r pressure, fig.align='center', warning=FALSE, message= FALSE}
 # Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
 covid19pt <- mutate(covid19pt, 
                     confirmados_lag = lag(confirmados),
@@ -283,7 +283,7 @@ Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de inf
 Através da análise deste gráfico, podemos verificar que a ARS Norte apresentou o valor mais alto de Rt no início da pandemia (6,14 no dia 7 de Março), o que justifica o elevado número de casos nesta região no período inicial. O elevado número de contágios não foi eficazmente controlado até serem implementadas medidas de restrição em todo o país (dias 16 e 18 de Março). 
 Até dia 1 de Junho os valores de Rt foram diminuindo, chegando a apresentar o valor mais baixo desde então (0,33). Desde então, o Rt voltou a apresentar valores acima de 1, tendo apresentado um segundo pico no dia 8 de Junho (1,674).
 
-```{r,fig.align='center', warning=FALSE}
+```{r,fig.align='center', warning=FALSE, message= FALSE}
 # Rt Diário ARS Norte
 
 ## Substituir valores negativos por 0
@@ -376,7 +376,7 @@ graph_Norte<- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-Norte <- ggplotly(graph_Norte) %>%
+ggplotly(graph_Norte) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -394,7 +394,7 @@ TEXTO
 
 <br>
 
-```{r,fig.align='center', warning=FALSE}
+```{r,fig.align='center', warning=FALSE, message= FALSE}
 Rt_nonparam_si2 <- 
     estimate_R(
         covid_pt_var$confirmados_var_centro, 
@@ -466,7 +466,7 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
 
 ### Tornar gráfico interativo
-Centro <- ggplotly(graph_Centro) %>%
+ggplotly(graph_Centro) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -483,7 +483,7 @@ Centro <- ggplotly(graph_Centro) %>%
 TEXTO
 
 <br>
-```{r,fig.align='center', warning=FALSE}
+```{r,fig.align='center', warning=FALSE, message= FALSE}
 Rt_nonparam_si3 <- 
     estimate_R(
         covid_pt_var$confirmados_var_lvt, 
@@ -558,7 +558,7 @@ graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-LVT <- ggplotly(graph_LVT) %>%
+ggplotly(graph_LVT) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -575,7 +575,7 @@ LVT <- ggplotly(graph_LVT) %>%
 TEXTO
 
 <br>
-```{r,fig.align='center', warning=FALSE}
+```{r,fig.align='center', warning=FALSE, message= FALSE}
 Rt_nonparam_si4 <- 
     estimate_R(
         covid_pt_var$confirmados_var_alentejo, 
@@ -668,7 +668,7 @@ TEXTO
 
 <br>
 
-```{r,fig.align='center', warning=FALSE}
+```{r,fig.align='center', warning=FALSE, message= FALSE}
 Rt_nonparam_si5 <- 
     estimate_R(
         covid_pt_var$confirmados_var_algarve, 
@@ -744,7 +744,7 @@ graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-Algarve <- ggplotly(graph_Algarve) %>%
+ggplotly(graph_Algarve) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -762,7 +762,7 @@ Algarve <- ggplotly(graph_Algarve) %>%
 TEXTO
 
 <br>
-```{r,fig.align='center', warning=FALSE}
+```{r,fig.align='center', warning=FALSE, message= FALSE}
 Rt_nonparam_si6 <- 
     estimate_R(
         covid_pt_var$confirmados_var_acores, 
@@ -836,7 +836,7 @@ graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-Açores <- ggplotly(graph_Açores) %>%
+ggplotly(graph_Açores) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
@@ -854,7 +854,7 @@ TEXTO
 
 <br>
 
-```{r,fig.align='center', warning=FALSE}
+```{r,fig.align='center', warning=FALSE, message= FALSE}
 Rt_nonparam_si7 <- 
     estimate_R(
         covid_pt_var$confirmados_var_madeira, 
@@ -929,7 +929,7 @@ graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-Madeira <- ggplotly(graph_Madeira) %>%
+ggplotly(graph_Madeira) %>%
     layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                          "Nº de reprodução efetivo (Rt)",
                                          rep("&nbsp;", 20),
