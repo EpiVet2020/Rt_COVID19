@@ -147,12 +147,7 @@ posterior_R_t <-
 ## GRÁFICO ggplot
 
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16")), event=c("Encerramento das Escolas"))
-
-d1=data.frame(date1=as.Date(c("2020-03-18")), event1=c("Estado de Emergência"))
-
-d2=data.frame(date2=as.Date(c("2020-10-15")), event2=c("Estado de Calamidade"))
-
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
 
 
 graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
@@ -162,7 +157,7 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
     
     labs(title = " Evolução do Número Efetivo Reprodutivo ao longo do tempo",
          subtitle = "Fonte de dados: DGS ",
-         x = "Tempo",
+         x = "Data",
          y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -185,14 +180,13 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
         breaks = c(0:15),
         limits = c(0, 15)
     ) +
-  
-    geom_vline(data=d1, mapping =  aes(xintercept = date1, linetype =event1), size = 1, colour = 'grey5', alpha = 0.15, show.legend = TRUE) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype =event), size = 1, colour = 'grey5', alpha = 0.15, show.legend = TRUE) +
-    geom_vline(data=d2, mapping =  aes(xintercept = date2, linetype =event2), size = 1, colour = 'grey5', alpha = 0.15, show.legend = TRUE) 
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
       
 
 ### Tornar gráfico interativo
-PT <- ggplotly(graph_PT, tooltip = "text")
+ggplotly(graph_PT, tooltip = "text")
 
 PT
 
@@ -252,6 +246,8 @@ posterior_R_e1 <- posterior_R_t1 %>%
 
 
 ## GRÁFICO GGPLOT
+## Linhas a adicionar no gráfico
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
 
 graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
@@ -259,7 +255,7 @@ graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " ARS Norte - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: DGS ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -283,7 +279,9 @@ graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
     ) +
   
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
+
     
 
 ### Tornar gráfico interativo
@@ -342,13 +340,16 @@ posterior_R_t2 <-
 
 
 ## GRÁFICO GGPLOT
+## Linhas a adicionar no gráfico
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+
 graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
     labs( title = " ARS Centro - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: DGS ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -372,8 +373,8 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
-
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
 
 
 ### Tornar gráfico interativo
@@ -432,14 +433,15 @@ posterior_R_t3 <-
 
 
 ## GRÁFICO GGPLOT
-
+## Linhas a adicionar no gráfico
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
 graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
     labs( title = " ARS LVT - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: DGS ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -463,8 +465,8 @@ graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
-
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
 
 
 ### Tornar gráfico interativo
@@ -526,6 +528,8 @@ posterior_R_t4 <-
 
 
 ## GRÁFICO GGPLOT
+## Linhas a adicionar no gráfico
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
 
 graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
@@ -533,7 +537,7 @@ graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " ARS Alentejo - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: DGS ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -557,7 +561,8 @@ graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
     ) +
     
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
 
 
 
@@ -618,6 +623,8 @@ posterior_R_t5 <-
 
 
 ## GRÁFICO GGPLOT
+## Linhas a adicionar no gráfico
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
 
 graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
@@ -625,7 +632,7 @@ graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " ARS Algarve - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: DGS ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -649,7 +656,8 @@ graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
     ) +
   
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype=4, colour = "grey5", alpha = 0.15)
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
 
 
 
@@ -717,7 +725,7 @@ graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " ARS Açores - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: DGS ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -806,7 +814,7 @@ graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " ARS Madeira - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: DGS ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -933,6 +941,9 @@ posterior_Rt_it <-
 
 
 ## Gráfico Itália ggplot
+## Linhas a adicionar no gráfico
+d_it = data.frame(date=as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15")), Evento=c("Confinamento obrigatório", "Levantamento das restrições às movimentações", "Obrigatoriedade de máscara", "Encerramento de escolas e universidades"))
+
 
 graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "indianred",  alpha = 0.5, size = 1.5) +
@@ -940,7 +951,7 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
     
     labs( title = "Itália - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -950,10 +961,11 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_it_var$Date), max((posterior_Rt_it$date_point)))
     ) +
     
@@ -961,7 +973,10 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
         breaks = 0:ceiling(max(posterior_Rt_it$R_e_q0975)),
         limits = c(0, NA)
     ) +
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -1013,7 +1028,7 @@ names(ger_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_ger_var <- ger_var  %>%
-    filter(ger_var$Data > as.Date("2020-02-28")) %>% 
+    filter(ger_var$data > as.Date("2020-02-28")) %>% 
     dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Alemanha - Uncertainty method --> "uncertain_si"
@@ -1068,6 +1083,8 @@ posterior_Rt_ger <-
 
 
 ## Gráfico Alemanha ggplot
+## Linhas a adicionar no gráfico
+d_ger = data.frame(date=as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04")), Evento=c("Encerramento de escolas", "Estado de Emergência", "Reabertura de lojas", "Reabertura de escolas"))
 
 graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "goldenrod",  alpha = 0.5, size = 1.5) +
@@ -1075,7 +1092,7 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
     
     labs( title = "Alemanha - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -1085,10 +1102,11 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_ger_var$data), max((posterior_Rt_ger$date_point)))
     ) +
     
@@ -1096,7 +1114,10 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
         breaks = 0:ceiling(max(posterior_Rt_ger$R_e_q0975)),
         limits = c(0, NA)
     ) +
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04"))), linetype= c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
+    geom_vline(data=d_ger, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -1194,6 +1215,9 @@ posterior_Rt_spa <-
 
 
 ## Gráfico Espanha ggplot
+## Linhas a adicionar no gráfico
+d_spa = data.frame(date=as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25")), Evento=c("Estado de Emergência", "Início do desconfinamento", "Estado de Emergência - região autónoma de Madrid", "Estado de Emergência nacional"))
+
 
 graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "thistle3",  alpha = 0.8, size = 1.5) +
@@ -1201,7 +1225,7 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
     
     labs( title = "Espanha - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -1211,10 +1235,11 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_spa_var$data), max((posterior_Rt_spa$date_point)))
     ) +
     
@@ -1222,7 +1247,10 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
         breaks = 0:ceiling(max(posterior_Rt_spa$R_e_q0975)),
         limits = c(0, NA)
     ) +
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25"))), linetype = c("solid", "dotdash", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
+    geom_vline(data=d_spa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -1322,6 +1350,8 @@ posterior_Rt_bel <-
 
 
 ## Gráfico Bélgica ggplot
+## Linhas a adicionar no gráfico
+d_bel = data.frame(date=as.Date(c("2020-03-13", "2020-03-18", "2020-06-08", "2020-09-24")), Evento=c("Confinamento parcial", "Confinamento total", "Reabertura cafés e restaurantes", "Novas restrições"))
 
 graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "royalblue2",  alpha = 0.65, size = 1.5) +
@@ -1329,7 +1359,7 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
     
     labs( title = "Bélgica - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -1339,10 +1369,11 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_bel_var$data), max((posterior_Rt_bel$date_point)))
     ) +
     
@@ -1350,7 +1381,10 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
         breaks = 0:ceiling(max(posterior_Rt_bel$R_e_q0975)),
         limits = c(0, NA)
     ) +
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-18", "2020-06-08", "2020-09-24"))), linetype = c("solid", "twodash", "dotdash", "dotted"), colour = "darkred" , alpha = 0.5) +
+    geom_vline(data=d_bel, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -1387,11 +1421,11 @@ sens_configs <-
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 ## Alterar formato para data
-czechr$datum <- as.Date(czechr$datum, "%Y-%m-%d")
+czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d")
 
 ## Tabela confirmados novos
 cz_var <- czechr %>%
-    select(datum, prirustkovy_pocet_nakazenych)
+    select(ï..datum, prirustkovy_pocet_nakazenych)
 names(cz_var) <- c("data", "confirmados_novos")
 
 
@@ -1452,6 +1486,8 @@ posterior_Rt_cz <-
 
 
 ## Gráfico Républica Checa ggplot
+## Linhas a adicionar no gráfico
+d_cz = data.frame(date=as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22")), Evento=c("Estado de Emergência", "Reabertura de lojas", "Estado de Emergência", "Proibição de movimentações"))
 
 graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "steelblue3",  alpha = 0.65, size = 1.5) +
@@ -1459,7 +1495,7 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
     
     labs( title = "Républica Checa - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -1469,10 +1505,11 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_cz_var$data), max((posterior_Rt_cz$date_point)))
     ) +
     
@@ -1480,7 +1517,10 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
         breaks = 0:ceiling(max(posterior_Rt_cz$R_e_q0975)),
         limits = c(0, NA)
     ) +
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22"))), linetype = c("solid", "dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
+    geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -1504,8 +1544,6 @@ sens_configs <-
             seed = 123456789
         )
     )
-
-
 
 
 
@@ -1581,6 +1619,8 @@ posterior_Rt_swi <-
 
 
 ## Gráfico Suíça ggplot
+## Linhas a adicionar no gráfico
+d_swi = data.frame(date=as.Date(c("2020-03-13", "2020-04-27", "2020-10-19")), Evento=c("Encerramento de escolas, probição de eventos e controlo de fronteiras", "Levantamento gradual das restrições", "Proibição de ajuntamentos"))
 
 graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "antiquewhite4",  alpha = 0.65, size = 1.5) +
@@ -1588,7 +1628,7 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
     
     labs( title = "Suiça - Evolução do Número Efetivo Reprodutivo longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -1598,10 +1638,11 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_swi_var$data), max((posterior_Rt_swi$date_point)))
     ) +
     
@@ -1609,7 +1650,10 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
         breaks = 0:ceiling(max(posterior_Rt_swi$R_e_q0975)),
         limits = c(0, NA)
     ) +
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
+    geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -1633,8 +1677,6 @@ sens_configs <-
             seed = 123456789
         )
     )
-
-
 
 
 
@@ -1712,14 +1754,16 @@ posterior_Rt_uk <-
 
 
 ## Gráfico Reino Unido ggplot
+## Linhas a adicionar no gráfico
+d_uk = data.frame(date=as.Date(c("2020-03-24", "2020-05-22", "2020-09-14")), Evento=c("Confinamento obrigatório", "Quarentena obrigatória para quem chega", "Proibição de ajuntamentos"))
 
 graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "rosybrown3",  alpha = 0.65, size = 1.5) +
+    geom_line(colour = "plum4",  alpha = 0.65, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.2, fill = "rosybrown2") +
     
     labs( title = "Reino Unido - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -1729,10 +1773,11 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_uk_var$data), max((posterior_Rt_uk$date_point)))
     ) +
     
@@ -1740,7 +1785,10 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
         breaks = 0:ceiling(max(posterior_Rt_uk$R_e_q0975)),
         limits = c(0, NA)
     ) +
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-24", "2020-05-22", "2020-09-14"))), linetype = c("solid", "dotted", "twodash"), colour = "darkred" , alpha = 0.5) +
+    geom_vline(data=d_uk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -1764,8 +1812,6 @@ sens_configs <-
             seed = 123456789
         )
     )
-
-
 
 
 
@@ -1805,11 +1851,11 @@ sens_configs <-
     )
 
 ## Aplicar a função Estimate_R
-Rt_nonparam_si_sc <- estimate_R(as.numeric(covid_swe_var$confirmados_novos),
+Rt_nonparam_si_swe <- estimate_R(as.numeric(covid_swe_var$confirmados_novos),
                                 method = "uncertain_si",
                                 config = sens_configs)
 
-sample_windows_sc <- seq(length(Rt_nonparam_si_swe$R$t_start))
+sample_windows_swe <- seq(length(Rt_nonparam_si_swe$R$t_start))
 
 # Criar um data frame com valores de R
 posterior_Rt_swe <- 
@@ -1847,13 +1893,16 @@ posterior_Re_swe <- posterior_Rt_swe %>%
            upr=round(R_e_q0975, 2))
 
 #Grafico Suécia 
+## Linhas a adicionar no gráfico
+d_swe = data.frame(date=as.Date(c("2020-03-17", "2020-03-19", "2020-03-27")), Evento=c("Recomendação de teletrabalho", "Encerramento das escolas", "Proibição de ajuntamentos com mais de 50 pessoas"))
+
 graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
     geom_line(colour = "yellow4",  alpha = 0.5, size = 1.5) +
     geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "yellow3") +
     
     labs( title = "Suécia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:FOHM ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -1863,10 +1912,11 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
           plot.subtitle = element_text(size= 8),
           axis.title.x = element_text(size = 7),
           axis.title.y = element_text(size = 7),
+          axis.text.x = element_text(angle = 60, hjust = 1)
     ) +
     
     scale_x_date(
-        date_breaks = "1 month",
+        date_breaks = "2 weeks", labels = date_format("%b %d"),
         limits = c(min(covid_swe_var$data), max(posterior_Rt_swe$date_point))
     ) +
     
@@ -1875,7 +1925,10 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
         limits = c(0, NA)
     ) +
     
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-03-19", "2020-03-27"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
+    geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 #Tornar o grafico interativo
 ggplotly(graph_swe) %>%
@@ -1898,10 +1951,6 @@ sens_configs <-
             seed = 123456789
         )
     )
-
-
-
-
 
 
 
@@ -1989,7 +2038,7 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " Austrália - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -2125,7 +2174,7 @@ graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
     
     labs( title = "Índia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados: ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -2260,7 +2309,7 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
     
     labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -2352,7 +2401,7 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
     
     labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -2475,7 +2524,7 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " Estados Unidos da América - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -2605,7 +2654,7 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " Japão - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -2736,7 +2785,7 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " Nova Zelândia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -2878,7 +2927,7 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " México - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -3003,7 +3052,7 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " Coreia do Sul - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -3130,7 +3179,7 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " Brasil - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -3259,7 +3308,7 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
     
     labs( title = " China - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
           subtitle = "Fonte de dados:  ",
-          x = "Tempo",
+          x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
