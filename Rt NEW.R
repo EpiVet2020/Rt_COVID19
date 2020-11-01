@@ -32,6 +32,9 @@ library(readr)
 library(readxl)
 library(scales)
 
+
+setwd("~/Desktop/Treino Estágio 2020-2021/Rt_COVID19")
+
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
 
@@ -151,44 +154,42 @@ d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c
 
 
 graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
-                                                                          '<br>Rt médio: ', R_e_median))) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
-    
-    labs(title = " Evolução do Número Efetivo Reprodutivo ao longo do tempo",
-         subtitle = "Fonte de dados: DGS ",
-         x = "Data",
-         y = "Nº de reprodução efetivo (Rt)"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(title = element_text(size=15),
-          axis.title = element_text(size = 12, hjust =0.5),
-          plot.subtitle = element_text(size= 8),
-          axis.text.x = element_text(angle = 60, hjust = 1),
-          axis.title.y = element_text(size = 7),
-          axis.title.x = element_text(size = 7),
-    ) +
-    
-    scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b %d"),
-        limits = c(min(covid_pt_var$data), max(posterior_R_t$date_point))
-    ) +
-    
-    scale_y_continuous(
-        breaks = c(0:15),
-        limits = c(0, 15)
-    ) +
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
-      
+  geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                       '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
+  
+  labs(title = " Evolução do Número Efetivo Reprodutivo ao longo do tempo",
+       subtitle = "Fonte de dados: DGS ",
+       x = "Data",
+       y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(title = element_text(size=15),
+        axis.title = element_text(size = 12, hjust =0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.text.x = element_text(angle = 60, hjust = 1),
+        axis.title.y = element_text(size = 7),
+        axis.title.x = element_text(size = 7),
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_pt_var$data), max(posterior_R_t$date_point))
+  ) +
+  
+  scale_y_continuous(
+    breaks = c(0:15),
+    limits = c(0, 15)
+  ) +
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "dotted", "twodash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_PT, tooltip = "text")
-
-PT
 
 
 # Rt Diário ARS Norte
@@ -250,53 +251,48 @@ posterior_R_e1 <- posterior_R_t1 %>%
 d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
 
 graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
-    
-    labs( title = " ARS Norte - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
-          y = "Nº de reprodução efetivo (Rt)"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(axis.title = element_text(size = 10, hjust = 0.5),
-          plot.subtitle = element_text(size= 8),
-          axis.title.x = element_text(size = 7),
-          axis.title.y = element_text(size = 7),
-          axis.text.x = element_text(angle = 60, hjust = 1)
-    ) +
-    
-    scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b %d"),
-        limits = c(min(covid_pt_var$data), max(posterior_R_t1$date_point))
-    ) +
-    
-    scale_y_continuous(
-        breaks = c(0:15),
-        limits = c(0, 15)
-    ) +
+  geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                       '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
   
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
+  labs( title = " ARS Norte - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados: DGS ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_pt_var$data), max(posterior_R_t1$date_point))
+  ) +
+  
+  scale_y_continuous(
+    breaks = c(0:15),
+    limits = c(0, 15)
+  ) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "dotted", "twodash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
-    
+
 
 ### Tornar gráfico interativo
-ggplotly(graph_Norte) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
+ggplotly(graph_Norte, tooltip = "text")
 
-Norte
+
 
 
 # Rt Diário ARS Centro 
-
 Rt_nonparam_si2 <- 
     estimate_R(
         covid_pt_var$confirmados_var_centro, 
@@ -344,51 +340,47 @@ posterior_R_t2 <-
 d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
 
 graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
-    
-    labs( title = " ARS Centro - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
-          y = "Nº de reprodução efetivo (Rt)"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(axis.title = element_text(size = 10, hjust = 0.5),
-          plot.subtitle = element_text(size= 8),
-          axis.title.x = element_text(size = 7),
-          axis.title.y = element_text(size = 7),
-          axis.text.x = element_text(angle = 60, hjust = 1)
-    ) +
-    
-    scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b %d"),
-        limits = c(min(covid_pt_var$data), max(posterior_R_t2$date_point))
-    ) +
-    
-    scale_y_continuous(
-        breaks = c(0:15),
-        limits = c(0, 15)
-    ) +
-    
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
+  geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                       '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  
+  labs( title = " ARS Centro - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados: DGS ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_pt_var$data), max(posterior_R_t2$date_point))
+  ) +
+  
+  scale_y_continuous(
+    breaks = c(0:15),
+    limits = c(0, 15)
+  ) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_Centro) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
+ggplotly(graph_Centro, tooltip = "text")
 
-Centro
+
+
 
 # Rt ARS Lisboa e Vale do Tejo
-
 Rt_nonparam_si3 <- 
     estimate_R(
         covid_pt_var$confirmados_var_lvt, 
@@ -434,55 +426,50 @@ posterior_R_t3 <-
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento = c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+
 graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
-    
-    labs( title = " ARS LVT - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
-          y = "Nº de reprodução efetivo (Rt)"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(axis.title = element_text(size = 10, hjust = 0.5),
-          plot.subtitle = element_text(size= 8),
-          axis.title.x = element_text(size = 7),
-          axis.title.y = element_text(size = 7),
-          axis.text.x = element_text(angle = 60, hjust = 1)
-    ) +
-    
-    scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b %d"),
-        limits = c(min(covid_pt_var$data), max(posterior_R_t3$date_point))
-    ) +
-    
-    scale_y_continuous(
-        breaks = c(0:15),
-        limits = c(0, 15)
-    ) +
-    
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
+  geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                       '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  
+  labs( title = " ARS LVT - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados: DGS ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_pt_var$data), max(posterior_R_t3$date_point))
+  ) +
+  
+  scale_y_continuous(
+    breaks = c(0:15),
+    limits = c(0, 15)
+  ) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_LVT) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
+ggplotly(graph_LVT, tooltip = "text")
 
 
-LVT
 
 
 # Rt ARS Alentejo
-
 Rt_nonparam_si4 <- 
     estimate_R(
         covid_pt_var$confirmados_var_alentejo, 
@@ -529,56 +516,48 @@ posterior_R_t4 <-
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento = c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
 
 graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
-    
-    labs( title = " ARS Alentejo - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
-          y = "Nº de reprodução efetivo (Rt)"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(axis.title = element_text(size = 10, hjust = 0.5),
-          plot.subtitle = element_text(size= 8),
-          axis.title.x = element_text(size = 7),
-          axis.title.y = element_text(size = 7),
-          axis.text.x = element_text(angle = 60, hjust = 1)
-    ) +
-    
-    scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b %d"),
-        limits = c(min(covid_pt_var$data), max(posterior_R_t4$date_point))
-    ) +
-    
-    scale_y_continuous(
-        limits = c(0, 15),
-        breaks = c(0:15),
-    ) +
-    
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
-
-
+  geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                       '<br>Rt médio: ', R_e_median))) +    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  
+  labs( title = " ARS Alentejo - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados: DGS ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_pt_var$data), max(posterior_R_t4$date_point))
+  ) +
+  
+  scale_y_continuous(
+    limits = c(0, 15),
+    breaks = c(0:15),
+  ) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "dotted", "twodash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Alentejo) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
+ggplotly(graph_Alentejo, tooltip = "text")
 
-Alentejo
+
 
 
 # Rt ARS Algarve
-
 Rt_nonparam_si5 <- 
     estimate_R(
         covid_pt_var$confirmados_var_algarve, 
@@ -624,56 +603,49 @@ posterior_R_t5 <-
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento = c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
 
 graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
-    
-    labs( title = " ARS Algarve - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
-          y = "Nº de reprodução efetivo (Rt)"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(axis.title = element_text(size = 10, hjust = 0.5),
-          plot.subtitle = element_text(size= 8),
-          axis.title.x = element_text(size = 7),
-          axis.title.y = element_text(size = 7),
-          axis.text.x = element_text(angle = 60, hjust = 1)
-    ) +
-    
-    scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b %d"),
-        limits = c(min(covid_pt_var$data), max(posterior_R_t5$date_point))
-    ) +
-    
-    scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_R_t5$R_e_q0975)),
-        limits = c(0, 20)
-    ) +
+  geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                       '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
   
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
-
-
+  labs( title = " ARS Algarve - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados: DGS ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_pt_var$data), max(posterior_R_t5$date_point))
+  ) +
+  
+  scale_y_continuous(
+    breaks = 0:ceiling(max(posterior_R_t5$R_e_q0975)),
+    limits = c(0, 20)
+  ) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "dotted", "twodash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Algarve) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
+ggplotly(graph_Algarve, tooltip = "text")
 
 
-Algarve
+
 
 # Rt ARS Açores
-
 Rt_nonparam_si6 <- 
     estimate_R(
         covid_pt_var$confirmados_var_acores, 
@@ -718,52 +690,49 @@ posterior_R_t6 <-
 
 
 ## GRÁFICO GGPLOT
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17")), Evento = c("Encerramento das Escolas", "Estado de Emergência Nacional", "Confinamento Obrigatório de Passageiros", "Testagem e/ou Quarentena Obrigatória de Passageiros"))
 
 graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
-    
-    labs( title = " ARS Açores - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
-          y = "Nº de reprodução efetivo (Rt)"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(axis.title = element_text(size = 10, hjust = 0.5),
-          plot.subtitle = element_text(size= 8),
-          axis.title.x = element_text(size = 7),
-          axis.title.y = element_text(size = 7),
-          axis.text.x = element_text(angle = 60, hjust = 1)
-    ) +
-    
-    scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b %d"),
-        limits = c(min(covid_pt_var$data), max(posterior_R_t6$date_point))
-    ) +
-    
-    scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_R_t6$R_e_q0975)),
-        limits = c(0, NA)
-    ) +
-    
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
-
+  geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                       '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  
+  labs( title = " ARS Açores - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados: DGS ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_pt_var$data), max(posterior_R_t6$date_point))
+  ) +
+  
+  scale_y_continuous(
+    breaks = 0:ceiling(max(posterior_R_t5$R_e_q0975)),
+    limits = c(0, 20)
+  ) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17"))), linetype= c("dash", "dotted", "solid", "twodash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
-Açores <- ggplotly(graph_Açores) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
+ggplotly(graph_Açores, tooltip = "text")
 
-Açores
 
 
 # Rt ARS Madeira
-
 Rt_nonparam_si7 <- 
     estimate_R(
         covid_pt_var$confirmados_var_madeira, 
@@ -809,46 +778,42 @@ posterior_R_t7 <-
 ## GRÁFICO GGPLOT
 
 graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
-    geom_line(colour = "palegreen4",  alpha = 0.5, size = 1.5) +
-    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
-    
-    labs( title = " ARS Madeira - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
-          y = "Nº de reprodução efetivo (Rt)"
-    ) +
-    
-    theme_minimal() +
-    
-    theme(axis.title = element_text(size = 10, hjust = 0.5),
-          plot.subtitle = element_text(size= 8),
-          axis.title.x = element_text(size = 7),
-          axis.title.y = element_text(size = 7),
-          axis.text.x = element_text(angle = 60, hjust = 1)
-    ) +
-    
-    scale_x_date(
-        date_breaks = "2 weeks", labels = date_format("%b %d"),
-        limits = c(min(covid_pt_var$data), max(posterior_R_t7$date_point))
-    ) +
-    
-    scale_y_continuous(
-        breaks = 0:ceiling(max(posterior_R_t7$R_e_q0975)),
-        limits = c(0, NA)
-    ) +
-    
-    geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) 
+  geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                       '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  
+  labs( title = " ARS Madeira - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados: DGS ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_pt_var$data), max(posterior_R_t7$date_point))
+  ) +
+  
+  scale_y_continuous(
+    breaks = 0:ceiling(max(posterior_R_t7$R_e_q0975)),
+    limits = c(0, NA)
+  ) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  
+  ADICIONAR MEDIDAS DE RESTRIÇÃO
 
 
 ### Tornar gráfico interativo
-Madeira <- ggplotly(graph_Madeira) %>%
-    layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                         "Nº de reprodução efetivo (Rt)",
-                                         rep("&nbsp;", 20),
-                                         rep("\n&nbsp;", 2)),
-                                       collapse = "")))
-
-Madeira
+Madeira <- ggplotly(graph_Madeira, tooltip = "text")
 
 
 
