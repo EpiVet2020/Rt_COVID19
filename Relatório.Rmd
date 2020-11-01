@@ -284,12 +284,17 @@ Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de inf
 ### ARS Norte
 <br>
 
+<<<<<<< HEAD
 Através da análise deste gráfico, pode-se verificar que a ARS Norte apresentou o valor mais alto de Rt no início da pandemia (6,13 no dia 7 de Março), o que justifica o elevado número de casos nesta região no período inicial. O elevado número de contágios não foi eficazmente controlado até serem implementadas medidas de restrição em todo o país (dias 16 e 18 de Março). 
 Até dia 1 de Junho os valores de Rt foram diminuindo, embora com algumas oscilações, chegando a apresentar o valor mais baixo desde o início da pandemia (0,33) nesta data. Desde então, com o ínicio da terceira fase de desconfinamento a 1 de Junho, o Rt voltou a apresentar valores acima de 1, verificando-se um segundo pico no dia 8 de Junho (1,67). 
 
 Após esta data, os valores mantiveram-se acima de 1 na sua maioria, ????? (explicar oscilações após 8 junho e posterior decrescimo ate 24 julho)
 
 A partir de dia 24 de Julho, cujo Rt equivale a 0,65, os valores de Rt apresentaram-se constantemente acima de 1. De forma a tentar reduzir estes valores novamente abaixo de 1, foi implementado o estado de calamidade nacional no dia 15 de Outubro.
+=======
+Através da análise deste gráfico, podemos verificar que a ARS Norte apresentou o valor mais alto de Rt no início da pandemia (6,13 no dia 7 de Março), o que justifica o elevado número de casos nesta região no período inicial. O elevado número de contágios não foi eficazmente controlado até serem implementadas medidas de restrição em todo o país (dias 16 e 18 de Março). 
+Até dia 1 de Junho os valores de Rt foram diminuindo, chegando a apresentar o valor mais baixo desde o início da pandemia (0,33). Desde então, o Rt voltou a apresentar valores acima de 1, tendo apresentado um segundo pico no dia 8 de Junho (1,674).
+>>>>>>> 7ccef859747b02f6b31c3ae35c54a60e6b062a64
 
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
 # Rt Diário ARS Norte
@@ -697,7 +702,10 @@ ggplotly(graph_Alentejo, tooltip = "text")
 ### ARS Algarve
 <br>
 
-
+Como é possível visualizar através do gráfico, no início da pandemia (4 de Março) cada caso primário na ARS do Algarve foi responsável por cerca de 3,23 casos secundários, e este valor terá aumentado até ao dia 6 de Março, cujo valor máximo de Rt atingido foi de 9,75. Assim, a seguir ao Alentejo, foi a região que maior transmissibilidade atingiu, a partir de um único caso infetado (não tendo, no entanto, originado um superior número de casos nesta região).
+A partir de 6 de março, a transmissão de infeção foi diminuindo, mas ao contrário das restantes regiões, a implementação de medidas de restrição, como o encerramento das escolas e aplicação do estado de emergência no país, não culminou de forma imediata numa descida do Rt abaixo de 1. Ainda assim, foi ocorrendo uma descida gradual do contágio, tendo apresentado o menor valor no dia 14 de abril (0,39). 
+A partir de maio, com a introdução faseada de medidas de desconfinamento, os valores de transmissão foram-se descontrolando, tendo culminado num novo pico a 16 de Junho (Rt = 5,15), possivelmente em conjunto com uma maior procura desta região como destino de férias. 
+Desde então os valores de Rt voltaram a diminuir, mas nunca se conseguiu controlar a transmissão da infeção, no sentido em que apresentaram valores maioritariamente acima de 1 até ao mês de Novembro.
 
 <br>
 
