@@ -32,6 +32,9 @@ library(readr)
 library(readxl)
 library(scales)
 
+
+setwd("~/Desktop/Treino Estágio 2020-2021/Rt_COVID19")
+
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
 
@@ -180,15 +183,15 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
         breaks = c(0:15),
         limits = c(0, 15)
     ) +
+  
     geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
+  
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
       
 
 ### Tornar gráfico interativo
 ggplotly(graph_PT, tooltip = "text")
-
-PT
 
 
 # Rt Diário ARS Norte

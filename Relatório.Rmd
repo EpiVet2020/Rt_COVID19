@@ -284,7 +284,7 @@ Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de inf
 ### ARS Norte
 <br>
 
-Através da análise deste gráfico, podemos verificar que a ARS Norte apresentou o valor mais alto de Rt no início da pandemia (6,14 no dia 7 de Março), o que justifica o elevado número de casos nesta região no período inicial. O elevado número de contágios não foi eficazmente controlado até serem implementadas medidas de restrição em todo o país (dias 16 e 18 de Março). 
+Através da análise deste gráfico, podemos verificar que a ARS Norte apresentou o valor mais alto de Rt no início da pandemia (6,13 no dia 7 de Março), o que justifica o elevado número de casos nesta região no período inicial. O elevado número de contágios não foi eficazmente controlado até serem implementadas medidas de restrição em todo o país (dias 16 e 18 de Março). 
 Até dia 1 de Junho os valores de Rt foram diminuindo, chegando a apresentar o valor mais baixo desde o início da pandemia (0,33). Desde então, o Rt voltou a apresentar valores acima de 1, tendo apresentado um segundo pico no dia 8 de Junho (1,674).
 
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
