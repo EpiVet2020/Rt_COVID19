@@ -32,7 +32,6 @@ library(readr)
 library(readxl)
 library(scales)
 
-
 setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
 
 
@@ -117,7 +116,8 @@ d_it = data.frame(date=as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020
 
 
 graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "indianred",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "indianred",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                      '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "indianred3") +
   
   labs( title = "Itália - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -144,35 +144,13 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_it$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("solid", "twodash", "dotted"), colour = "darkred", alpha = 0.5) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("twodash", "dotted", "solid", "dotdash"), colour = "darkred", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
 
-
-
 ### Tornar gráfico interativo
-ggplotly(graph_it) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
-      std_si = , std_std_si = ,
-      min_std_si = , max_std_si = ,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
+ggplotly(graph_it, tooltip = "text")
 
 
 
@@ -258,7 +236,8 @@ posterior_Rt_ger <-
 d_ger = data.frame(date=as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04")), Evento=c("Encerramento de escolas", "Estado de Emergência", "Reabertura de lojas", "Reabertura de escolas"))
 
 graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "goldenrod",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "goldenrod",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                      '<br>Rt médio: ', R_e_median))) +  
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "goldenrod1") +
   
   labs( title = "Alemanha - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -2254,21 +2233,6 @@ ggplotly(graph_kor) %>%
                                        rep("\n&nbsp;", 2)),
                                      collapse = "")))
 
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = , std_mean_si = ,
-      min_mean_si = , max_mean_si = ,
-      std_si = , std_std_si = ,
-      min_std_si = , max_std_si = ,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-
 
 
 
@@ -2380,22 +2344,6 @@ ggplotly(graph_bra) %>%
                                        rep("&nbsp;", 20),
                                        rep("\n&nbsp;", 2)),
                                      collapse = "")))
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = , std_mean_si = ,
-      min_mean_si = , max_mean_si = ,
-      std_si = , std_std_si = ,
-      min_std_si = , max_std_si = ,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-
 
 
 
@@ -2510,19 +2458,6 @@ ggplotly(graph_chi) %>%
                                        rep("\n&nbsp;", 2)),
                                      collapse = "")))
 
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = , std_mean_si = ,
-      min_mean_si = , max_mean_si = ,
-      std_si = , std_std_si = ,
-      min_std_si = , max_std_si = ,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 
 

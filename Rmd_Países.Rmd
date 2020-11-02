@@ -1,0 +1,380 @@
+---
+title: "Análise comparativa entre Rt de diferentes países"
+author: "By: Estagiárias de Epidemiologia da FMV"
+date: "Outubro, 2020"
+output:
+  html_document:
+    code_folding: hide
+    df_print: paged
+    theme: cosmo
+    toc: yes
+    toc_depth: 3
+
+  html_notebook:
+    code_folding: hide
+    theme: cosmo
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+
+```{css, echo=FALSE}
+/* Whole document: */
+body{
+  font-size: 12pt;
+}
+```
+
+<br>
+
+## **Introdução**
+***
+O Número Básico de Reprodução (R0) indica o número médio de casos secundários originados a partir de um caso primário, quando o vírus é introduzido numa população que consiste somente em indivíduos suscetíveis.
+
+Por outro lado, o Número Efetivo de Reprodução (Re ou Rt) indica também, em média, o nº de contágios que cada infetado provoca, mas tem como ponto de partida uma população que já esteve exposta ao vírus. Ou seja, leva em conta as medidas postas em prática para travar a disseminação. 
+
+O valor que fomos calcular neste projeto foi o Rt, sendo um indicador essencial para o estudo da evolução de um surto epidémico, permitindo avaliar a efetividade das medidas de contenção e analisar qual o momento mais adequado para o levantamento das restrições implementadas.
+
+<br>
+
+### Interpretação dos valores de Rt
+
+* Quando R > 1, significa que a epidemia continua a crescer e que o número de novos casos será superior ao número de casos atuais; 
+* Por outro lado, quando Rt = 1, ocorre o limiar da transmissão (abaixo deste valor a doença é incapaz de se manter numa população). 
+
+O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disponibilidade de uma vacina eficaz.
+
+<br>
+
+Este relatório tem como objetivo analisar de que forma variou o Rt em Portugal, em comparação com outros países do Mundo. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data, para Portugal, e em bases de dados de COVID dos restantes países, que se encontram respetivamente no final de cada análise específica.
+
+<br>
+```{r warning=FALSE, message=FALSE, message= FALSE}
+#Libraries
+library(testthat)
+library(rlang)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(ggthemes)
+library(plotly)
+library(data.table)
+library(ggpubr)
+library(devtools)
+install_github("holtzy/epuRate")
+library(epuRate)
+library(EpiEstim)
+library(tidyr)
+library(lubridate)
+library(googlesheets)
+require(RCurl)
+library(viridis)
+library(flexdashboard)
+library(here)
+library(rjson)
+library(jsonlite)
+library(RCurl)
+library(highcharter)
+library(here)
+library(purrr)
+library(magrittr)
+library(RColorBrewer)
+library(rjson)
+library(readr)
+library(readxl)
+library(scales)
+
+#Importar dados
+covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
+
+
+#Data de chr para Date
+covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
+
+```
+
+<br>
+
+## **União Europeia** {.tabset .tabset-fade .tabset-pills}
+***
+<br>
+
+## Itália
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## Alemanha
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r,fig.align='center', warning=FALSE, message= FALSE}
+
+```
+
+<br>
+
+## Espanha
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## Bélgica
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## República Checa
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## Suíça
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+<br>
+
+## Suécia
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## **Extracomunitários** {.tabset .tabset-fade .tabset-pills}
+***
+<br>
+
+## Reino Unido
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## Austrália
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## Nova Zelândia
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+<br>
+
+## Índia
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## Hong Kong
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## China
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+<br>
+
+## Estados Unidos da América
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## Japão
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## México
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## Coreia do Sul
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+<br>
+
+## Brasil
+
+<br>
+
+TEXTO
+
+<br>
+
+```{r pressure, fig.align='center', warning=FALSE}
+
+
+```
+
+
+

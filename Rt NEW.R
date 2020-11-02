@@ -34,6 +34,8 @@ library(scales)
 
 
 setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
+setwd("~/Desktop/Treino Estágio 2020-2021/Rt_COVID19")
+
 
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -855,7 +857,7 @@ Rt_regioes_tempo_graph <- ggplot(regioes_Rt_tempo, aes(x = Data, y = Rt_Médio, 
   labs(title="Evolução do Rt por regiões ao longo do tempo") +
 
   theme(legend.title = element_blank(),
-        axis.text.y = element_text(size = 8),
+        axis.text.y = element_text(size = 7),
         axis.text.x = element_text(size = 7)) +
   
   labs(title = "Evolução do Número de Reprodução Efetivo por região",
@@ -880,7 +882,6 @@ ggplotly(Rt_regioes_tempo_graph, tooltip = "text") %>%
                                        rep("\n&nbsp;", 2)),
                                      collapse = "")),
          legend = list(x = 1, y = 0))
-
 
 
 
