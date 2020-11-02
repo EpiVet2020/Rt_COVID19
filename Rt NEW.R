@@ -33,7 +33,7 @@ library(readxl)
 library(scales)
 
 
-setwd("~/Desktop/Treino Estágio 2020-2021/Rt_COVID19")
+setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
 
 #Data
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -690,7 +690,7 @@ posterior_R_t6 <-
 
 
 ## GRÁFICO GGPLOT
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17")), Evento = c("Encerramento das Escolas", "Estado de Emergência Nacional", "Confinamento Obrigatório de Passageiros", "Testagem e/ou Quarentena Obrigatória de Passageiros"))
+d_azo=data.frame(date=as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17")), Evento = c("Encerramento das Escolas", "Estado de Emergência Nacional", "Confinamento Obrigatório de Passageiros", "Testagem e/ou Quarentena Obrigatória de Passageiros"))
 
 graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -718,14 +718,13 @@ graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_R_t5$R_e_q0975)),
+    breaks = 0:ceiling(max(posterior_R_t6$R_e_q0975)),
     limits = c(0, 20)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17"))), linetype= c("dash", "dotted", "solid", "twodash"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17"))), linetype= c("twodash", "dotted", "solid", "dotdash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d_azo, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
 ggplotly(graph_Açores, tooltip = "text")
@@ -776,6 +775,7 @@ posterior_R_t7 <-
     reduce(bind_rows)
 
 ## GRÁFICO GGPLOT
+d_mad=data.frame(date=as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28")), Evento = c("Quarentena obrigatória para todos os passageiros", "Estado de Emergência Nacional", "Início do desconfinamento", "Obrigatoriedade de teste negativo e/ou quarentena para todos os passageiros"))
 
 graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -808,12 +808,13 @@ graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  
-  ADICIONAR MEDIDAS DE RESTRIÇÃO
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28"))), linetype= c("dotdash", "solid", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d_mad, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
-Madeira <- ggplotly(graph_Madeira, tooltip = "text")
+ggplotly(graph_Madeira, tooltip = "text")
 
 
 
