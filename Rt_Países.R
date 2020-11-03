@@ -33,6 +33,7 @@ library(readxl)
 library(scales)
 
 setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
+setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
 
 
 
@@ -99,7 +100,7 @@ posterior_Rt_it <-
             window_index = x,
             window_t_start = Rt_nonparam_si_it$R$t_start[x],
             window_t_end = Rt_nonparam_si_it$R$t_end[x],
-            date_point = covid_it_var[covid_it_var$t_start == Rt_nonparam_si_it$R$t_end[x], "Date"],
+            date_point = covid_it_var[covid_it_var$t_start == Rt_nonparam_si_it$R$t_end[x], "data"],
             R_e_median = median(posterior_sample_obj_it),
             R_e_q0025 = quantile(posterior_sample_obj_it, probs = 0.025),
             R_e_q0975 = quantile(posterior_sample_obj_it, probs = 0.975))
@@ -137,7 +138,7 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
   
   scale_x_date(
     date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_it_var$Date), max((posterior_Rt_it$date_point)))
+    limits = c(min(covid_it_var$data), max((posterior_Rt_it$date_point)))
   ) +
   
   scale_y_continuous(
@@ -146,8 +147,8 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("twodash", "dotted", "solid", "dotdash"), colour = "darkred", alpha = 0.5) +
-  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("solid", "dotted", "dotdash", "twodash"), colour = "darkred", alpha = 0.5) +
+  geom_vline(data=d_it, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
 ggplotly(graph_it, tooltip = "text")
@@ -264,33 +265,12 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_ger$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04"))), linetype= c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04"))), linetype= c("solid", "twodash", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_ger, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
-
-
 ### Tornar gráfico interativo
-ggplotly(graph_ger) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
+ggplotly(graph_ger, tooltip = "text")
 
 
 
@@ -366,11 +346,12 @@ posterior_Rt_spa <-
 
 ## Gráfico Espanha ggplot
 ## Linhas a adicionar no gráfico
-d_spa = data.frame(date=as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25")), Evento=c("Estado de Emergência", "Início do desconfinamento", "Estado de Emergência - região autónoma de Madrid", "Estado de Emergência nacional"))
+d_spa = data.frame(date=as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25")), Evento=c("Estado de Emergência", "Início do desconfinamento", "Estado de Emergência - Região Autónoma de Madrid", "Estado de Emergência Nacional"))
 
 
 graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "thistle3",  alpha = 0.8, size = 1.5) +
+  geom_line(colour = "thistle3",  alpha = 0.8, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                        '<br>Rt médio: ', R_e_median))) +  
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "thistle2") +
   
   labs( title = "Espanha - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -397,34 +378,12 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_spa$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25"))), linetype = c("solid", "dotdash", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_spa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
-
-
 ### Tornar gráfico interativo
-ggplotly(graph_spa) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
+ggplotly(graph_spa, tooltip = "text")
 
 
 
@@ -501,10 +460,11 @@ posterior_Rt_bel <-
 
 ## Gráfico Bélgica ggplot
 ## Linhas a adicionar no gráfico
-d_bel = data.frame(date=as.Date(c("2020-03-13", "2020-03-18", "2020-06-08", "2020-09-24")), Evento=c("Confinamento parcial", "Confinamento total", "Reabertura cafés e restaurantes", "Novas restrições"))
+d_bel = data.frame(date=as.Date(c("2020-03-13", "2020-03-18", "2020-06-08", "2020-09-24")), Evento=c("Confinamento parcial", "Confinamento total", "Reabertura de cafés e restaurantes", "Novas restrições"))
 
 graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "royalblue2",  alpha = 0.65, size = 1.5) +
+  geom_line(colour = "royalblue2",  alpha = 0.65, size = 1 ,aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "royalblue1") +
   
   labs( title = "Bélgica - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -531,35 +491,13 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_bel$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-18", "2020-06-08", "2020-09-24"))), linetype = c("solid", "twodash", "dotdash", "dotted"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_bel, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
-
-
 ### Tornar gráfico interativo
-ggplotly(graph_bel) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-
+ggplotly(graph_bel, tooltip = "text")
 
 
 
@@ -571,11 +509,11 @@ sens_configs <-
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 ## Alterar formato para data
-czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d")
+czechr$datum <- as.Date(czechr$datum, "%Y-%m-%d")
 
 ## Tabela confirmados novos
 cz_var <- czechr %>%
-  select(ï..datum, prirustkovy_pocet_nakazenych)
+  select(datum, prirustkovy_pocet_nakazenych)
 names(cz_var) <- c("data", "confirmados_novos")
 
 
@@ -586,7 +524,6 @@ covid_cz_var <- cz_var  %>%
 
 ## Cálculo do Rt Rép. Checa - Uncertainty method --> "uncertain_si"
 ### Serial Interval (c/ base nos valores anteriores)
-
 sens_configs <- 
   make_config(
     list(
@@ -640,7 +577,8 @@ posterior_Rt_cz <-
 d_cz = data.frame(date=as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22")), Evento=c("Estado de Emergência", "Reabertura de lojas", "Estado de Emergência", "Proibição de movimentações"))
 
 graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "steelblue3",  alpha = 0.65, size = 1.5) +
+  geom_line(colour = "steelblue3",  alpha = 0.65, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                           '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "steelblue1") +
   
   labs( title = "Républica Checa - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -667,40 +605,20 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_cz$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22"))), linetype = c("solid", "dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
-
-
 ### Tornar gráfico interativo
-ggplotly(graph_cz) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = , std_mean_si = ,
-      min_mean_si = , max_mean_si = ,
-      std_si = , std_std_si = ,
-      min_std_si = , max_std_si = ,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
+ggplotly(graph_cz, tooltip = "text")
 
 
 
 
 
 
-# SUIÇA (https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html#-640157857)
+# SUÍÇA (https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html#-640157857)
 switzerland <- rio::import(file ="https://www.bag.admin.ch/dam/bag/en/dokumente/mt/k-und-i/aktuelle-ausbrueche-pandemien/2019-nCoV/covid-19-basisdaten-labortests.xlsx.download.xlsx/Dashboard_3_COVID19_labtests_positivity.xlsx")
 
 ## Alterar formato para Data
@@ -773,7 +691,8 @@ posterior_Rt_swi <-
 d_swi = data.frame(date=as.Date(c("2020-03-13", "2020-04-27", "2020-10-19")), Evento=c("Encerramento de escolas, probição de eventos e controlo de fronteiras", "Levantamento gradual das restrições", "Proibição de ajuntamentos"))
 
 graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "antiquewhite4",  alpha = 0.65, size = 1.5) +
+  geom_line(colour = "antiquewhite4",  alpha = 0.65, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                             '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "antiquewhite3") +
   
   labs( title = "Suiça - Evolução do Número Efetivo Reprodutivo longo do tempo", size= 10,
@@ -800,26 +719,43 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_swi$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
-
-
 ### Tornar gráfico interativo
-ggplotly(graph_swi) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_swi, tooltip = "text")
 
-# Serial Interval específico
+
+
+
+
+
+
+#SUÉCIA (https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/)
+sweden <- "https://fohm.maps.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data"
+sweden <- rio::import(file = sweden)
+
+## Alterar formato de Data
+sweden$Statistikdatum <- as.Date(sweden$Statistikdatum, "%Y-%m-%d")
+
+## Tabela de confirmados novos
+swe_var <- sweden %>%
+  select(Statistikdatum, Totalt_antal_fall)
+names(swe_var) <- c("data", "confirmados_novos")
+
+## Previsão da evolução
+covid_swe_var <- swe_var  %>%
+  filter(swe_var$data > as.Date("2020-02-28")) %>% 
+  dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt Suécia- Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
 sens_configs <- 
   make_config(
     list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
+      mean_si = 4.7, std_mean_si = 0.7,
+      min_mean_si = 3.7, max_mean_si = 6.0,
       std_si = 2.9, std_std_si = 0.5,
       min_std_si = 1.9, max_std_si = 4.9,
       n1 = 1000,
@@ -827,6 +763,85 @@ sens_configs <-
       seed = 123456789
     )
   )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_swe <- estimate_R(as.numeric(covid_swe_var$confirmados_novos),
+                                 method = "uncertain_si",
+                                 config = sens_configs)
+
+sample_windows_swe <- seq(length(Rt_nonparam_si_swe$R$t_start))
+
+# Criar um data frame com valores de R
+posterior_Rt_swe <- 
+  map(
+    .x = sample_windows_swe,
+    .f = function(x) {
+      
+      posterior_sample_obj_swe <- 
+        sample_posterior_R(
+          R = Rt_nonparam_si_swe,
+          n = 1000, 
+          window = x
+        )
+      
+      posterior_sample_estim_swe <- 
+        data.frame(
+          window_index = x,
+          window_t_start = Rt_nonparam_si_swe$R$t_start[x],
+          window_t_end = Rt_nonparam_si_swe$R$t_end[x],
+          date_point = covid_swe_var[covid_swe_var$t_start == Rt_nonparam_si_swe$R$t_end[x], "data"],
+          R_e_median = median(posterior_sample_obj_swe),
+          R_e_q0025 = quantile(posterior_sample_obj_swe, probs = 0.025),
+          R_e_q0975 = quantile(posterior_sample_obj_swe, probs = 0.975)
+        )
+      
+      return(posterior_sample_estim_swe)
+      
+    }
+  ) %>% 
+  reduce(bind_rows)
+
+#Grafico Suécia 
+## Linhas a adicionar no gráfico
+d_swe = data.frame(date=as.Date(c("2020-03-17", "2020-03-19", "2020-03-27")), Evento=c("Recomendação de teletrabalho", "Encerramento das escolas", "Proibição de ajuntamentos com mais de 50 pessoas"))
+
+graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
+  geom_line(colour = "yellow4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                      '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "yellow3") +
+  
+  labs( title = "Suécia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados:FOHM ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_swe_var$data), max(posterior_Rt_swe$date_point))
+  ) +
+  
+  scale_y_continuous(
+    breaks = 0:ceiling(max(posterior_Rt_swe$R_e_q0975)),
+    limits = c(0, NA)
+  ) +
+  
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-03-19", "2020-03-27"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
+#Tornar o grafico interativo
+ggplotly(graph_swe, tooltip = "text")
+
 
 
 
@@ -908,7 +923,8 @@ posterior_Rt_uk <-
 d_uk = data.frame(date=as.Date(c("2020-03-24", "2020-05-22", "2020-09-14")), Evento=c("Confinamento obrigatório", "Quarentena obrigatória para quem chega", "Proibição de ajuntamentos"))
 
 graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "plum4",  alpha = 0.65, size = 1.5) +
+  geom_line(colour = "plum4",  alpha = 0.65, size = 1,  aes(group = 1, text = paste('Data: ', date_point,
+                                                                                      '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.2, fill = "rosybrown2") +
   
   labs( title = "Reino Unido - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -935,172 +951,13 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_uk$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-24", "2020-05-22", "2020-09-14"))), linetype = c("solid", "dotted", "twodash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_uk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
-
-
 ### Tornar gráfico interativo
-ggplotly(graph_uk) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_uk, tooltip = "text")
 
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-
-
-
-
-
-#SUÉCIA (https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/)
-sweden <- "https://fohm.maps.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data"
-sweden <- rio::import(file = sweden)
-
-## Alterar formato de Data
-sweden$Statistikdatum <- as.Date(sweden$Statistikdatum, "%Y-%m-%d")
-
-## Tabela de confirmados novos
-swe_var <- sweden %>%
-  select(Statistikdatum, Totalt_antal_fall)
-names(swe_var) <- c("data", "confirmados_novos")
-
-## Previsão da evolução
-covid_swe_var <- swe_var  %>%
-  filter(swe_var$data > as.Date("2020-02-28")) %>% 
-  dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt Suécia- Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-## Aplicar a função Estimate_R
-Rt_nonparam_si_swe <- estimate_R(as.numeric(covid_swe_var$confirmados_novos),
-                                 method = "uncertain_si",
-                                 config = sens_configs)
-
-sample_windows_swe <- seq(length(Rt_nonparam_si_swe$R$t_start))
-
-# Criar um data frame com valores de R
-posterior_Rt_swe <- 
-  map(
-    .x = sample_windows_swe,
-    .f = function(x) {
-      
-      posterior_sample_obj_swe <- 
-        sample_posterior_R(
-          R = Rt_nonparam_si_swe,
-          n = 1000, 
-          window = x
-        )
-      
-      posterior_sample_estim_swe <- 
-        data.frame(
-          window_index = x,
-          window_t_start = Rt_nonparam_si_swe$R$t_start[x],
-          window_t_end = Rt_nonparam_si_swe$R$t_end[x],
-          date_point = covid_swe_var[covid_swe_var$t_start == Rt_nonparam_si_swe$R$t_end[x], "data"],
-          R_e_median = median(posterior_sample_obj_swe),
-          R_e_q0025 = quantile(posterior_sample_obj_swe, probs = 0.025),
-          R_e_q0975 = quantile(posterior_sample_obj_swe, probs = 0.975)
-        )
-      
-      return(posterior_sample_estim_swe)
-      
-    }
-  ) %>% 
-  reduce(bind_rows)
-
-posterior_Re_swe <- posterior_Rt_swe %>%
-  mutate(fit = round(R_e_median, 2),
-         lwr=round(R_e_q0025, 2),
-         upr=round(R_e_q0975, 2))
-
-#Grafico Suécia 
-## Linhas a adicionar no gráfico
-d_swe = data.frame(date=as.Date(c("2020-03-17", "2020-03-19", "2020-03-27")), Evento=c("Recomendação de teletrabalho", "Encerramento das escolas", "Proibição de ajuntamentos com mais de 50 pessoas"))
-
-graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "yellow4",  alpha = 0.5, size = 1.5) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "yellow3") +
-  
-  labs( title = "Suécia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados:FOHM ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
-  theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
-        plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
-        axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
-  ) +
-  
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_swe_var$data), max(posterior_Rt_swe$date_point))
-  ) +
-  
-  scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_swe$R_e_q0975)),
-    limits = c(0, NA)
-  ) +
-  
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-03-19", "2020-03-27"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
-
-
-#Tornar o grafico interativo
-ggplotly(graph_swe) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 
 
@@ -1176,14 +1033,10 @@ posterior_Rt_aus <-
   ) %>% 
   reduce(bind_rows)
 
-posterior_Re_aus <- posterior_Rt_aus %>%
-  mutate(fit = round(R_e_median, 2),
-         lwr=round(R_e_q0025, 2),
-         upr=round(R_e_q0975, 2))
-
 #Grafico Australia
 graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "cyan4",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "cyan4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                  '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "cyan3") +
   
   labs( title = " Austrália - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -1210,22 +1063,43 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
     limits = c(0, NA)
   ) +
   
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 #Tornar o grafico interativo
-ggplotly(graph_aus) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_aus, tooltip = "text")
 
-# Serial Interval específico
+
+
+
+
+
+
+# NOVA ZELÂNDIA (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
+nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-24oct20_0.xlsx"
+nzealand <- rio::import(file = nzealand)
+nzealand <- nzealand[-c(1,2), ]
+
+## Alterar formato para data
+nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
+
+## Criar tabela confirmados novos
+nze_var <- as.data.frame(aggregate(x = nzealand, list(nzealand$`Confirmed Covid-19 cases`), FUN = length)) #nº registos por dia
+nze_var <- nze_var[, 1:2]
+names(nze_var) <- c("data", "confirmados_novos")
+
+## Previsão da evolução
+covid_nze_var <- nze_var  %>%
+  filter(nze_var$data > as.Date("2020-02-28")) %>% 
+  dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt Nova Zelândia - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
 sens_configs <- 
   make_config(
     list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
+      mean_si = 4.7, std_mean_si = 0.7,
+      min_mean_si = 3.7, max_mean_si = 6.0,
       std_si = 2.9, std_std_si = 0.5,
       min_std_si = 1.9, max_std_si = 4.9,
       n1 = 1000,
@@ -1234,7 +1108,74 @@ sens_configs <-
     )
   )
 
+## Aplicar a função Estimate_R
+Rt_nonparam_si_nze <- estimate_R(as.numeric(covid_nze_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
 
+sample_windows_nze <- seq(length(Rt_nonparam_si_nze$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_nze <- 
+  map(.x = sample_windows_nze,
+      .f = function(x) {
+        
+        posterior_sample_obj_nze <- 
+          sample_posterior_R(
+            R = Rt_nonparam_si_nze,
+            n = 1000, 
+            window = x )
+        
+        posterior_sample_estim_nze <- 
+          data.frame(
+            window_index = x,
+            window_t_start = Rt_nonparam_si_nze$R$t_start[x],
+            window_t_end = Rt_nonparam_si_nze$R$t_end[x],
+            date_point = covid_nze_var[covid_nze_var$t_start == Rt_nonparam_si_nze$R$t_end[x], "data"],
+            R_e_median = median(posterior_sample_obj_nze),
+            R_e_q0025 = quantile(posterior_sample_obj_nze, probs = 0.025),
+            R_e_q0975 = quantile(posterior_sample_obj_nze, probs = 0.975))
+        
+        return(posterior_sample_estim_nze)}
+  ) %>% 
+  
+  reduce(bind_rows)
+
+## Gráfico Nova Zelândia ggplot
+
+graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+  
+  labs( title = " Nova Zelândia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados:  ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+  ) +
+  
+  scale_x_date(
+    date_breaks = "1 month",
+    limits = c(min(covid_nze_var$data), max((posterior_Rt_nze$date_point)))
+  ) +
+  
+  scale_y_continuous(
+    breaks = 0:ceiling(max(posterior_Rt_nze$R_e_q0975)),
+    limits = c(0, NA)
+  ) +
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+
+### Tornar gráfico interativo
+ggplotly(graph_nze, tooltip = "text")
 
 
 
@@ -1319,7 +1260,8 @@ posterior_Re_india <- posterior_Rt_india %>%
 
 #Grafico Índia
 graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "coral3",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "coral3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                     '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "coral") +
   
   labs( title = "Índia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -1346,30 +1288,10 @@ graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
     limits = c(0, NA)
   ) +
   
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 #Tornar o grafico interativo
-ggplotly(graph_india) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
+ggplotly(graph_india, tooltip = "text")
 
 
 
@@ -1454,7 +1376,8 @@ posterior_Rt_hk <-
 ## Gráfico Hong Kong ggplot
 
 graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                             '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palevioletred1") +
   
   labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -1480,16 +1403,11 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_hk$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_hk) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_hk, tooltip = "text")
 
 
 
@@ -1546,7 +1464,8 @@ posterior_Rt_hk2 <-
 ## Gráfico Hong Kong ggplot 2
 
 graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "paleturquoise4",  alpha = 0.5, size = 1) +
+  geom_line(colour = "paleturquoise4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                           '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "paleturquoise1") +
   
   labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -1572,17 +1491,119 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_hk2$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_hk2) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_hk2, tooltip = "text")
 
+
+
+
+
+
+
+#CHINA (https://covid19.who.int/table)
+china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+
+## Alterar formato para data
+china$Date_reported <- as.Date(china$Date_reported, "%Y-%m-%d")
+
+## Criar tabela confirmados novos
+chi_var <- china %>%
+  filter(Country == "China") %>%
+  select(Date_reported, New_cases)
+names(chi_var) <- c("data", "confirmados_novos")
+
+## Previsão da evolução
+covid_chi_var <- chi_var  %>%
+  filter(chi_var$data > as.Date("2020-02-28")) %>% 
+  dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt China - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+  make_config(
+    list(
+      mean_si = 4.7, std_mean_si = 0.7,
+      min_mean_si = 3.7, max_mean_si = 6.0,
+      std_si = 2.9, std_std_si = 0.5,
+      min_std_si = 1.9, max_std_si = 4.9,
+      n1 = 1000,
+      n2 = 100,
+      seed = 123456789
+    )
+  )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_chi <- estimate_R(as.numeric(covid_chi_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_chi <- seq(length(Rt_nonparam_si_chi$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_chi <- 
+  map(.x = sample_windows_chi,
+      .f = function(x) {
+        
+        posterior_sample_obj_chi <- 
+          sample_posterior_R(
+            R = Rt_nonparam_si_chi,
+            n = 1000, 
+            window = x )
+        
+        posterior_sample_estim_chi <- 
+          data.frame(
+            window_index = x,
+            window_t_start = Rt_nonparam_si_chi$R$t_start[x],
+            window_t_end = Rt_nonparam_si_chi$R$t_end[x],
+            date_point = covid_chi_var[covid_chi_var$t_start == Rt_nonparam_si_chi$R$t_end[x], "data"],
+            R_e_median = median(posterior_sample_obj_chi),
+            R_e_q0025 = quantile(posterior_sample_obj_chi, probs = 0.025),
+            R_e_q0975 = quantile(posterior_sample_obj_chi, probs = 0.975))
+        
+        return(posterior_sample_estim_chi)}
+  ) %>% 
+  
+  reduce(bind_rows)
+
+## Gráfico China ggplot
+
+graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+  
+  labs( title = " China - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados:  ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+  ) +
+  
+  scale_x_date(
+    date_breaks = "1 month",
+    limits = c(min(covid_chi_var$data), max((posterior_Rt_chi$date_point)))
+  ) +
+  
+  scale_y_continuous(
+    breaks = 0:ceiling(max(posterior_Rt_chi$R_e_q0975)),
+    limits = c(0, NA)
+  ) +
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+
+### Tornar gráfico interativo
+ggplotly(graph_chi, tooltip = "text")
 
 
 
@@ -1667,9 +1688,9 @@ posterior_Rt_usa <-
 
 
 ## Gráfico USA ggplot
-
 graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "royalblue4",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "royalblue4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "royalblue2") +
   
   labs( title = " Estados Unidos da América - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -1695,31 +1716,10 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_usa$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
-
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 ### Tornar gráfico interativo
-ggplotly(graph_usa) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
+ggplotly(graph_usa, tooltip = "text")
 
 
 
@@ -1799,7 +1799,8 @@ posterior_Rt_jap <-
 ## Gráfico Japão ggplot
 
 graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
   labs( title = " Japão - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -1825,160 +1826,11 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_jap$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
-
-
-### Tornar gráfico interativo
-ggplotly(graph_jap) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 6.75, std_mean_si = 3.76,
-      min_mean_si = 5.98, max_mean_si = 13.17,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-
-
-
-
-
-
-
-
-# NOVA ZELÂNDIA (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
-nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-24oct20_0.xlsx"
-nzealand <- rio::import(file = nzealand)
-nzealand <- nzealand[-c(1,2), ]
-
-## Alterar formato para data
-nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
-
-## Criar tabela confirmados novos
-nze_var <- as.data.frame(aggregate(x = nzealand, list(nzealand$`Confirmed Covid-19 cases`), FUN = length)) #nº registos por dia
-nze_var <- nze_var[, 1:2]
-names(nze_var) <- c("data", "confirmados_novos")
-
-## Previsão da evolução
-covid_nze_var <- nze_var  %>%
-  filter(nze_var$data > as.Date("2020-02-28")) %>% 
-  dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt Nova Zelândia - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-## Aplicar a função Estimate_R
-Rt_nonparam_si_nze <- estimate_R(as.numeric(covid_nze_var$confirmados_novos), 
-                                 method = "uncertain_si",
-                                 config = sens_configs
-)
-
-sample_windows_nze <- seq(length(Rt_nonparam_si_nze$R$t_start))
-
-## Criar um data frame com valores de R
-posterior_Rt_nze <- 
-  map(.x = sample_windows_nze,
-      .f = function(x) {
-        
-        posterior_sample_obj_nze <- 
-          sample_posterior_R(
-            R = Rt_nonparam_si_nze,
-            n = 1000, 
-            window = x )
-        
-        posterior_sample_estim_nze <- 
-          data.frame(
-            window_index = x,
-            window_t_start = Rt_nonparam_si_nze$R$t_start[x],
-            window_t_end = Rt_nonparam_si_nze$R$t_end[x],
-            date_point = covid_nze_var[covid_nze_var$t_start == Rt_nonparam_si_nze$R$t_end[x], "data"],
-            R_e_median = median(posterior_sample_obj_nze),
-            R_e_q0025 = quantile(posterior_sample_obj_nze, probs = 0.025),
-            R_e_q0975 = quantile(posterior_sample_obj_nze, probs = 0.975))
-        
-        return(posterior_sample_estim_nze)}
-  ) %>% 
-  
-  reduce(bind_rows)
-
-## Gráfico Nova Zelândia ggplot
-
-graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
-  
-  labs( title = " Nova Zelândia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados:  ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
-  theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
-        plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
-        axis.title.y = element_text(size = 7),
-  ) +
-  
-  scale_x_date(
-    date_breaks = "1 month",
-    limits = c(min(covid_nze_var$data), max((posterior_Rt_nze$date_point)))
-  ) +
-  
-  scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_nze$R_e_q0975)),
-    limits = c(0, NA)
-  ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 ### Tornar gráfico interativo
-ggplotly(graph_nze) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_jap, tooltip = "text")
 
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = , std_mean_si = ,
-      min_mean_si = , max_mean_si = ,
-      std_si = , std_std_si = ,
-      min_std_si = , max_std_si = ,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 
 
@@ -2072,7 +1924,8 @@ posterior_Rt_mex <-
 ## Gráfico México ggplot
 
 graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
   labs( title = " México - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -2098,30 +1951,11 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_mex$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 ### Tornar gráfico interativo
-ggplotly(graph_mex) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_mex, tooltip = "text")
 
-
-# Serial Interval específico
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = , std_mean_si = ,
-      min_mean_si = , max_mean_si = ,
-      std_si = , std_std_si = ,
-      min_std_si = , max_std_si = ,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 
 
@@ -2197,7 +2031,8 @@ posterior_Rt_kor <-
 ## Gráfico Coreia do Sul ggplot
 
 graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
   labs( title = " Coreia do Sul - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -2223,15 +2058,10 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_kor$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 ### Tornar gráfico interativo
-ggplotly(graph_kor) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_kor, tooltip = "text")
 
 
 
@@ -2309,7 +2139,8 @@ posterior_Rt_bra <-
 ## Gráfico Brasil ggplot
 
 graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
   labs( title = " Brasil - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -2335,128 +2166,14 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_bra$R_e_q0975)),
     limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 ### Tornar gráfico interativo
-ggplotly(graph_bra) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_bra, tooltip = "text")
 
 
 
 
-
-
-
-
-#CHINA (https://covid19.who.int/table)
-china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
-
-## Alterar formato para data
-china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
-
-## Criar tabela confirmados novos
-chi_var <- china %>%
-  filter(Country == "China") %>%
-  select(ï..Date_reported, New_cases)
-names(chi_var) <- c("data", "confirmados_novos")
-
-## Previsão da evolução
-covid_chi_var <- chi_var  %>%
-  filter(chi_var$data > as.Date("2020-02-28")) %>% 
-  dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt China - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-## Aplicar a função Estimate_R
-Rt_nonparam_si_chi <- estimate_R(as.numeric(covid_chi_var$confirmados_novos), 
-                                 method = "uncertain_si",
-                                 config = sens_configs
-)
-
-sample_windows_chi <- seq(length(Rt_nonparam_si_chi$R$t_start))
-
-## Criar um data frame com valores de R
-posterior_Rt_chi <- 
-  map(.x = sample_windows_chi,
-      .f = function(x) {
-        
-        posterior_sample_obj_chi <- 
-          sample_posterior_R(
-            R = Rt_nonparam_si_chi,
-            n = 1000, 
-            window = x )
-        
-        posterior_sample_estim_chi <- 
-          data.frame(
-            window_index = x,
-            window_t_start = Rt_nonparam_si_chi$R$t_start[x],
-            window_t_end = Rt_nonparam_si_chi$R$t_end[x],
-            date_point = covid_chi_var[covid_chi_var$t_start == Rt_nonparam_si_chi$R$t_end[x], "data"],
-            R_e_median = median(posterior_sample_obj_chi),
-            R_e_q0025 = quantile(posterior_sample_obj_chi, probs = 0.025),
-            R_e_q0975 = quantile(posterior_sample_obj_chi, probs = 0.975))
-        
-        return(posterior_sample_estim_chi)}
-  ) %>% 
-  
-  reduce(bind_rows)
-
-## Gráfico China ggplot
-
-graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
-  
-  labs( title = " China - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados:  ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
-  theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
-        plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
-        axis.title.y = element_text(size = 7),
-  ) +
-  
-  scale_x_date(
-    date_breaks = "1 month",
-    limits = c(min(covid_chi_var$data), max((posterior_Rt_chi$date_point)))
-  ) +
-  
-  scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_chi$R_e_q0975)),
-    limits = c(0, NA)
-  ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
-
-### Tornar gráfico interativo
-ggplotly(graph_chi) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
 
 
 
