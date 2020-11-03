@@ -1081,11 +1081,10 @@ ggplotly(graph_aus, tooltip = "text")
 
 
 # NOVA ZELÂNDIA (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
-nzealand <- read_excel("https://www.health.govt.nz/system/files/documents/pages/covid-cases-24oct20_0.xlsx")
+nzealand <- read_excel("https://www.health.govt.nz/system/files/documents/pages/covid-cases-3nov20.xlsx")
 nzealand <- rio::import(file = nzealand)
 nzealand <- nzealand[-c(1,2), ]
 
-file.exists("https://www.health.govt.nz/system/files/documents/pages/covid-cases-24oct20_0.xlsx")
 
 ## Alterar formato para data
 nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
@@ -1151,11 +1150,13 @@ posterior_Rt_nze <-
   reduce(bind_rows)
 
 ## Gráfico Nova Zelândia ggplot
+## Linhas a adicionar no gráfico
+d_nze = data.frame(date=as.Date(c("2020-03-18", "2020-03-25", "2020-06-08")), Evento=c("Encerramento de fronteiras", "Confinamento obrigatório", "Levantamento gradual das medidas de restrição"))
 
 graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "darkorange",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "darkorange") +
   
   labs( title = " Nova Zelândia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
@@ -1169,10 +1170,11 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_nze_var$data), max((posterior_Rt_nze$date_point)))
   ) +
   
@@ -1180,7 +1182,10 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-18", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_nze, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_nze, tooltip = "text")
@@ -1262,10 +1267,13 @@ posterior_Rt_india <-
   reduce(bind_rows)
 
 #Grafico Índia
-graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "coral3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+## Linhas a adicionar no gráfico
+d_ind = data.frame(date=as.Date(c("2020-03-04", "2020-03-25", "2020-06-08")), Evento=c("Triagem obrigatória a todos os passageiros", "Confinamento obrigatório", "Levantamento gradual das medidas de restrição"))
+
+graph_ind<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
+  geom_line(colour = "darkcyan",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                      '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "coral") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "darkcyan") +
   
   labs( title = "Índia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados: ",
@@ -1279,22 +1287,26 @@ graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_india_var$data), max(posterior_Rt_india$date_point))
   ) +
   
   scale_y_continuous(
-    breaks = 0:10,
-    limits = c(0, 10)
+    breaks = 0:ceiling(max(posterior_Rt_india$R_e_q0975)),
+    limits = c(0, NA)
   ) +
   
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-04", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_ind, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 #Tornar o grafico interativo
-ggplotly(graph_india, tooltip = "text")
+ggplotly(graph_ind, tooltip = "text")
 
 
 
