@@ -142,8 +142,8 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_it$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
@@ -262,8 +262,8 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_ger$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04"))), linetype= c("solid", "twodash", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
@@ -348,9 +348,8 @@ posterior_Rt_spa <-
 ## Linhas a adicionar no gráfico
 d_spa = data.frame(date=as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25")), Evento=c("Estado de Emergência", "Início do desconfinamento", "Estado de Emergência - Região Autónoma de Madrid", "Estado de Emergência Nacional"))
 
-
 graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "thistle3",  alpha = 0.8, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "thistle3",  alpha = 0.8, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                         '<br>Rt médio: ', R_e_median))) +  
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "thistle2") +
   
@@ -375,8 +374,8 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_spa$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25"))), linetype = c("solid", "dotdash", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
@@ -488,8 +487,8 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_bel$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
@@ -602,8 +601,8 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_cz$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
@@ -716,8 +715,8 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_swi$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
@@ -831,8 +830,8 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_swe$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
@@ -948,8 +947,8 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_uk$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-24", "2020-05-22", "2020-09-14"))), linetype = c("solid", "dotted", "twodash"), colour = "darkred" , alpha = 0.5) +
@@ -1054,13 +1053,13 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_aus_var$data), max(posterior_Rt_aus$date_point))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_aus$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
@@ -1075,9 +1074,11 @@ ggplotly(graph_aus, tooltip = "text")
 
 
 # NOVA ZELÂNDIA (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
-nzealand <- "https://www.health.govt.nz/system/files/documents/pages/covid-cases-24oct20_0.xlsx"
+nzealand <- read_excel("https://www.health.govt.nz/system/files/documents/pages/covid-cases-24oct20_0.xlsx")
 nzealand <- rio::import(file = nzealand)
 nzealand <- nzealand[-c(1,2), ]
+
+file.exists("https://www.health.govt.nz/system/files/documents/pages/covid-cases-24oct20_0.xlsx")
 
 ## Alterar formato para data
 nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
@@ -1145,7 +1146,7 @@ posterior_Rt_nze <-
 ## Gráfico Nova Zelândia ggplot
 
 graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
@@ -1164,13 +1165,13 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_nze_var$data), max((posterior_Rt_nze$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_nze$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
@@ -1253,14 +1254,9 @@ posterior_Rt_india <-
   ) %>% 
   reduce(bind_rows)
 
-posterior_Re_india <- posterior_Rt_india %>%
-  mutate(fit = round(R_e_median, 2),
-         lwr=round(R_e_q0025, 2),
-         upr=round(R_e_q0975, 2))
-
 #Grafico Índia
 graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "coral3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "coral3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                      '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "coral") +
   
@@ -1279,13 +1275,13 @@ graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_india_var$data), max(posterior_Rt_india$date_point))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_india$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
@@ -1376,7 +1372,7 @@ posterior_Rt_hk <-
 ## Gráfico Hong Kong ggplot
 
 graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                              '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palevioletred1") +
   
@@ -1395,13 +1391,13 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_hk_var$data), max((posterior_Rt_hk$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_hk$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
@@ -1410,7 +1406,7 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
 ggplotly(graph_hk, tooltip = "text")
 
 
-
+------
 # Serial Interval específico
 ## Comparar Rt conforme SI
 sens_configs2 <- 
@@ -1483,13 +1479,13 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_hk_var$data), max((posterior_Rt_hk2$date_point)))
   ) +
   
   scale_y_continuous(
     breaks = 0:ceiling(max(posterior_Rt_hk2$R_e_q0975)),
-    limits = c(0, NA)
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
@@ -1497,7 +1493,7 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
 ### Tornar gráfico interativo
 ggplotly(graph_hk2, tooltip = "text")
 
-
+-------
 
 
 
@@ -1573,7 +1569,7 @@ posterior_Rt_chi <-
 ## Gráfico China ggplot
 
 graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
@@ -1592,13 +1588,13 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_chi_var$data), max((posterior_Rt_chi$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_chi$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
@@ -1708,18 +1704,20 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_usa_var$data), max((posterior_Rt_usa$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_usa$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 ### Tornar gráfico interativo
 ggplotly(graph_usa, tooltip = "text")
+
+
 
 
 
@@ -1818,13 +1816,13 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_jap_var$data), max((posterior_Rt_jap$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_jap$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
@@ -1924,7 +1922,7 @@ posterior_Rt_mex <-
 ## Gráfico México ggplot
 
 graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
@@ -1943,13 +1941,13 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_mex_var$data), max((posterior_Rt_mex$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_mex$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
@@ -2031,7 +2029,7 @@ posterior_Rt_kor <-
 ## Gráfico Coreia do Sul ggplot
 
 graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
@@ -2050,13 +2048,13 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_kor_var$data), max((posterior_Rt_kor$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_kor$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
@@ -2073,12 +2071,12 @@ ggplotly(graph_kor, tooltip = "text")
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-brasil$ï..Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
+brasil$Date_reported <- as.Date(brasil$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 bra_var <- brasil %>%
   filter(Country == "Brazil") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(bra_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -2139,7 +2137,7 @@ posterior_Rt_bra <-
 ## Gráfico Brasil ggplot
 
 graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
@@ -2158,13 +2156,13 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks",
     limits = c(min(covid_bra_var$data), max((posterior_Rt_bra$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_bra$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 

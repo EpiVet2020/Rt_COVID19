@@ -57,6 +57,7 @@ O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disp
 <br>
 
 Este relatório tem como objetivo analisar de que forma variou o Rt em Portugal, em comparação com outros países do Mundo. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data, para Portugal, e em bases de dados de COVID dos restantes países, que se encontram respetivamente no final de cada análise específica.
+Dividimos a nossa análise em duas partes, sendo a primeira respetiva a países pertencentes à União Europeia e, posteriormente, aos países extracomunitários.
 
 <br>
 ```{r warning=FALSE, message=FALSE, message= FALSE}
@@ -113,7 +114,7 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
 <br>
 
-TEXTO
+Pela visualização deste gráfico
 
 <br>
 
@@ -220,8 +221,8 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_it$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
