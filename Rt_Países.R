@@ -57,7 +57,7 @@ names(it_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_it_var <- it_var  %>%
-  filter(it_var$data > as.Date("2020-02-28")) %>%  
+  filter(it_var$data > as.Date("2020-02-24")) %>%  
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Itália- Uncertainty method --> "uncertain_si"
@@ -1069,7 +1069,6 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-20", "2020-06-30", "2020-08-02", "2020-09-27"))), linetype = c("dotted", "twodash", "solid", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_aus, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
-
 
 #Tornar o grafico interativo
 ggplotly(graph_aus, tooltip = "text")
