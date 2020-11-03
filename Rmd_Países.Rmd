@@ -319,7 +319,7 @@ posterior_Rt_ger <-
 
 ## Gráfico Alemanha ggplot
 ## Linhas a adicionar no gráfico
-d_ger = data.frame(date=as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04")), Evento=c("Encerramento de escolas", "Estado de Emergência", "Reabertura de lojas", "Reabertura de escolas"))
+d_ger = data.frame(date=as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04", "2020-11-02")), Evento=c("Encerramento de escolas", "Estado de Emergência", "Reabertura de lojas", "Reabertura de escolas", "Confinamento parcial"))
 
 graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "goldenrod",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -351,7 +351,7 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
     limits = c(0, NA)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04"))), linetype= c("solid", "twodash", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04", "2020-11-02"))), linetype= c("twodash", "dotted", "dashed", "dotdash", "solid"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_ger, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
@@ -674,7 +674,7 @@ posterior_Rt_cz <-
   reduce(bind_rows)
 
 
-## Gráfico Républica Checa ggplot
+## Gráfico República Checa ggplot
 ## Linhas a adicionar no gráfico
 d_cz = data.frame(date=as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22")), Evento=c("Estado de Emergência", "Reabertura de lojas", "Estado de Emergência", "Proibição de movimentações"))
 
@@ -797,7 +797,7 @@ posterior_Rt_swi <-
 
 ## Gráfico Suíça ggplot
 ## Linhas a adicionar no gráfico
-d_swi = data.frame(date=as.Date(c("2020-03-13", "2020-04-27", "2020-10-19")), Evento=c("Encerramento de escolas, probição de eventos e controlo de fronteiras", "Levantamento gradual das restrições", "Proibição de ajuntamentos"))
+d_swi = data.frame(date=as.Date(c("2020-03-13", "2020-03-16", "2020-04-27", "2020-10-19")), Evento=c("Encerramento de escolas, probição de eventos e controlo de fronteiras", "Estado de Emergência", "Levantamento gradual das restrições", "Proibição de ajuntamentos"))
 
 graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "antiquewhite4",  alpha = 0.65, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -829,7 +829,7 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
     limits = c(0, NA)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-16", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
@@ -917,7 +917,7 @@ posterior_Rt_swe <-
 
 #Grafico Suécia 
 ## Linhas a adicionar no gráfico
-d_swe = data.frame(date=as.Date(c("2020-03-17", "2020-03-19", "2020-03-27")), Evento=c("Recomendação de teletrabalho", "Encerramento das escolas", "Proibição de ajuntamentos com mais de 50 pessoas"))
+d_swe = data.frame(date=as.Date(c("2020-03-17", "2020-03-19", "2020-03-27", "2020-11-01")), Evento=c("Recomendação de teletrabalho", "Encerramento das escolas", "Proibição de ajuntamentos com mais de 50 pessoas", "Novas medidas de restrição"))
 
 graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "yellow4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -950,7 +950,7 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-03-19", "2020-03-27"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-03-19", "2020-03-27", "2020-11-01"))), linetype = c("dotdash", "solid", "dotted", "twodash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
 #Tornar o grafico interativo
