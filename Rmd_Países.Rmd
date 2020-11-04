@@ -114,7 +114,9 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
 <br>
 
-Pela visualização deste gráfico
+Pela visualização deste gráfico é possível verificar que o número reprodutivo efetivo apresentou o valor mais elevado no início da pandemia (3 de Março; Rt = 3,16), ligeiramente mais baixo que o Rt inicial para Portugal (embora os casos tenham sido importados mais precocemente em Itália). O confinamento obrigatório, implementado no dia 9 de Março, contribuiu para uma descida abrupta do número de contágios, que atingiu o seu valor mínimo de 0,68 no dia 4 de Junho.
+A partir de Junho, com o levantamento de restrições às movimentações e medidas de contenção mais folgadas, ocorreu um aumento sucessivo dos valores de Rt, que culminou num novo pico no dia 26 de Agosto (Rt = 1,53).
+No mês de Setembro, a transmissão de infeção parece ter sofrido uma diminuição, mas a partir de Outubro terá surgido um novo pico (18 de Outubro; Rt = 1,57), cujo controlo passou pela implementação de certas medidas novamente, como obrigatoriedade de máscara e encerramento de escolas e universidades.
 
 <br>
 
@@ -239,7 +241,7 @@ ggplotly(graph_it, tooltip = "text")
 
 <br>
 
-TEXTO
+No caso da Alemanha, inicialmente 1 pessoa era responsável pelo ocorrência de cerca de 3,88 casos secundários (3 de Março; Rt = 3,88), período durante o qual ocorreu a importação dos primeiros casos infetados. Nos seguintes 5 dias, o valor sofreu um pequeno decréscimo seguido de um novo pico no dia 13 de Março, com Rt de 3,15. Este novo aumento na transmissão foi eficazmente controlado com o encerramento de escolas (dia 13 de Março) e declaração posterior do estado de emergência nacional (22 de Março).
 
 <br>
 
@@ -347,8 +349,8 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_ger$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04", "2020-11-02"))), linetype= c("twodash", "dotted", "dashed", "dotdash", "solid"), colour = "darkred" , alpha = 0.5) +
@@ -1163,6 +1165,9 @@ posterior_Rt_aus <-
   reduce(bind_rows)
 
 #Grafico Australia
+## Linhas a adicionar no gráfico
+d_aus = data.frame(date=as.Date(c("2020-03-16", "2020-03-20", "2020-06-30", "2020-08-02", "2020-09-27")), Evento=c("Estado de Emergência - estado Victoria", "Encerramento de fronteiras", "Confinamento obrigatório - estado Victoria", "Estado de Emergência - estado Victoria", "Levantamento gradual das medidas de restrição"))
+
 graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "cyan4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                   '<br>Rt médio: ', R_e_median))) +
@@ -1180,19 +1185,23 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_aus_var$data), max(posterior_Rt_aus$date_point))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_aus$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-20", "2020-06-30", "2020-08-02", "2020-09-27"))), linetype = c("dotted", "twodash", "solid", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_aus, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 #Tornar o grafico interativo
 ggplotly(graph_aus, tooltip = "text")

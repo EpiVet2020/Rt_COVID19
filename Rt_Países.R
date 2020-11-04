@@ -57,7 +57,7 @@ names(it_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_it_var <- it_var  %>%
-  filter(it_var$data > as.Date("2020-02-28")) %>%  
+  filter(it_var$data > as.Date("2020-02-24")) %>%  
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Itália- Uncertainty method --> "uncertain_si"
@@ -1070,7 +1070,6 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-20", "2020-06-30", "2020-08-02", "2020-09-27"))), linetype = c("dotted", "twodash", "solid", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_aus, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
-
 #Tornar o grafico interativo
 ggplotly(graph_aus, tooltip = "text")
 
@@ -1410,7 +1409,7 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_hk_var$data), max((posterior_Rt_hk$date_point)))
   ) +
   
@@ -1498,7 +1497,7 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_hk_var$data), max((posterior_Rt_hk2$date_point)))
   ) +
   
@@ -1607,7 +1606,7 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_chi_var$data), max((posterior_Rt_chi$date_point)))
   ) +
   
@@ -1723,7 +1722,7 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_usa_var$data), max((posterior_Rt_usa$date_point)))
   ) +
   
@@ -1835,7 +1834,7 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_jap_var$data), max((posterior_Rt_jap$date_point)))
   ) +
   
@@ -1960,7 +1959,7 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_mex_var$data), max((posterior_Rt_mex$date_point)))
   ) +
   
@@ -2067,7 +2066,7 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_kor_var$data), max((posterior_Rt_kor$date_point)))
   ) +
   
@@ -2175,7 +2174,7 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_bra_var$data), max((posterior_Rt_bra$date_point)))
   ) +
   
