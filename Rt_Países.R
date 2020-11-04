@@ -31,6 +31,7 @@ library(rjson)
 library(readr)
 library(readxl)
 library(scales)
+library(tibble)
 
 setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
 setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
@@ -1079,19 +1080,48 @@ ggplotly(graph_aus, tooltip = "text")
 
 
 
-# NOVA ZELÂNDIA (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
-nzealand <- read_excel("https://www.health.govt.nz/system/files/documents/pages/covid-cases-3nov20.xlsx")
+# NOVA ZELÂNDIA - NÃO ESTÁ ACABADO, NÃO MEXER PLEASE
+## Antigo (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
+nzealand <- read_excel("https://www.health.govt.nz/system/files/documents/pages/covid-cases-4nov20.xlsx")
 nzealand <- rio::import(file = nzealand)
 nzealand <- nzealand[-c(1,2), ]
 
-
-## Alterar formato para data
 nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
 
-## Criar tabela confirmados novos
 nze_var <- as.data.frame(aggregate(x = nzealand, list(nzealand$`Confirmed Covid-19 cases`), FUN = length)) #nº registos por dia
 nze_var <- nze_var[, 1:2]
 names(nze_var) <- c("data", "confirmados_novos")
+
+## Novo
+nzealand <- read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv", stringsAsFactors = FALSE)
+
+## Inverter tabela
+nzealand <- as.data.frame(t(nzealand))
+
+## Eliminar linhas 1, 3 e 4
+nzealand <- nzealand[-c(1,3,4), ]
+
+## Tranformar o nome das linhas numa coluna
+nzealand <- rownames_to_column(nzealand, var = "data")
+
+## Transformar a primeira linha no nome das colunas e eliminar linha repetida
+colnames(nzealand) <- nzealand[1,]
+nzealand <- nzealand[-1,]
+
+## Alterar formato para data
+nzealand$Country.Region <- gsub(x = nzealand$Country.Region, pattern = "X", replacement = "")
+
+nzealand$Country.Region <- as.Date(nzealand$Country.Region, "%Y-%m-%d") ## ESTÁ A DAR NA!!!
+
+
+## Criar tabela confirmados novos
+nzealand$`New Zealand`<- as.numeric(nzealand$`New Zealand`)
+nze_var <- nzealand %>%
+  select(Country.Region, `New Zealand`) %>%
+  mutate(casos = nzealand$`New Zealand` - lag(nzealand$`New Zealand`))
+nze_var <- nze_var[, -2]
+names(nze_var) <- c("data", "confirmados_novos")
+ 
 
 ## Previsão da evolução
 covid_nze_var <- nze_var  %>%
@@ -1388,11 +1418,13 @@ posterior_Rt_hk <-
 
 
 ## Gráfico Hong Kong ggplot
+## Linhas a adicionar no gráfico
+d_hk = data.frame(date=as.Date(c("2020-03-25", "2020-07-20", "2020-10-04")), Evento=c("Encerramento de fronteiras", "Novas medidas de restrição", "Proibição de máscara nos protestos"))
 
 graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "lightseagreen",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                              '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palevioletred1") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "lightseagreen") +
   
   labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
@@ -1406,6 +1438,7 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
@@ -1417,7 +1450,10 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -1494,6 +1530,7 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
@@ -1505,7 +1542,10 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
     breaks = 0:ceiling(max(posterior_Rt_hk2$R_e_q0975)),
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -1585,6 +1625,8 @@ posterior_Rt_chi <-
   reduce(bind_rows)
 
 ## Gráfico China ggplot
+## Linhas a adicionar no gráfico
+d_chi = data.frame(date=as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26")), Evento=c("Desconfinamento gradual em Hubei", "Confinamento total em Xinjiang", "Desconfinamento gradual em Xinjiang", "Confinamento parcial em Xinjiang"))
 
 graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -1603,6 +1645,7 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
@@ -1614,7 +1657,10 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_chi, tooltip = "text")
