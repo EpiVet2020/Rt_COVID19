@@ -94,6 +94,7 @@ library(rjson)
 library(readr)
 library(readxl)
 library(scales)
+library(tibble)
 
 #Importar dados
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -1427,11 +1428,13 @@ posterior_Rt_hk <-
 
 
 ## Gráfico Hong Kong ggplot
+## Linhas a adicionar no gráfico
+d_hk = data.frame(date=as.Date(c("2020-03-25", "2020-07-20", "2020-10-04")), Evento=c("Encerramento de fronteiras", "Novas medidas de restrição", "Proibição de máscara nos protestos"))
 
 graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "lightseagreen",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                              '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palevioletred1") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "lightseagreen") +
   
   labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
@@ -1445,18 +1448,21 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_hk_var$data), max((posterior_Rt_hk$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_hk$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
 
 ### Tornar gráfico interativo
@@ -1542,6 +1548,8 @@ posterior_Rt_chi <-
   reduce(bind_rows)
 
 ## Gráfico China ggplot
+## Linhas a adicionar no gráfico
+d_chi = data.frame(date=as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26")), Evento=c("Desconfinamento gradual em Hubei", "Confinamento total em Xinjiang", "Desconfinamento gradual em Xinjiang", "Confinamento parcial em Xinjiang"))
 
 graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -1560,18 +1568,22 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_chi_var$data), max((posterior_Rt_chi$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_chi$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_chi, tooltip = "text")
