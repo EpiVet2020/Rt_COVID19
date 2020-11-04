@@ -487,7 +487,7 @@ ggplotly(graph_spa, tooltip = "text")
 <br>
 
 A partir desde gráfico, é possível constatar que o número de reprodução efetivo inicial atingiu os 2,72 (8 de Março), o que não parece ter sido muito diferente em relação aos restantes países da união europeia. No entanto, neste caso, os dados utilizados só terão começado a ser reportados a partir de 1 de Março. Desde então, com a implementação do confinamento parcial e posteriormente total a nível nacional, o número de contágios diminuiu até um Rt de 0,60 no dia 1 de Maio. 
-Até ao final de Julho os valores de Rt foram aumentando gradualmente, embora se tenham mantido mais ou menos sob controlo (inferiores a 1) entre Maio e Junho.
+Até ao final de Julho os valores de Rt foram aumentando gradualmente, embora se tenham mantido mais ou menos sob controlo (inferiores a 1) entre Maio e Junho. O maior valor de Rt voltou a ser registado no dia 17 de Julho (1,56) e posteriormente voltou a apresentar dois novos picos em Setembro e Outubro, respetivamente. Com a implementação de novas restrições a 24 de Setembro, a transmissão de infeção não sofreu uma diminuição imediata, mas a partir de meados de Outubro decresceu de forma considerável até um Rt de 0,58.
 
 <br>
 
