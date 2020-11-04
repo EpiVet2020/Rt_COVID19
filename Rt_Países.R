@@ -291,7 +291,7 @@ names(spa_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_spa_var <- spa_var  %>%
-  filter(spa_var$data > as.Date("2020-02-28")) %>% 
+  filter(spa_var$data > as.Date("2020-01-31")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Espanha - Uncertainty method --> "uncertain_si"

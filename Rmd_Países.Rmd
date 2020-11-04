@@ -94,7 +94,6 @@ library(rjson)
 library(readr)
 library(readxl)
 library(scales)
-library(tibble)
 
 #Importar dados
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -242,8 +241,8 @@ ggplotly(graph_it, tooltip = "text")
 
 <br>
 
-No caso da Alemanha, inicialmente 1 pessoa era responsável pelo ocorrência de cerca de 3,88 casos secundários (3 de Março; Rt = 3,88), período durante o qual ocorreu a importação dos primeiros casos infetados. Nos seguintes 5 dias, o valor sofreu um pequeno decréscimo seguido de um novo pico no dia 13 de Março, com Rt de 3,15. Este novo aumento na transmissão foi eficazmente controlado com o encerramento de escolas (dia 13 de Março) e declaração posterior do estado de emergência nacional (22 de Março).
-
+No caso da Alemanha, inicialmente 1 pessoa era responsável pelo ocorrência de cerca de 4,07 casos secundários (4 de Março; Rt = 4,07), período durante o qual ocorreu a importação dos primeiros casos infetados. Nos seguintes 5 dias, o valor sofreu um pequeno decréscimo seguido de um novo pico no dia 13 de Março, com Rt de 3,15. Este novo aumento na transmissão foi eficazmente controlado com o encerramento de escolas (dia 13 de Março) e declaração posterior do estado de emergência nacional (22 de Março), apresentando o valor mais baixo de transmissão no dia 16 de Abril (Rt = 0,71). A partir desta data, apesar da reabertura de lojas e escolas ter contribuído para que o número de reprodução efetivo voltasse a apresentar valores acima de 1, este país parece ter conseguido manter os valores de Rt relativamente constantes. 
+A 2 de Outubro foi declarado um novo confinamento, desta vez parcial, de forma a prevenir um novo aumento no número de contágios.
 <br>
 
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
@@ -367,7 +366,8 @@ ggplotly(graph_ger, tooltip = "text")
 
 <br>
 
-TEXTO
+À semelhança do que aconteceu nos restantes países, o maior período de transmissão em Espanha ocorreu no início da pandemia, tendo atingido o valor máximo de 3,04 no dia 2 de Março. Estes valores levaram a que o país declarasse estado de emergência no dia 13 de Março, com a intenção de diminuir a probabilidade de contágio. A partir desta altura, os valores de Rt foram decrescendo de forma considerável, até ao valor mínimo de 0,46 no dia 10 de Maio. 
+Por volta desta altura, com o início do desconfinamento, assistiu-se a um aumento do número de contágios, com valores de Rt até 1,53, e mantiveram-se valores de Rt na ordem de 1 até meados de Outubro. Nesta fase, com a declaração de um novo estado de emergência na região de Madrid a 7 de Outubro e a nível nacional no dia 23 do mesmo mês, verificou-se uma descida dos valores de Rt até 0,71, o que confirma a eficácia destas medidas no controlo da doença.
 
 <br>
 
@@ -384,7 +384,7 @@ names(spa_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_spa_var <- spa_var  %>%
-  filter(spa_var$data > as.Date("2020-02-28")) %>% 
+  filter(spa_var$data > as.Date("2020-01-31")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Espanha - Uncertainty method --> "uncertain_si"
@@ -486,7 +486,8 @@ ggplotly(graph_spa, tooltip = "text")
 
 <br>
 
-TEXTO
+A partir desde gráfico, é possível constatar que o número de reprodução efetivo inicial atingiu os 2,72 (8 de Março), o que não parece ter sido muito diferente em relação aos restantes países da união europeia. No entanto, neste caso, os dados utilizados só terão começado a ser reportados a partir de 1 de Março. Desde então, com a implementação do confinamento parcial e posteriormente total a nível nacional, o número de contágios diminuiu até um Rt de 0,60 no dia 1 de Maio. 
+Até ao final de Julho os valores de Rt foram aumentando gradualmente, embora se tenham mantido mais ou menos sob controlo (inferiores a 1) entre Maio e Junho.
 
 <br>
 
@@ -1428,13 +1429,11 @@ posterior_Rt_hk <-
 
 
 ## Gráfico Hong Kong ggplot
-## Linhas a adicionar no gráfico
-d_hk = data.frame(date=as.Date(c("2020-03-25", "2020-07-20", "2020-10-04")), Evento=c("Encerramento de fronteiras", "Novas medidas de restrição", "Proibição de máscara nos protestos"))
 
 graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "lightseagreen",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
                                                                                              '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "lightseagreen") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palevioletred1") +
   
   labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
@@ -1448,21 +1447,18 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    date_breaks = "1 month",
     limits = c(min(covid_hk_var$data), max((posterior_Rt_hk$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:10,
-    limits = c(0, 10)
+    breaks = 0:ceiling(max(posterior_Rt_hk$R_e_q0975)),
+    limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 
 ### Tornar gráfico interativo
@@ -1548,8 +1544,6 @@ posterior_Rt_chi <-
   reduce(bind_rows)
 
 ## Gráfico China ggplot
-## Linhas a adicionar no gráfico
-d_chi = data.frame(date=as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26")), Evento=c("Desconfinamento gradual em Hubei", "Confinamento total em Xinjiang", "Desconfinamento gradual em Xinjiang", "Confinamento parcial em Xinjiang"))
 
 graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -1568,22 +1562,18 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    date_breaks = "1 month",
     limits = c(min(covid_chi_var$data), max((posterior_Rt_chi$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:10,
-    limits = c(0, 10)
+    breaks = 0:ceiling(max(posterior_Rt_chi$R_e_q0975)),
+    limits = c(0, NA)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
-
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
 
 ### Tornar gráfico interativo
 ggplotly(graph_chi, tooltip = "text")
