@@ -1101,13 +1101,9 @@ nzealand <- nzealand[-1,]
 ## Remover horas e minutos
 nzealand$Country.Region <- gsub(x = nzealand$Country.Region, pattern = "X", replacement = "")
 
-<<<<<<< HEAD
 nzealand$Country.Region <- as.Date(as.character(nzealand$Country.Region), format = "%Y %m %d")
-=======
-
 nzealand$Country.Region <- as.Date(nzealand$Country.Region, "%Y-%m-%d") ## ESTÁ A DAR NA!!!
 
->>>>>>> 3248957e7fc8d8dbd92b0baab7193a35c97de126
 
 ## Criar tabela confirmados novos
 nzealand$`New Zealand`<- as.numeric(nzealand$`New Zealand`)

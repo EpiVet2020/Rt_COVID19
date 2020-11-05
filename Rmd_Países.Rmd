@@ -1801,6 +1801,7 @@ posterior_Rt_jap <-
 
 
 ## Gráfico Japão ggplot
+## Linhas a adicionar no gráfico
 
 graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
