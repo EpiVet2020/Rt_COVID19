@@ -1111,6 +1111,7 @@ nzealand <- nzealand[-1,]
 ## Alterar formato para data
 nzealand$Country.Region <- gsub(x = nzealand$Country.Region, pattern = "X", replacement = "")
 
+
 nzealand$Country.Region <- as.Date(nzealand$Country.Region, "%Y-%m-%d") ## ESTÁ A DAR NA!!!
 
 
