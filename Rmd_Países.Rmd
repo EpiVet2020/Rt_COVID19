@@ -625,7 +625,7 @@ names(cz_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_cz_var <- cz_var  %>%
-  filter(cz_var$data > as.Date("2020-02-28")) %>% 
+  filter(cz_var$data > as.Date("2020-01-27")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Rép. Checa - Uncertainty method --> "uncertain_si"
@@ -745,7 +745,7 @@ names(swi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_swi_var <- swi_var  %>%
-  filter(swi_var$data > as.Date("2020-02-28")) %>% 
+  filter(swi_var$data > as.Date("2020-02-18")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Rép. Checa - Uncertainty method --> "uncertain_si"
@@ -808,7 +808,7 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
                                                                                              '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "antiquewhite3") +
   
-  labs( title = "Suiça - Evolução do Número Efetivo Reprodutivo longo do tempo", size= 10,
+  labs( title = "Suíça - Evolução do Número Efetivo Reprodutivo longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
         x = "Data",
         y = "Nº de reprodução efetivo (Rt)"
@@ -864,7 +864,7 @@ names(swe_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_swe_var <- swe_var  %>%
-  filter(swe_var$data > as.Date("2020-02-28")) %>% 
+  filter(swe_var$data > as.Date("2020-02-04")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Suécia- Uncertainty method --> "uncertain_si"
@@ -970,8 +970,9 @@ ggplotly(graph_swe, tooltip = "text")
 ## Reino Unido
 <br>
 
-TEXTO
-
+No caso do Reino Unido, o primeiro pico de transmissão a 8 de Fevereiro (Rt = 4,83) correspondeu aos primeiros casos de COVID19 confirmados no país, tendo posteriormente diminuído uma vez que o número de novos casos voltou a ter valores mínimos até ao início de Janeiro. Assim, a partir de dia 20 de Fevereiro, o Rt sofreu uma subida repentina até valores na ordem dos 4,88, que correspondeu ao período de maior transmissão de infeção no país. 
+Ao longo de Março, os valores de contágio foram diminuindo, sendo esta descida ainda mais reforçada após a implementação de confinamento obrigatório no dia 24 de Março (embora um pouco mais tardiamente que os restantes países). Desta forma, só a partir de Maio é que os valores de Rt se mantiveram abaixo de 1 e foi ainda implementada quarentena obrigatória para todos os passageiros de chegada ao Reino Unido a partir de dia 22 deste mês.
+Apesar de todas as medidas implementadas, a esperada segunda vaga de infeções não foi prevenida e desde Julho que os valores de Rt voltaram a aumentar até um novo pico a 7 de Setembro (Rt = 1,52). Na medida de controlar novos surtos, procedeu-se à proibição de ajuntamentos e, mais tarde, o país viu-se obrigado a recorrer a um novo confinamento obrigatório no dia 5 de Novembro, que é expectável que volte a reduzir os valores de Rt abaixo de 1.
 <br>
 
 ```{r pressure, fig.align='center', warning=FALSE}
@@ -981,6 +982,7 @@ uk <- uk$data
 
 ## Alterar para formato Data
 uk$date <- as.Date(uk$date, "%Y-%m-%d")
+
 ### Ordenar por data
 uk <- as.data.frame(uk[order(uk$date), ])
 
@@ -991,7 +993,7 @@ names(uk_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_uk_var <- uk_var  %>%
-  filter(uk_var$data > as.Date("2020-02-28")) %>% 
+  filter(uk_var$data > as.Date("2020-01-30")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Reino Unido - Uncertainty method --> "uncertain_si"
@@ -1047,7 +1049,7 @@ posterior_Rt_uk <-
 
 ## Gráfico Reino Unido ggplot
 ## Linhas a adicionar no gráfico
-d_uk = data.frame(date=as.Date(c("2020-03-24", "2020-05-22", "2020-09-14")), Evento=c("Confinamento obrigatório", "Quarentena obrigatória para quem chega", "Proibição de ajuntamentos"))
+d_uk = data.frame(date=as.Date(c("2020-03-24", "2020-05-22", "2020-09-14", "2020-11-05")), Evento=c("Confinamento obrigatório", "Quarentena obrigatória para quem chega", "Proibição de ajuntamentos", "Confinamento obrigatório"))
 
 graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "plum4",  alpha = 0.65, size = 1,  aes(group = 1, text = paste('Data: ', date_point,
@@ -1075,11 +1077,11 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_uk$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-24", "2020-05-22", "2020-09-14"))), linetype = c("solid", "dotted", "twodash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-24", "2020-05-22", "2020-09-14", "2020-11-05"))), linetype = c("solid", "dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_uk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
@@ -1092,7 +1094,7 @@ ggplotly(graph_uk, tooltip = "text")
 
 <br>
 
-TEXTO
+Pela observação do gráfico, pode-se constatar que a Austrália apresentou uma transmissão inicial de infeção muito considerável (Rt = 9.996; 21 de Fevereiro), tendo posteriormente ...
 
 <br>
 
@@ -1110,7 +1112,7 @@ names(aus_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_aus_var <- aus_var  %>%
-  filter(aus_var$data > as.Date("2020-02-28")) %>% 
+  filter(aus_var$data > as.Date("2020-01-25")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Australia- Uncertainty method --> "uncertain_si"
@@ -1228,7 +1230,8 @@ TEXTO
 
 <br>
 
-TEXTO
+Como podemos observar no gráfico, a Índia apresentou valores de transmissão na ordem dos 37 no início de março o que, ainda assim, poderá ser enviesado devido à possibilidade do número de novos casos confirmados poder ter sido subestimado. Ainda assim, trata-se de um valor mais elevado que os restantes países, o que pode refletir a dificuldade de implementação de medidas de restrição neste país. A partir de 4 de março começou a ser realizada a triagem a todos os passageiros e, mais tarde, a 25 de Março foi implementado o confinamento obrigatório. 
+Embora estas medidas tenham contribuído para diminuir os valores até perto do limiar de tranmissão (Rt ≂ 1), não conseguiram controlar a disseminação da doença até, pelo menos, 19 de Setembro (Rt = 1,004). A partir desde dia, o número de reprodução efetivo diminuiu ligeiramente e manteve-se abaixo de 1 até Novembro, embora o país tenha continuado a apresentar um número de novos casos considerável (50465 novos confirmados no dia 4 de Novembro), o que pode ser explicado por uma maior dificuldade de testagem.
 
 <br>
 
@@ -1245,7 +1248,7 @@ names(india_var) <- c("data", "confirmados_novos")
 
 # Previsão da evolução - acrescentar coluna numerada 
 covid_india_var <- india_var  %>%
-  filter(india_var$data > as.Date("2020-02-28")) %>% 
+  filter(india_var$data > as.Date("2020-01-31")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ### Cálculo do Rt India- Uncertainty method --> "uncertain_si"
@@ -1302,16 +1305,14 @@ posterior_Rt_india <-
   ) %>% 
   reduce(bind_rows)
 
-posterior_Re_india <- posterior_Rt_india %>%
-  mutate(fit = round(R_e_median, 2),
-         lwr=round(R_e_q0025, 2),
-         upr=round(R_e_q0975, 2))
-
 #Grafico Índia
-graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "coral3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+## Linhas a adicionar no gráfico
+d_ind = data.frame(date=as.Date(c("2020-03-04", "2020-03-25", "2020-06-08")), Evento=c("Triagem obrigatória a todos os passageiros", "Confinamento obrigatório", "Levantamento gradual das medidas de restrição"))
+
+graph_ind<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
+  geom_line(colour = "darkcyan",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                      '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "coral") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "darkcyan") +
   
   labs( title = "Índia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados: ",
@@ -1324,23 +1325,27 @@ graph_india<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
   theme(axis.title = element_text(size = 10, hjust = 0.5),
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
-        axis.title.y = element_text(size = 7),
+        axis.title.y = element_text(size = 3),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_india_var$data), max(posterior_Rt_india$date_point))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_india$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = seq(from = 0, to = 90, by = 5),
+    limits = c(0, 90)
   ) +
   
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-04", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_ind, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 #Tornar o grafico interativo
-ggplotly(graph_india, tooltip = "text")
+ggplotly(graph_ind, tooltip = "text")
 ```
 
 <br>
@@ -1349,7 +1354,11 @@ ggplotly(graph_india, tooltip = "text")
 
 <br>
 
-TEXTO
+Em Hong Kong, como é possível verificar no gráfico, os valores de transmissão iniciais não atingiram valores tão elevados quanto outros países, tendo atingido um valor de Rt de 2,798 a 20 de março. Com o encerramento geral de fronteiras, observou-se uma diminuição considerável dos valores de contágio no final de março, tendo assumido o seu mínimo a 18 de Abril (Rt = 0,258). 
+A partir desta altura, foi-se assistindo a um pequeno aumento no número de novos casos confirmados, que justificou um aumento dos valores de Rt acima do limiar de transmissibilidade (Rt > 1). Apesar do número de transmissões parecer estar novamente a ser controlado após dia 30 de abril, surgiram dois novos picos, a 23 de junho e 10 de julho, que justificaram o consequente maior número de novos positivos em Hong Kong até então.
+Com a implementação de novas medidas de restrição a 20 de julho, observou-se um decréscimo acentuado da transmissibilidade, só voltando a apresentar valores de Rt acima de 1 a partir de Setembro. 
+Na sequência dos protestos a que se tem assistido em Hong Kong, implementou-se a proibição de utilização de máscara neste contexto, que apesar de apenas entrar em vigor para as pessoas que participem em manifestações ilegais e recorram à violência, pode ter contribuído para um aumento do número de transmissões neste período crítico da doença.
+
 
 <br>
 
@@ -1429,11 +1438,13 @@ posterior_Rt_hk <-
 
 
 ## Gráfico Hong Kong ggplot
+## Linhas a adicionar no gráfico
+d_hk = data.frame(date=as.Date(c("2020-03-25", "2020-07-20", "2020-10-04")), Evento=c("Encerramento de fronteiras", "Novas medidas de restrição", "Proibição de máscara nos protestos"))
 
 graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "palevioletred3",  alpha = 0.5, size = 1.5, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "lightseagreen",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                              '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palevioletred1") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "lightseagreen") +
   
   labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
@@ -1447,18 +1458,22 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_hk_var$data), max((posterior_Rt_hk$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_hk$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 
 ### Tornar gráfico interativo
@@ -2068,119 +2083,4 @@ ggplotly(graph_bra) %>%
 
 ```
 
-## China
-
-<br>
-
-TEXTO
-
-<br>
-
-```{r pressure, fig.align='center', warning=FALSE}
-#CHINA (https://covid19.who.int/table)
-china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
-
-## Alterar formato para data
-china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
-
-## Criar tabela confirmados novos
-chi_var <- china %>%
-  filter(Country == "China") %>%
-  select(ï..Date_reported, New_cases)
-names(chi_var) <- c("data", "confirmados_novos")
-
-## Previsão da evolução
-covid_chi_var <- chi_var  %>%
-  filter(chi_var$data > as.Date("2020-02-28")) %>% 
-  dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt China - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-## Aplicar a função Estimate_R
-Rt_nonparam_si_chi <- estimate_R(as.numeric(covid_chi_var$confirmados_novos), 
-                                 method = "uncertain_si",
-                                 config = sens_configs
-)
-
-sample_windows_chi <- seq(length(Rt_nonparam_si_chi$R$t_start))
-
-## Criar um data frame com valores de R
-posterior_Rt_chi <- 
-  map(.x = sample_windows_chi,
-      .f = function(x) {
-        
-        posterior_sample_obj_chi <- 
-          sample_posterior_R(
-            R = Rt_nonparam_si_chi,
-            n = 1000, 
-            window = x )
-        
-        posterior_sample_estim_chi <- 
-          data.frame(
-            window_index = x,
-            window_t_start = Rt_nonparam_si_chi$R$t_start[x],
-            window_t_end = Rt_nonparam_si_chi$R$t_end[x],
-            date_point = covid_chi_var[covid_chi_var$t_start == Rt_nonparam_si_chi$R$t_end[x], "data"],
-            R_e_median = median(posterior_sample_obj_chi),
-            R_e_q0025 = quantile(posterior_sample_obj_chi, probs = 0.025),
-            R_e_q0975 = quantile(posterior_sample_obj_chi, probs = 0.975))
-        
-        return(posterior_sample_estim_chi)}
-  ) %>% 
-  
-  reduce(bind_rows)
-
-## Gráfico China ggplot
-graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
-  
-  labs( title = " China - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados:  ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
-  theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
-        plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
-        axis.title.y = element_text(size = 7),
-  ) +
-  
-  scale_x_date(
-    date_breaks = "1 month",
-    limits = c(min(covid_chi_var$data), max((posterior_Rt_chi$date_point)))
-  ) +
-  
-  scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_chi$R_e_q0975)),
-    limits = c(0, NA)
-  ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
-
-### Tornar gráfico interativo
-ggplotly(graph_chi) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
-
-```
 

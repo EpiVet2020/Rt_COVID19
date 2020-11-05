@@ -519,7 +519,7 @@ names(cz_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_cz_var <- cz_var  %>%
-  filter(cz_var$data > as.Date("2020-02-28")) %>% 
+  filter(cz_var$data > as.Date("2020-01-27")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Rép. Checa - Uncertainty method --> "uncertain_si"
@@ -632,7 +632,7 @@ names(swi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_swi_var <- swi_var  %>%
-  filter(swi_var$data > as.Date("2020-02-28")) %>% 
+  filter(swi_var$data > as.Date("2020-02-18")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Rép. Checa - Uncertainty method --> "uncertain_si"
@@ -746,7 +746,7 @@ names(swe_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_swe_var <- swe_var  %>%
-  filter(swe_var$data > as.Date("2020-02-28")) %>% 
+  filter(swe_var$data > as.Date("2020-02-04")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Suécia- Uncertainty method --> "uncertain_si"
@@ -977,7 +977,7 @@ names(aus_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_aus_var <- aus_var  %>%
-  filter(aus_var$data > as.Date("2020-02-28")) %>% 
+  filter(aus_var$data > as.Date("2020-01-25")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Australia- Uncertainty method --> "uncertain_si"
@@ -1080,18 +1080,7 @@ ggplotly(graph_aus, tooltip = "text")
 
 
 
-# NOVA ZELÂNDIA - NÃO ESTÁ ACABADO, NÃO MEXER PLEASE
-## Antigo (alterar diariamente em https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-current-cases-details#download)
-nzealand <- read_excel("https://www.health.govt.nz/system/files/documents/pages/covid-cases-4nov20.xlsx")
-nzealand <- rio::import(file = nzealand)
-nzealand <- nzealand[-c(1,2), ]
-
-nzealand$`Confirmed Covid-19 cases` <- openxlsx::convertToDate(nzealand$`Confirmed Covid-19 cases`) #alterar formato de data excel para Date no R
-
-nze_var <- as.data.frame(aggregate(x = nzealand, list(nzealand$`Confirmed Covid-19 cases`), FUN = length)) #nº registos por dia
-nze_var <- nze_var[, 1:2]
-names(nze_var) <- c("data", "confirmados_novos")
-
+# NOVA ZELÂNDIA
 ## Novo
 nzealand <- read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv", stringsAsFactors = FALSE)
 
@@ -1109,10 +1098,10 @@ colnames(nzealand) <- nzealand[1,]
 nzealand <- nzealand[-1,]
 
 ## Alterar formato para data
+## Remover horas e minutos
 nzealand$Country.Region <- gsub(x = nzealand$Country.Region, pattern = "X", replacement = "")
 
-nzealand$Country.Region <- as.Date(nzealand$Country.Region, "%Y-%m-%d") ## ESTÁ A DAR NA!!!
-
+nzealand$Country.Region <- as.Date(as.character(nzealand$Country.Region), format = "%Y %m %d")
 
 ## Criar tabela confirmados novos
 nzealand$`New Zealand`<- as.numeric(nzealand$`New Zealand`)
@@ -1231,6 +1220,8 @@ india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv"
 
 india$Date_YMD <- as.Date(india$Date_YMD, "%Y-%m-%d")
 
+testing_india <- read.csv("https://www.kaggle.com/sudalairajkumar/covid19-in-india?select=StatewiseTestingDetails.csv")
+
 # Tabela
 india_var <- india %>%
   select(Date_YMD, Daily.Confirmed)
@@ -1238,7 +1229,7 @@ names(india_var) <- c("data", "confirmados_novos")
 
 # Previsão da evolução - acrescentar coluna numerada 
 covid_india_var <- india_var  %>%
-  filter(india_var$data > as.Date("2020-02-28")) %>% 
+  filter(india_var$data > as.Date("2020-01-31")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ### Cálculo do Rt India- Uncertainty method --> "uncertain_si"
@@ -1315,7 +1306,7 @@ graph_ind<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
   theme(axis.title = element_text(size = 10, hjust = 0.5),
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
-        axis.title.y = element_text(size = 7),
+        axis.title.y = element_text(size = 3),
         axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
@@ -1325,8 +1316,8 @@ graph_ind<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_india$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = seq(from = 0, to = 90, by = 5),
+    limits = c(0, 90)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
