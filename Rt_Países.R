@@ -1778,7 +1778,7 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
     limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-25", "2020-04-13"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-25", "2020-04-13"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_usa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
 
@@ -1897,7 +1897,7 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-04-07", "2020-05-25"))), linetype = c("solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_usa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_jap, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
 
 ### Tornar gráfico interativo
