@@ -1101,7 +1101,13 @@ nzealand <- nzealand[-1,]
 ## Remover horas e minutos
 nzealand$Country.Region <- gsub(x = nzealand$Country.Region, pattern = "X", replacement = "")
 
+<<<<<<< HEAD
 nzealand$Country.Region <- as.Date(as.character(nzealand$Country.Region), format = "%Y %m %d")
+=======
+
+nzealand$Country.Region <- as.Date(nzealand$Country.Region, "%Y-%m-%d") ## ESTÁ A DAR NA!!!
+
+>>>>>>> 3248957e7fc8d8dbd92b0baab7193a35c97de126
 
 ## Criar tabela confirmados novos
 nzealand$`New Zealand`<- as.numeric(nzealand$`New Zealand`)
@@ -1562,7 +1568,7 @@ names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_chi_var <- chi_var  %>%
-  filter(chi_var$data > as.Date("2020-02-28")) %>% 
+  filter(chi_var$data > as.Date("2020-01-03")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt China - Uncertainty method --> "uncertain_si"
@@ -1684,7 +1690,7 @@ names(usa_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_usa_var <- usa_var  %>%
-  filter(usa_var$data > as.Date("2020-02-28")) %>% 
+  filter(usa_var$data > as.Date("2020-01-29")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt USA - Uncertainty method --> "uncertain_si"
@@ -1795,7 +1801,7 @@ names(jap_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_jap_var <- jap_var  %>%
-  filter(jap_var$data > as.Date("2020-02-28")) %>% 
+  filter(jap_var$data > as.Date("2020-02-10")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Japão - Uncertainty method --> "uncertain_si"

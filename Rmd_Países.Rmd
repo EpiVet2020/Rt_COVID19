@@ -1505,7 +1505,7 @@ names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_chi_var <- chi_var  %>%
-  filter(chi_var$data > as.Date("2020-02-28")) %>% 
+  filter(chi_var$data > as.Date("2020-01-03")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt China - Uncertainty method --> "uncertain_si"
@@ -1559,6 +1559,8 @@ posterior_Rt_chi <-
   reduce(bind_rows)
 
 ## Gráfico China ggplot
+## Linhas a adicionar no gráfico
+d_chi = data.frame(date=as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26")), Evento=c("Desconfinamento gradual em Hubei", "Confinamento total em Xinjiang", "Desconfinamento gradual em Xinjiang", "Confinamento parcial em Xinjiang"))
 
 graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -1577,18 +1579,22 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_chi_var$data), max((posterior_Rt_chi$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_chi$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_chi, tooltip = "text")
@@ -1625,7 +1631,7 @@ names(usa_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_usa_var <- usa_var  %>%
-  filter(usa_var$data > as.Date("2020-02-28")) %>% 
+  filter(usa_var$data > as.Date("2020-01-29")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt USA - Uncertainty method --> "uncertain_si"
@@ -1680,7 +1686,6 @@ posterior_Rt_usa <-
 
 
 ## Gráfico USA ggplot
-
 graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "royalblue4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
@@ -1701,16 +1706,15 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_usa_var$data), max((posterior_Rt_usa$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_usa$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
-
 
 ### Tornar gráfico interativo
 ggplotly(graph_usa, tooltip = "text")
@@ -1742,7 +1746,7 @@ names(jap_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_jap_var <- jap_var  %>%
-  filter(jap_var$data > as.Date("2020-02-28")) %>% 
+  filter(jap_var$data > as.Date("2020-02-10")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Japão - Uncertainty method --> "uncertain_si"
