@@ -1793,6 +1793,9 @@ posterior_Rt_usa <-
 
 
 ## Gráfico USA ggplot
+## Linhas a adicionar no gráfico
+d_usa = data.frame(date=as.Date(c("2020-03-13", "2020-03-25", "2020-04-13")), Evento=c("Estado de Emergência", "Confinamento total", "Estado de Calamidade"))
+
 graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "royalblue4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
@@ -1810,6 +1813,7 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
@@ -1821,7 +1825,10 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-25", "2020-04-13"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_usa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_usa, tooltip = "text")
@@ -1833,7 +1840,7 @@ ggplotly(graph_usa, tooltip = "text")
 
 <br>
 
-TEXTO
+No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de fevereiro (Rt = 3.09), altura em que ainda não tinham sido implementadas medidas de restrição e de distanciamento social, levando assim a uma maior transmissão de vírus. No dia 29 do mês seguinte, foi atingido um novo pico de 2.03, no entanto a curva iniciou a sua descida logo após esta data com a declaração do Estado de Emergência no dia 7 de abril. Apesar deste não obrigar ao confinamento da população, sendo apenas voluntário, foi suficiente para fazer o Rt decrescer até ao valor mínimo de 0.49 ao dia 11 de maio. Duas semanas mais tarde, o Estado de Emergência foi suspenso (25 de maio) e, a partir essa data e até 4 de julho, que se registou um aumento progressivo do Rt. Desde então que o Rt tem vindo a diminuir e, mais recentemente, a estabilizar em valores bastante próximos do 1, o que indica uma desaceleração na transmissão. 
 
 <br>
 
@@ -1909,11 +1916,12 @@ posterior_Rt_jap <-
 
 ## Gráfico Japão ggplot
 ## Linhas a adicionar no gráfico
+d_jap = data.frame(date=as.Date(c("2020-04-07", "2020-05-25")), Evento=c("Estado de Emergência com confinamento voluntário", "Suspensão do Estado de Emergência"))
 
 graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "royalblue",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "royalblue") +
   
   labs( title = " Japão - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
@@ -1927,18 +1935,22 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_jap_var$data), max((posterior_Rt_jap$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_jap$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-04-07", "2020-05-25"))), linetype = c("solid", "twodash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_jap, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_jap, tooltip = "text")
@@ -1950,12 +1962,118 @@ ggplotly(graph_jap, tooltip = "text")
 
 <br>
 
-TEXTO
+No México, os primeiros casos foram registados no fim de fevereiro e o pico no Rt (Rt = 6.68) foi atingido no dia 15 de março, refletindo a elevada transmissão de vírus, uma vez que nesta altura ainda não existiam medidas de restrição em vigor. No fim de março foi declarado o Estado de Emergência e observou-se uma descida gradual no Rt até valores próximos de 1. Até meados de outubro, apenas se registaram pequenas flutuações e no dia 10 de outubro deu-se um novo pico (Rt = 1.77), retomando depois valores mais constantes, sempre próximos de 1. 
 
 <br>
 
 ```{r pressure, fig.align='center', warning=FALSE}
+# MÉXICO (https://covid19.who.int/table)
+mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
+## Alterar formato para data
+mexico$ï..Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
+
+## Criar tabela confirmados novos
+mex_var <- mexico %>%
+  filter(Country == "Mexico") %>%
+  select(ï..Date_reported, New_cases)
+names(mex_var) <- c("data", "confirmados_novos")
+
+## Previsão da evolução
+covid_mex_var <- mex_var  %>%
+  filter(mex_var$data > as.Date("2020-02-28")) %>% 
+  dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt México - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+  make_config(
+    list(
+      mean_si = 4.7, std_mean_si = 0.7,
+      min_mean_si = 3.7, max_mean_si = 6.0,
+      std_si = 2.9, std_std_si = 0.5,
+      min_std_si = 1.9, max_std_si = 4.9,
+      n1 = 1000,
+      n2 = 100,
+      seed = 123456789
+    )
+  )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_mex <- estimate_R(as.numeric(covid_mex_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_mex <- seq(length(Rt_nonparam_si_mex$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_mex <- 
+  map(.x = sample_windows_mex,
+      .f = function(x) {
+        
+        posterior_sample_obj_mex <- 
+          sample_posterior_R(
+            R = Rt_nonparam_si_mex,
+            n = 1000, 
+            window = x )
+        
+        posterior_sample_estim_mex <- 
+          data.frame(
+            window_index = x,
+            window_t_start = Rt_nonparam_si_mex$R$t_start[x],
+            window_t_end = Rt_nonparam_si_mex$R$t_end[x],
+            date_point = covid_mex_var[covid_mex_var$t_start == Rt_nonparam_si_mex$R$t_end[x], "data"],
+            R_e_median = median(posterior_sample_obj_mex),
+            R_e_q0025 = quantile(posterior_sample_obj_mex, probs = 0.025),
+            R_e_q0975 = quantile(posterior_sample_obj_mex, probs = 0.975))
+        
+        return(posterior_sample_estim_mex)}
+  ) %>% 
+  
+  reduce(bind_rows)
+
+## Gráfico México ggplot
+## Linhas a adicionar no gráfico
+d_mex = data.frame(date=as.Date(c("2020-03-31", "2020-06-01")), Evento=c("Estado de Emergência", "Desconfinamento gradual"))
+
+graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+  
+  labs( title = " México - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados:  ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_mex_var$data), max((posterior_Rt_mex$date_point)))
+  ) +
+  
+  scale_y_continuous(
+    breaks = 0:10,
+    limits = c(0, 10)
+  ) +
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-31", "2020-06-01"))), linetype = c("twodash", "solid"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_mex, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
+
+### Tornar gráfico interativo
+ggplotly(graph_mex, tooltip = "text")
 ```
 
 <br>
@@ -1964,7 +2082,7 @@ TEXTO
 
 <br>
 
-TEXTO
+Numa primeira fase da pandemia na Coreia do Sul, verificou-se uma elevada transmissão de vírus, com o Rt a atingir valores na ordem dos 14 no dia 22 de fevereiro. O governo coreano apresentou uma abordagem baseada na testagem da população, permitindo detetar, isolar e tratar todos os positivos, contrastanto com as medidas de confinamento total e obrigatório implementadas nos outros países. Desde meados de março, que esta medida se fez refletir na transmissão, com uma consequente diminuição do Rt. No dia 17 de agosto, surgiu um novo pico (Rt = 2.63) porém, este aumento da transmissão foi rapidamento controlado através do confinamento parcial decretado no dia anterior, voltando o valor de Rt a diminuir e estabilizar em valores perto de 1. 
 
 <br>
 
@@ -1983,7 +2101,7 @@ names(kor_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_kor_var <- kor_var  %>%
-  filter(kor_var$data > as.Date("2020-02-28")) %>% 
+  filter(kor_var$data > as.Date("2020-01-20")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Coreia do Sul - Uncertainty method --> "uncertain_si"
@@ -2037,10 +2155,13 @@ posterior_Rt_kor <-
   reduce(bind_rows)
 
 ## Gráfico Coreia do Sul ggplot
+## Linhas a adicionar no gráfico
+d_kor = data.frame(date=as.Date(c("2020-02-21", "2020-04-01", "2020-08-16", "2020-10-12")), Evento=c("Estado de Emergência em Daegu e Cheongdo", "Quarentena obrigatória para passageiros dos EUA e Europa", "Confinamento parcial", "Levantamento gradual das restrições"))
 
 graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+  geom_line(colour = "seagreen",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "seagreen") +
   
   labs( title = " Coreia do Sul - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
@@ -2054,18 +2175,22 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_kor_var$data), max((posterior_Rt_kor$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_kor$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:15,
+    limits = c(0, 15)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-02-21", "2020-04-01", "2020-08-16", "2020-10-12"))), linetype = c("twodash", "dotdash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_kor, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_kor) %>%
