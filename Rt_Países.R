@@ -1910,32 +1910,16 @@ ggplotly(graph_jap, tooltip = "text")
 
 
 
-# MÉXICO (https://www.gob.mx/salud/documentos/datos-abiertos-152127)
-## Criar pasta temporária para guardar zip do mexico
-MEXDATA <- tempfile() 
-
-## Download do zip para a pasta temporária
-download.file("http://datosabiertos.salud.gob.mx/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip", MEXDATA)
-
-## Fazer unzip do cvs 
-mexico <- read.csv(unz(MEXDATA, "201024COVID19MEXICO.csv")) 
-
-## Eliminar pasta temporária
-unlink(MEXDATA) 
+# MÉXICO
+mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-mexico$FECHA_INGRESO <- as.Date(mexico$FECHA_INGRESO, "%Y-%m-%d")
+mexico$ï..Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
-### Ordenar por data
-mexico <- as.data.frame(mexico[order(mexico$FECHA_INGRESO),])
-### Selecionar apenas casos confirmados, que correspondem aos nº 1 na coluna do resultado lab
 mex_var <- mexico %>%
-  filter(RESULTADO_LAB == "1") 
-
-mex_var <- as.data.frame(aggregate(x = mex_var , list(mex_var$FECHA_INGRESO), FUN = length)) #nº registos por dia
-mex_var <- mex_var %>%
-  select(Group.1, FECHA_INGRESO)
+  filter(Country == "Mexico") %>%
+  select(ï..Date_reported, New_cases)
 names(mex_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -1994,6 +1978,8 @@ posterior_Rt_mex <-
   reduce(bind_rows)
 
 ## Gráfico México ggplot
+## Linhas a adicionar no gráfico
+d_mex = data.frame(date=as.Date(c("2020-03-31", "2020-06-01")), Evento=c("Estado de Emergência", "Desconfinamento gradual"))
 
 graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -2012,6 +1998,7 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
@@ -2023,7 +2010,10 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-31", "2020-06-01"))), linetype = c("twodash", "solid"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_mex, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_mex, tooltip = "text")
@@ -2047,7 +2037,7 @@ names(kor_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_kor_var <- kor_var  %>%
-  filter(kor_var$data > as.Date("2020-02-28")) %>% 
+  filter(kor_var$data > as.Date("2020-01-20")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Coreia do Sul - Uncertainty method --> "uncertain_si"
@@ -2101,11 +2091,13 @@ posterior_Rt_kor <-
   reduce(bind_rows)
 
 ## Gráfico Coreia do Sul ggplot
+## Linhas a adicionar no gráfico
+d_kor = data.frame(date=as.Date(c("2020-02-21", "2020-04-01", "2020-08-16", "2020-10-12")), Evento=c("Estado de Emergência em Daegu e Cheongdo", "Quarentena obrigatória para passageiros dos EUA e Europa", "Confinamento parcial", "Levantamento gradual das restrições"))
 
 graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "seagreen",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "seagreen") +
   
   labs( title = " Coreia do Sul - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
@@ -2119,6 +2111,7 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
@@ -2127,10 +2120,13 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:10,
-    limits = c(0, 10)
+    breaks = 0:15,
+    limits = c(0, 15)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-02-21", "2020-04-01", "2020-08-16", "2020-10-12"))), linetype = c("twodash", "dotdash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_kor, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_kor, tooltip = "text")
@@ -2141,16 +2137,16 @@ ggplotly(graph_kor, tooltip = "text")
 
 
 
-#BRASIL (https://covid19.who.int/table)
+# BRASIL (https://covid19.who.int/table)
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-brasil$Date_reported <- as.Date(brasil$Date_reported, "%Y-%m-%d")
+brasil$ï..Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 bra_var <- brasil %>%
   filter(Country == "Brazil") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(bra_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
