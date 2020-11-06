@@ -606,7 +606,8 @@ ggplotly(graph_bel, tooltip = "text")
 
 <br>
 
-TEXTO
+O priemiro caso confirmado de COVID-19 na República checa foi no dia 1 de Março, e por esta mesma razão o Rt neste dia foi 18,05, que representou o pico da transmissibilidade neste país. No dia 12 de Março foi declarado o Estado de Emergência, com a durção de um mês, o que permitiu que exixtisse uma redução dos valores de transmissibilidade, até um minimo de 0,62 no dia 16 de Abril. No dia 11 de Maio foram reabertas as lojas, permitindo uma maior abertura, após esta decisão existiram ligeiras oscilações nos valores de Rt, com um máximo de 0,94 no dia 
+28 de Junho, posteriormente atingindo um mínimo de 0.66 no dia 6 de Julho. Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas novas medidas de restrição, um novo Estado de Emergência no dia 5 de outubro, e a proibição das movimentações no dia 22 de outubro, existindo uma redução dos valores de Rt. Atualmente este valor é inferior a 1 (0,99).
 
 <br>
 
@@ -615,11 +616,11 @@ TEXTO
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 ## Alterar formato para data
-czechr$datum <- as.Date(czechr$datum, "%Y-%m-%d")
+czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d")
 
 ## Tabela confirmados novos
 cz_var <- czechr %>%
-  select(datum, prirustkovy_pocet_nakazenych)
+  select(ï..datum, prirustkovy_pocet_nakazenych)
 names(cz_var) <- c("data", "confirmados_novos")
 
 
@@ -715,9 +716,10 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22"))), linetype = c("solid", "dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
-
+graph_cz
 ### Tornar gráfico interativo
-ggplotly(graph_cz, tooltip = "text")
+graph_cz_int <- ggplotly(graph_cz, tooltip = "text")
+graph_cz_int
 ```
 
 <br>
@@ -726,7 +728,7 @@ ggplotly(graph_cz, tooltip = "text")
 
 <br>
 
-TEXTO
+Na Suiça as primeiras medidas começaram a ser tomadas no final do mês de fevereiro, devido às celebrações de Carnaval, quando se deram os primeiros casos, a 24 de fevereiro. Pelo que, os valores iniciais de Rt foram de 23,14 a 26 de fevereiro. No dia 13 de março foram aplicadas algumas medidas restritivas, como o encerramento de escolas, e no dia 16 de março declarado o Estado de Emergência. Estes acontecimentos levaram a que existisse uma redução nos valores de transmissibilidade, até um mínimo de 0,62 no dia 16 de abril. A partir do dia 27 de abril as restrições foram sendo levantadas, levando a um aumento do núemro de casos, e consequentemente do Rt para valores de 1,78 (1 de julho). A partir de meados de setembro existe um aumento de casos generalizado em toda a Europa, o que provocou o aumento do número de reprodução para 1,79 no dia 9 de outubro. Foram aplicadas novamente medidas de restrição, como a proibição de ajuntamentos no dia 19 de outubro, o que permitiu que existisse uma ligeira redução dos valores de Rt, até ao autual de 1,08 (4 de novembro).
 
 <br>
 
@@ -845,7 +847,8 @@ ggplotly(graph_swi, tooltip = "text")
 
 <br>
 
-TEXTO
+É importante analisar os dados da Suécia, visto que este país defendeu uma filosofia de combate ao vírus muito diferente dos restantes países europeus, a imunidade de grupo.
+A Suiça teve o primeiro caso de COVID-19 no dia 26 de fevereiro, no qual o valor de Rt era de 8,27. Após este dia, apresentou o valor máximo de transmissibilidade no dia 28 de  fevereiro, de 23,14, apresentando em seguida uma redução drástica destes valores, apresentando um mínimo de 1,06 no dia em que as escolas foram encerradas (19 de março). Existiu, em seguida, um novo aumento dos valores de Rt, para 1,57 no dia 28 de março. Neste mesmo dia foi aplicada a proibição de ajuntamentos comm mais de 50 pessoas, o que permitiu a redução da transmissibilidade para valores inferiores a 1 (0,99 no dia 14 de abril). Entre abril e setembro os valores de Rt oscilaram ligeiramente, apresentando-se na sua maioria superiroes a 1, mas também alcançando o seu mínimo no dia 10 de julho (0,60). A partir de setembro é visisvel que estes valores sofreram, novamente, um aumento, visto que desde o dia 4 de setembro não apresentaram valores inferiores a 1. Devido ao aumento preocupante de casos no mês de outubro, no dia 1 de novembro foi feita a recomendação de teletrabalho, o que permiitu uma ligeira diminuição dos valores de Rt para o atual 1,33 (4 de novembro). Conclui-se que, apesar da Suécia ter apresentado valores de transmissibilidade inferiores a 1, estes foram constantes apenas durante um mês (julho), enquanto que noutros países foi possível manter este valor inferior a 1 durante mais tempo.
 
 <br>
 
