@@ -1081,42 +1081,24 @@ ggplotly(graph_aus, tooltip = "text")
 
 
 # NOVA ZELÂNDIA
-## Novo
-nzealand <- read.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv", stringsAsFactors = FALSE)
-
-## Inverter tabela
-nzealand <- as.data.frame(t(nzealand))
-
-## Eliminar linhas 1, 3 e 4
-nzealand <- nzealand[-c(1,3,4), ]
-
-## Tranformar o nome das linhas numa coluna
-nzealand <- rownames_to_column(nzealand, var = "data")
-
-## Transformar a primeira linha no nome das colunas e eliminar linha repetida
-colnames(nzealand) <- nzealand[1,]
-nzealand <- nzealand[-1,]
+## Base de dados WHO
+nzealand <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-## Remover horas e minutos
-nzealand$Country.Region <- gsub(x = nzealand$Country.Region, pattern = "X", replacement = "")
-
-nzealand$Country.Region <- as.Date(as.character(nzealand$Country.Region), format = "%Y %m %d")
-nzealand$Country.Region <- as.Date(nzealand$Country.Region, "%Y-%m-%d") ## ESTÁ A DAR NA!!!
-
+nzealand$Date_reported <- as.Date(nzealand$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
-nzealand$`New Zealand`<- as.numeric(nzealand$`New Zealand`)
-nze_var <- nzealand %>%
-  select(Country.Region, `New Zealand`) %>%
-  mutate(casos = nzealand$`New Zealand` - lag(nzealand$`New Zealand`))
-nze_var <- nze_var[, -2]
-names(nze_var) <- c("data", "confirmados_novos")
- 
+nzealand_var <- nzealand %>%
+  filter(Country == "New Zealand") %>%
+  select(Date_reported, New_cases)
+names(nzealand_var) <- c("data", "confirmados_novos")
+
+## Alterar para formato Data
+nzealand_var$data <- as.Date(nzealand_var$data, "%Y-%m-%d")
 
 ## Previsão da evolução
-covid_nze_var <- nze_var  %>%
-  filter(nze_var$data > as.Date("2020-02-28")) %>% 
+covid_nze_var <- nzealand_var  %>%
+  filter(nzealand_var$data > as.Date("2020-01-03")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
 ## Cálculo do Rt Nova Zelândia - Uncertainty method --> "uncertain_si"
@@ -1209,7 +1191,6 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_nze, tooltip = "text")
-
 
 
 

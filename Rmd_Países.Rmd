@@ -1217,12 +1217,119 @@ ggplotly(graph_aus, tooltip = "text")
 
 <br>
 
-TEXTO
-
 <br>
 
 ```{r pressure, fig.align='center', warning=FALSE}
+# NOVA ZELÂNDIA
+## Base de dados WHO
+nzealand <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
+## Alterar formato para data
+nzealand$Date_reported <- as.Date(nzealand$Date_reported, "%Y-%m-%d")
+
+## Criar tabela confirmados novos
+nzealand_var <- nzealand %>%
+  filter(Country == "New Zealand") %>%
+  select(Date_reported, New_cases)
+names(nzealand_var) <- c("data", "confirmados_novos")
+
+## Alterar para formato Data
+nzealand_var$data <- as.Date(nzealand_var$data, "%Y-%m-%d")
+
+## Previsão da evolução
+covid_nze_var <- nzealand_var  %>%
+  filter(nzealand_var$data > as.Date("2020-01-03")) %>% 
+  dplyr::mutate(t_start = dplyr::row_number())
+
+## Cálculo do Rt Nova Zelândia - Uncertainty method --> "uncertain_si"
+### Serial Interval (c/ base nos valores anteriores)
+
+sens_configs <- 
+  make_config(
+    list(
+      mean_si = 4.7, std_mean_si = 0.7,
+      min_mean_si = 3.7, max_mean_si = 6.0,
+      std_si = 2.9, std_std_si = 0.5,
+      min_std_si = 1.9, max_std_si = 4.9,
+      n1 = 1000,
+      n2 = 100,
+      seed = 123456789
+    )
+  )
+
+## Aplicar a função Estimate_R
+Rt_nonparam_si_nze <- estimate_R(as.numeric(covid_nze_var$confirmados_novos), 
+                                 method = "uncertain_si",
+                                 config = sens_configs
+)
+
+sample_windows_nze <- seq(length(Rt_nonparam_si_nze$R$t_start))
+
+## Criar um data frame com valores de R
+posterior_Rt_nze <- 
+  map(.x = sample_windows_nze,
+      .f = function(x) {
+        
+        posterior_sample_obj_nze <- 
+          sample_posterior_R(
+            R = Rt_nonparam_si_nze,
+            n = 1000, 
+            window = x )
+        
+        posterior_sample_estim_nze <- 
+          data.frame(
+            window_index = x,
+            window_t_start = Rt_nonparam_si_nze$R$t_start[x],
+            window_t_end = Rt_nonparam_si_nze$R$t_end[x],
+            date_point = covid_nze_var[covid_nze_var$t_start == Rt_nonparam_si_nze$R$t_end[x], "data"],
+            R_e_median = median(posterior_sample_obj_nze),
+            R_e_q0025 = quantile(posterior_sample_obj_nze, probs = 0.025),
+            R_e_q0975 = quantile(posterior_sample_obj_nze, probs = 0.975))
+        
+        return(posterior_sample_estim_nze)}
+  ) %>% 
+  
+  reduce(bind_rows)
+
+## Gráfico Nova Zelândia ggplot
+## Linhas a adicionar no gráfico
+d_nze = data.frame(date=as.Date(c("2020-03-18", "2020-03-25", "2020-06-08")), Evento=c("Encerramento de fronteiras", "Confinamento obrigatório", "Levantamento gradual das medidas de restrição"))
+
+graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
+  geom_line(colour = "darkorange",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "darkorange") +
+  
+  labs( title = " Nova Zelândia - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
+        subtitle = "Fonte de dados:  ",
+        x = "Data",
+        y = "Nº de reprodução efetivo (Rt)"
+  ) +
+  
+  theme_minimal() +
+  
+  theme(axis.title = element_text(size = 10, hjust = 0.5),
+        plot.subtitle = element_text(size= 8),
+        axis.title.x = element_text(size = 7),
+        axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
+  ) +
+  
+  scale_x_date(
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
+    limits = c(min(covid_nze_var$data), max((posterior_Rt_nze$date_point)))
+  ) +
+  
+  scale_y_continuous(
+    breaks = 0:10,
+    limits = c(0, 10)
+  ) +
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-18", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_nze, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
+### Tornar gráfico interativo
+ggplotly(graph_nze, tooltip = "text")
 ```
 <br>
 
