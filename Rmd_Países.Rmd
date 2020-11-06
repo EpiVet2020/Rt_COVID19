@@ -2212,7 +2212,7 @@ TEXTO
 <br>
 
 ```{r pressure, fig.align='center', warning=FALSE}
-#BRASIL (https://covid19.who.int/table)
+# BRASIL (https://covid19.who.int/table)
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
@@ -2280,9 +2280,11 @@ posterior_Rt_bra <-
   reduce(bind_rows)
 
 ## Gráfico Brasil ggplot
+d_bra = data.frame(date=as.Date(c("2020-03-17", "2020-05-07", "2020-06-04")), Evento=c("Estado de Emergência - São Paulo e Rio de Janeiro", "Confinamento parcial obrigatório", "Levantamento de medidas de restrição"))
 
 graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1.5) +
+  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                         '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
   
   labs( title = " Brasil - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
@@ -2297,26 +2299,26 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
-    date_breaks = "1 month",
+    date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_bra_var$data), max((posterior_Rt_bra$date_point)))
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_bra$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey1", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-05-07", "2020-06-04"))), linetype = c("twodash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
-ggplotly(graph_bra) %>%
-  layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
-                                       "Nº de reprodução efetivo (Rt)",
-                                       rep("&nbsp;", 20),
-                                       rep("\n&nbsp;", 2)),
-                                     collapse = "")))
+ggplotly(graph_bra, tooltip = "text")
 
 ```
 

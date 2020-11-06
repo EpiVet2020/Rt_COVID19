@@ -2182,6 +2182,7 @@ posterior_Rt_bra <-
   reduce(bind_rows)
 
 ## Gráfico Brasil ggplot
+d_bra = data.frame(date=as.Date(c("2020-03-17", "2020-05-07", "2020-06-04")), Evento=c("Estado de Emergência - São Paulo e Rio de Janeiro", "Confinamento parcial obrigatório", "Levantamento de medidas de restrição"))
 
 graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -2200,6 +2201,7 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
         plot.subtitle = element_text(size= 8),
         axis.title.x = element_text(size = 7),
         axis.title.y = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1)
   ) +
   
   scale_x_date(
@@ -2211,7 +2213,11 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4)
+  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+  
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-05-07", "2020-06-04"))), linetype = c("twodash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_bra, tooltip = "text")
