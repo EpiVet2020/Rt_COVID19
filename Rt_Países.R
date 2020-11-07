@@ -1888,12 +1888,12 @@ ggplotly(graph_jap, tooltip = "text")
 mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-mexico$ï..Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
+mexico$Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 mex_var <- mexico %>%
   filter(Country == "Mexico") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(mex_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -2115,12 +2115,12 @@ ggplotly(graph_kor, tooltip = "text")
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-brasil$ï..Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
+brasil$Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 bra_var <- brasil %>%
   filter(Country == "Brazil") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(bra_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
