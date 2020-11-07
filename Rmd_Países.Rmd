@@ -710,9 +710,7 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
     limits = c(min(covid_cz_var$data), max((posterior_Rt_cz$date_point)))
   ) +
   
-  scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_cz$R_e_q0975)),
-    limits = c(0, NA)
+  scale_y_continuous(breaks = seq(from = 0, to = 50, by = 5)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
@@ -834,8 +832,7 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_swi$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = seq(from = 0, to = 50, by = 5)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-16", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
@@ -1738,7 +1735,8 @@ Para a análise da evolução do Rt nos Estados Unidos da América, utilizou-se 
 <br>
 
 Os primeiros casos confirmados nos Estados Unidos ocorreram a 1 de janeiro, e o primeiro valor de Rt é de 1,85 a 6 de fevereiro. Após esta data os valores de transmissão foram aumentando, até atingir um pico de 2,78 no dia 16 de março.
-No dia 15 de março foi declarado o Estado de Emergência, e no dia 25 de março o confinamento total. Estas medidas de restrição permitiram que a transmissão fosse reduzida a 1,11 (3 de abril). Foi, então, declarado o Estado de Calamidade a 13 de abril, e após este dia os valores de R foram os mais baixos desde então, 0,94 a 25 de abril. A partir deste dia os valores oscilaram ligeiramente próximos de 1, até ao dia 25 de maio, em que é visível um aumento do número de transmissão, possívelmente devido ao movimento "Black Lives Matter" que ocorreu após a morte de George Floyd a 20 de maio. Desde esse dia até ao dia 1 de julho os valores oscilam entre 0,6 e 2,04, e após esse dia os valores sofrem oscilações mas não voltam a atingir valores tão elevados. O número de reprodução mais recente, a 16 de outubro, foi de 1,29. "Acreditamos que as eleições americanas possam ter influenciado a transmissão de casos nos Estados Unidos " 
+No dia 15 de março foi declarado o Estado de Emergência, e no dia 25 de março o confinamento total. Estas medidas de restrição permitiram que a transmissão fosse reduzida a 1,11 (3 de abril). Foi, então, declarado o Estado de Calamidade a 13 de abril, e após este dia os valores de R foram os mais baixos desde então, 0,94 a 25 de abril. A partir deste dia os valores oscilaram ligeiramente próximos de 1, até ao dia 25 de maio, em que é visível um aumento do número de transmissão, possívelmente devido ao movimento "Black Lives Matter" que ocorreu após a morte de George Floyd a 20 de maio. Desde esse dia até ao dia 1 de julho os valores oscilam entre 0,6 e 2,04, e após esse dia os valores sofrem oscilações mas não voltam a atingir valores tão elevados. O número de reprodução mais recente, a 16 de outubro, foi de 1,29. 
+"Acreditamos que as eleições americanas possam ter influenciado a transmissão de casos nos Estados Unidos, devido à mensagem política contraditória que existiu quanto as medidas a tomar  " 
 <br>
 
 ```{r, fig.align='center', warning=FALSE}
