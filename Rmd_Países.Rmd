@@ -711,8 +711,8 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_cz$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = seq(from = 0, to = 50, by = 5),
+    limits = c(0,50)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
@@ -835,10 +835,12 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_swi$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = seq(from = 0, to = 50, by = 5),
+    limits = c(0,50)
   ) +
+  
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+  
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-16", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
 
@@ -961,7 +963,8 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = seq(from = 0, to = 50, by = 5)
+    breaks = seq(from = 0, to = 50, by = 5),
+    limits = c(0,50)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
