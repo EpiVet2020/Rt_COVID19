@@ -711,14 +711,14 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = seq(from = 0, to = 50, by = 5),
-    limits = c(0,50)
+    breaks = 0:10,
+    limits = c(0, 10)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22"))), linetype = c("solid", "dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
-graph_cz
+
 ### Tornar gráfico interativo
 ggplotly(graph_cz, tooltip = "text")
 ```
