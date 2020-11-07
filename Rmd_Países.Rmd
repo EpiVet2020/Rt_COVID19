@@ -227,7 +227,7 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("twodash", "dotted", "solid", "dotdash"), colour = "darkred", alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("solid", "dotted", "dotdash", "twodash"), colour = "darkred", alpha = 0.5) +
   geom_vline(data=d_it, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
@@ -1479,8 +1479,8 @@ Para a análise da evolução do Rt em Hong Kong, utilizou-se a base de dados pr
 <br>
 
 Em Hong Kong, como é possível verificar no gráfico, os valores de transmissão iniciais não atingiram valores tão elevados quanto outros países, tendo atingido um valor de Rt de 2,798 a 20 de março. Com o encerramento geral de fronteiras, observou-se uma diminuição considerável dos valores de contágio no final de março, tendo assumido o seu mínimo a 18 de Abril (Rt = 0,258). 
-A partir desta altura, foi-se assistindo a um pequeno aumento no número de novos casos confirmados, que justificou um aumento dos valores de Rt acima do limiar de transmissibilidade (Rt > 1). Apesar do número de transmissões parecer estar novamente a ser controlado após dia 30 de abril, surgiram dois novos picos, a 23 de junho e 10 de julho, que justificaram o consequente maior número de novos positivos em Hong Kong até então.
-Com a implementação de novas medidas de restrição a 20 de julho, observou-se um decréscimo acentuado da transmissibilidade, só voltando a apresentar valores de Rt acima de 1 a partir de Setembro. 
+A partir desta altura, foi-se assistindo a um pequeno aumento no número de novos casos confirmados, que justificou um aumento dos valores de Rt acima do limiar de transmissibilidade (Rt > 1). Apesar do número de transmissões parecer estar novamente a ser controlado após dia 30 de abril, surgiram dois novos picos, a 23 de junho e 10 de julho, que justificaram o consequente maior número de novos positivos em Hong Kong até então. <br>
+Com a implementação de novas medidas de restrição a 20 de julho, observou-se um decréscimo acentuado da transmissibilidade, só voltando a apresentar valores de Rt acima de 1 a partir de Setembro. <br>
 Na sequência dos protestos a que se tem assistido em Hong Kong, implementou-se a proibição de utilização de máscara neste contexto, que apesar de apenas entrar em vigor para as pessoas que participem em manifestações ilegais e recorram à violência, pode ter contribuído para um aumento do número de transmissões neste período crítico da doença.
 
 
@@ -1612,13 +1612,9 @@ Para esta análise, recorreu-se à base de dados presente em: https://covid19.wh
 <br>
 <br>
 
-No caso da China, país onde o vírus teve origem, o maior valor de transmissão de doença verificou-se inicialmente (Rt = 7.86; 12 de janeiro), uma vez que toda a população se encontrava suscetível e potencialmente exposta a um microrganismo até então desconhecido. Apesar do Rt ter sofrido um pequeno decréscimo até 18 de Janeiro, a partir desta data foi-se acentuando até um novo pico no dia 22 de Janeiro, apresentando um valor bastante considerável (Rt = 5.29). 
-Em meados de fevereiro, o número de novos casos voltou a ser mais reduzido, pelo que o Rt dos dias anteriores acompanhou esta tendência e voltou a apresentar valores decrescentes até dia 14 de março, com o Rt mais baixo desde o início da pandemia (Rt = 0.23). Embora a transmissibilidade tenha voltado a aumentar nos dias seguintes, a implementação de confinamento parcial em Xinjiang contribuiu para a limitação da propagação de doença e dia 26 de Abril o Rt voltou a apresentar o valor mais baixo desde então (Rt = 0.24).
-De Maio a Junho podemos verificar que foi difícil limitar a transmissão de infeção, com um novo pico de Rt a 16 de Junho (Rt = 2.97).
-
-.....
-
-
+No caso da China, país onde o vírus teve origem, o maior valor de transmissão de doença verificou-se inicialmente (Rt = 7.86; 12 de janeiro), uma vez que toda a população se encontrava suscetível e potencialmente exposta a um microrganismo até então desconhecido. Apesar do Rt ter sofrido um pequeno decréscimo até 18 de Janeiro, a partir desta data foi-se acentuando até um novo pico no dia 22 de Janeiro, apresentando um valor bastante considerável (Rt = 5.29). No dia 23 de Janeiro foi implementado o confinamento parcial em xinjiang. <br>
+Em meados de fevereiro, o número de novos casos voltou a ser mais reduzido na sequência destas medidas, pelo que o Rt dos dias anteriores acompanhou esta tendência e voltou a apresentar valores decrescentes até dia 14 de março, com o Rt mais baixo desde o início da pandemia (Rt = 0.23). Embora a transmissibilidade tenha voltado a aumentar nos dias seguintes, a implementação de confinamento parcial em Xinjiang contribuiu para a limitação da propagação de doença e dia 26 de Abril o Rt voltou a apresentar o valor mais baixo desde então (Rt = 0.24). <br>
+De Maio a Junho podemos verificar que foi difícil limitar a transmissão de infeção, com um novo pico de Rt a 16 de Junho (Rt = 2.97). Desde então, com um novo confinamento, desta vez total, em Xinjiang e posteriormente a implementação gradual de confinamento em Hubei, contribuiram para diminuir a transmissibilidade até valores inferiores a 1.
 A partir de Setembro, os valores de Rt mantiveram-se bastante próximos do 1, no limiar de transmissão. 
 <br>
 
@@ -1872,7 +1868,8 @@ Para esta análise, utilizou-se a base de dados presente em: https://github.com/
 <br>
 <br>
 
-No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de fevereiro (Rt = 3.09), altura em que ainda não tinham sido implementadas medidas de restrição e de distanciamento social, levando assim a uma maior transmissão de vírus. No dia 29 do mês seguinte, foi atingido um novo pico de 2.03, no entanto a curva iniciou a sua descida logo após esta data com a declaração do Estado de Emergência no dia 7 de abril. Apesar deste não obrigar ao confinamento da população, sendo apenas voluntário, foi suficiente para fazer o Rt decrescer até ao valor mínimo de 0.49 ao dia 11 de maio. Duas semanas mais tarde, o Estado de Emergência foi suspenso (25 de maio) e, a partir essa data e até 4 de julho, que se registou um aumento progressivo do Rt. Desde então o Rt diminuiu e, a partir de Setembro, veio a estabilizar com valores bastante próximos do 1, o que indica que a doença se manteve uniformemente na população.
+No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de fevereiro (Rt = 3.09), altura em que ainda não tinham sido implementadas medidas de restrição e de distanciamento social, levando assim a uma maior transmissão de vírus. <br>
+No dia 29 do mês seguinte, foi atingido um novo pico de 2.03, no entanto, a curva iniciou a sua descida logo após esta data com a declaração do Estado de Emergência no dia 7 de abril. Apesar deste não obrigar ao confinamento da população, sendo apenas voluntário, foi suficiente para fazer o Rt decrescer até ao valor mínimo de 0.49 ao dia 11 de maio. Duas semanas mais tarde, o Estado de Emergência foi suspenso (25 de maio) e desde essa data e 4 de julho, registou-se um aumento progressivo do Rt. Desde então o Rt diminuiu e, a partir de Setembro, veio a estabilizar com valores bastante próximos do 1, o que indica que a doença se manteve uniformemente na população.
 
 <br>
 
@@ -1996,7 +1993,8 @@ Para a análise da evolução do Rt no México, utilizou-se a base de dados docu
 <br>
 <br>
 
-No México, os primeiros casos foram registados no fim de fevereiro e o pico no Rt (Rt = 6.68) foi atingido no dia 15 de março, refletindo a elevada transmissão de vírus, uma vez que nesta altura ainda não existiam medidas de restrição em vigor. No fim de março foi declarado o Estado de Emergência e observou-se uma descida gradual no Rt até valores próximos de 1. Até meados de outubro, apenas se registaram pequenas flutuações e no dia 10 de outubro deu-se um novo pico (Rt = 1.77), retomando depois valores mais constantes, sempre próximos de 1. 
+No México, os primeiros casos foram registados no fim de fevereiro e o pico no Rt (Rt = 6.68) foi atingido no dia 15 de março, refletindo a elevada transmissão de vírus, uma vez que nesta altura ainda não existiam medidas de restrição em vigor. No fim de março foi declarado o Estado de Emergência e observou-se uma descida gradual no Rt até valores próximos de 1. <br>
+Até meados de outubro, apenas se registaram pequenas flutuações e no dia 10 de outubro deu-se um novo pico (Rt = 1.77), retomando depois valores mais constantes, sempre próximos de 1. 
 
 <br>
 
@@ -2118,7 +2116,8 @@ Neste caso, a análise da evolução do Rt foi realizada com base nos seguintes 
 <br>
 <br>
 
-Numa primeira fase da pandemia na Coreia do Sul, verificou-se uma elevada transmissão de vírus, com o Rt a atingir valores na ordem dos 14 no dia 22 de fevereiro. O governo coreano apresentou uma abordagem baseada na testagem da população, permitindo detetar, isolar e tratar todos os positivos, contrastanto com as medidas de confinamento total e obrigatório implementadas nos outros países. Desde meados de março, que esta medida se fez refletir na transmissão, com uma consequente diminuição do Rt. No dia 17 de agosto, surgiu um novo pico (Rt = 2.63) porém, este aumento da transmissão foi rapidamento controlado através do confinamento parcial decretado no dia anterior, voltando o valor de Rt a diminuir e estabilizar em valores perto de 1. 
+Numa primeira fase da pandemia na Coreia do Sul, verificou-se uma elevada transmissão de vírus, com o Rt a atingir valores na ordem dos 14 no dia 22 de fevereiro. O governo coreano apresentou uma abordagem baseada na testagem da população, permitindo detetar, isolar e tratar todos os positivos, contrastanto com as medidas de confinamento total e obrigatório implementadas nos outros países. Desde meados de março, que esta medida se fez refletir na transmissão, com uma consequente diminuição do Rt.<br>
+No dia 17 de agosto, surgiu um novo pico (Rt = 2.63) porém, este aumento da transmissão foi rapidamente controlado através do confinamento parcial decretado no dia anterior, voltando o valor de Rt a diminuir e estabilizar em valores perto de 1. 
 
 <br>
 
