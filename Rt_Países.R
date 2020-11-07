@@ -1532,12 +1532,12 @@ ggplotly(graph_hk2, tooltip = "text")
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
+china$Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 chi_var <- china %>%
   filter(Country == "China") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
