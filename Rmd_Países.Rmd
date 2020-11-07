@@ -114,9 +114,9 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 Esta análise foi realizada com recurso à seguinte base de dados: https://github.com/pcm-dpc/COVID-19/blob/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv.
 <br>
 <br>
-Pela visualização deste gráfico é possível verificar que o número reprodutivo efetivo apresentou o valor mais elevado no início da pandemia (3 de Março; Rt = 3,16), ligeiramente mais baixo que o Rt inicial para Portugal (embora os casos tenham sido importados mais precocemente em Itália). O confinamento obrigatório, implementado no dia 9 de Março, contribuiu para uma descida abrupta do número de contágios, que atingiu o seu valor mínimo de 0,68 no dia 4 de Junho. <br>
-A partir de Junho, com o levantamento de restrições às movimentações e medidas de contenção mais folgadas, ocorreu um aumento sucessivo dos valores de Rt, que culminou num novo pico no dia 26 de Agosto (Rt = 1,53). <br>
-No mês de Setembro, a transmissão de infeção parece ter sofrido uma diminuição, mas a partir de Outubro terá surgido um novo pico (18 de Outubro; Rt = 1,57), cujo controlo passou pela implementação de certas medidas novamente, como obrigatoriedade de máscara e encerramento de escolas e universidades.
+Pela visualização deste gráfico é possível verificar que o número reprodutivo efetivo apresentou o valor mais elevado no início da pandemia (3 de março; Rt = 3,16), ligeiramente mais baixo que o Rt inicial para Portugal (embora os casos tenham sido importados mais precocemente em Itália). O confinamento obrigatório, implementado no dia 9 de março, contribuiu para uma descida abrupta do número de contágios, que atingiu o seu valor mínimo de 0,68 no dia 4 de junho. <br>
+A partir de junho, com o levantamento de restrições às movimentações e medidas de contenção mais folgadas, ocorreu um aumento sucessivo dos valores de Rt, que culminou num novo pico no dia 26 de agosto (Rt = 1,53). <br>
+No mês de setembro, a transmissão de infeção parece ter sofrido uma diminuição, mas a partir de outubro terá surgido um novo pico (18 de outubro; Rt = 1,57), cujo controlo passou pela implementação de certas medidas novamente, como obrigatoriedade de máscara e encerramento de escolas e universidades.
 <br>
 
 ```{r, fig.align='center', warning = FALSE, message = FALSE}
@@ -240,8 +240,8 @@ ggplotly(graph_it, tooltip = "text")
 Esta análise foi realizada a partir da base de dados presente no seguinte link: https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0/data.
 <br>
 <br>
-No caso da Alemanha, inicialmente 1 pessoa era responsável pelo ocorrência de cerca de 4,07 casos secundários (4 de Março; Rt = 4,07), período durante o qual ocorreu a importação dos primeiros casos infetados. Nos seguintes 5 dias, o valor sofreu um pequeno decréscimo seguido de um novo pico no dia 13 de Março, com Rt de 3,15. Este novo aumento na transmissão foi eficazmente controlado com o encerramento de escolas (dia 13 de Março) e declaração posterior do estado de emergência nacional (22 de Março), apresentando o valor mais baixo de transmissão no dia 16 de Abril (Rt = 0,71). A partir desta data, apesar da reabertura de lojas e escolas ter contribuído para que o número de reprodução efetivo voltasse a apresentar valores acima de 1, este país parece ter conseguido manter os valores de Rt relativamente constantes. <br>
-A 2 de Outubro foi declarado um novo confinamento, desta vez parcial, de forma a prevenir um novo aumento no número de contágios.
+No caso da Alemanha, inicialmente 1 pessoa era responsável pelo ocorrência de cerca de 4,07 casos secundários (4 de março; Rt = 4,07), período durante o qual ocorreu a importação dos primeiros casos. Nos seguintes 5 dias, o valor sofreu um pequeno decréscimo seguido de um novo pico no dia 13 de março, com Rt de 3,15. Este novo aumento na transmissão foi eficazmente controlado com o encerramento de escolas (dia 13 de março) e declaração posterior do Estado de Emergência nacional (22 de março), apresentando o valor mais baixo de transmissão no dia 16 de abril (Rt = 0,71). A partir desta data, apesar da reabertura de lojas e escolas ter contribuído para que o número de reprodução efetivo voltasse a apresentar valores acima de 1, este país parece ter conseguido manter os valores de Rt relativamente constantes. <br>
+A 2 de outubro foi declarado um novo confinamento, desta vez parcial, de forma a prevenir um novo aumento no número de contágios.
 <br>
 
 ```{r, fig.align='center', warning = FALSE, message = FALSE}
@@ -365,8 +365,8 @@ ggplotly(graph_ger, tooltip = "text")
 Para a análise da evolução do Rt em Espanha, utilizou-se a base de dados presente em: https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos.
 <br>
 <br>
-À semelhança do que aconteceu nos restantes países, o maior período de transmissão em Espanha ocorreu no início da pandemia, tendo atingido o valor máximo de 3,04 no dia 2 de Março. Estes valores levaram a que o país declarasse estado de emergência no dia 13 de Março, com a intenção de diminuir a probabilidade de contágio. A partir desta altura, os valores de Rt foram decrescendo de forma considerável, até ao valor mínimo de 0,46 no dia 10 de Maio. <br>
-Por volta desta altura, com o início do desconfinamento, assistiu-se a um aumento do número de contágios, com valores de Rt até 1,53, e mantiveram-se valores de Rt na ordem de 1 até meados de Outubro. Nesta fase, com a declaração de um novo estado de emergência na região de Madrid a 7 de Outubro e a nível nacional no dia 23 do mesmo mês, verificou-se uma descida dos valores de Rt até 0,71, o que confirma a eficácia destas medidas no controlo da doença.
+À semelhança do que aconteceu nos restantes países, o maior período de transmissão em Espanha ocorreu no início da pandemia, tendo atingido o valor máximo de 3,04 no dia 2 de março. Estes valores levaram a que o país declarasse Estado de Emergência no dia 13 de março, com a intenção de diminuir a probabilidade de contágio. A partir desta altura, os valores de Rt foram decrescendo de forma considerável, até ao valor mínimo de 0,46 no dia 10 de maio. <br>
+Por volta desta altura, com o início do desconfinamento, assistiu-se a um aumento do número de contágios, com valores de Rt até 1,53, e mantiveram-se valores de Rt na ordem de 1 até meados de outubro. Nesta fase, com a declaração de um novo Estado de Emergência na região de Madrid a 7 de outubro e a nível nacional no dia 23 do mesmo mês, verificou-se uma descida dos valores de Rt até 0,71, o que confirma a eficácia destas medidas no controlo da doença.
 
 <br>
 
@@ -486,8 +486,8 @@ ggplotly(graph_spa, tooltip = "text")
 Para esta análise, utilizou-se a base de dados presente em: https://epistat.wiv-isp.be/covid/.
 <br>
 <br>
-A partir desde gráfico, é possível constatar que o número de reprodução efetivo inicial atingiu os 2,72 (8 de Março), o que não parece ter sido muito diferente em relação aos restantes países da união europeia. No entanto, neste caso, os dados utilizados só terão começado a ser reportados a partir de 1 de Março. Desde então, com a implementação do confinamento parcial e posteriormente total a nível nacional, o número de contágios diminuiu até um Rt de 0,60 no dia 1 de Maio. <br>
-Até ao final de Julho os valores de Rt foram aumentando gradualmente, embora se tenham mantido mais ou menos sob controlo (inferiores a 1) entre Maio e Junho. O maior valor de Rt voltou a ser registado no dia 17 de Julho (1,56) e posteriormente voltou a apresentar dois novos picos em Setembro e Outubro, respetivamente. Com a implementação de novas restrições a 24 de Setembro, a transmissão de infeção não sofreu uma diminuição imediata, mas a partir de meados de Outubro decresceu de forma considerável até um Rt de 0,58.
+A partir desde gráfico, é possível constatar que o número de reprodução efetivo inicial atingiu os 2,72 (8 de março), o que não parece ter sido muito diferente em relação aos restantes países da União Europeia. No entanto, no caso da Bélgica, os dados utilizados só terão começado a ser reportados a partir de 1 de março. Desde então, com a implementação do confinamento parcial e posteriormente total a nível nacional, o número de contágios diminuiu até um Rt de 0,60 no dia 1 de maio. <br>
+Até ao final de julho os valores de Rt foram aumentando gradualmente, embora se tenham mantido mais ou menos sob controlo (inferiores a 1) entre maio e junho. O maior valor de Rt voltou a ser registado no dia 17 de julho (1,56) e posteriormente voltou a apresentar dois novos picos em setembro e outubro, respetivamente. Com a implementação de novas restrições a 24 de setembro, a transmissão de infeção não sofreu uma diminuição imediata, mas a partir de meados de outubro decresceu de forma considerável até um Rt de 0,58.
 
 <br>
 
@@ -608,8 +608,9 @@ Para a análise da evolução do Rt na República Checa, utilizou-se a base de d
 <br>
 <br>
 
-O primeiro caso confirmado de COVID-19 na República checa foi no dia 1 de Março, e neste mesmo dia o Rt = 18,05, que representou o pico da transmissibilidade neste país. No dia 12 de Março foi declarado o Estado de Emergência, com a duração de um mês, o que permitiu que existisse uma redução dos valores de transmissibilidade, até um minimo de 0,62 no dia 16 de Abril. <br>
-No dia 11 de Maio foram reabertas as lojas, permitindo uma maior abertura, após esta decisão existiram ligeiras oscilações nos valores de Rt, com um máximo de 0,94 no dia 28 de Junho, posteriormente atingindo um mínimo de 0.66 no dia 6 de Julho. Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas novas medidas de restrição, um novo Estado de Emergência no dia 5 de outubro e a proibição das movimentações no dia 22 de outubro, existindo uma redução dos valores de Rt. Desde então, o este valor é inferior a 1 (0,99).
+O primeiro caso confirmado de COVID-19 na República checa foi no dia 1 de março e neste mesmo dia, o Rt atingiu o valor de 18,05, que representou o pico da transmissibilidade neste país. No dia 12 de março foi declarado o Estado de Emergência, com a duração de um mês, o que permitiu que existisse uma redução da transmissão, até um minimo de 0,62 no dia 16 de abril. <br>
+No dia 11 de maio iniciou-se a reabertura das lojas, provocando ligeiras oscilações nos valores de Rt, com um máximo de 0,94 no dia 28 de junho e, posteriormente, atingindo um mínimo de 0.66 no dia 6 de julho. <br>
+Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas novas medidas de restrição, um novo Estado de Emergência no dia 5 de outubro e a proibição das movimentações no dia 22 de outubro, existindo uma redução dos valores de Rt. Desde então que este valor se tem mantido inferior a 1 (0,99).
 
 <br>
 
@@ -731,8 +732,8 @@ Esta análise foi efetuada com acesso aos seguintes dados: https://www.bag.admin
 <br>
 <br>
 
-Na Suiça as primeiras medidas começaram a ser tomadas no final do mês de fevereiro, devido às celebrações de Carnaval, quando se deram os primeiros casos, a 24 de fevereiro. Os valores iniciais de Rt foram de 23,14 a 26 de fevereiro. No dia 13 de março foram aplicadas algumas medidas restritivas, como o encerramento de escolas, e no dia 16 de março declarado o Estado de Emergência. Estes acontecimentos levaram a que existisse uma redução nos valores de transmissibilidade, até um mínimo de 0,62 no dia 16 de abril. A partir do dia 27 de abril as restrições foram sendo levantadas, levando a um aumento do númemro de casos, e consequentemente do Rt para valores de 1,78 (1 de julho). <br>
-A partir de meados de setembro existe um aumento de casos generalizado em toda a Europa, o que provocou o aumento do número de reprodução para 1,79 no dia 9 de outubro. Foram aplicadas novamente medidas de restrição, como a proibição de ajuntamentos no dia 19 de outubro, o que permitiu que existisse uma ligeira redução dos valores de Rt, até ao atual de 1,08 (4 de novembro).
+Na Suiça, os primeiros casos registaram-se no dia 24 de fevereiro, aquando das celebrações de Carnaval, com um valor de Rt máximo (Rt = 23,14) a 26 de fevereiro. No dia 13 de março foram aplicadas algumas medidas restritivas, como o encerramento de escolas, e no dia 16 de março foi declarado o Estado de Emergência. Estes acontecimentos levaram a uma redução do Rt até um mínimo de 0,62 no dia 16 de abril. A partir do dia 27 de abril, as restrições foram sendo levantadas, levando a um aumento do númemro de casos, e consequentemente do Rt para valores de 1,78 (1 de julho). <br>
+A partir de meados de setembro que se verificou um aumento de casos generalizado em toda a Europa, o que provocou o crescimento do número de reprodução para 1,79 (9 de outubro). A 19 de outubro, foram aplicadas novamente medidas de restrição, como a proibição de ajuntamento, possibilitando uma ligeira redução dos valores de Rt, até ao valor de 1,08 (4 de novembro).
 
 <br>
 
@@ -855,10 +856,10 @@ Para a análise da evolução do Rt na Suécia, utilizou-se a base de dados pres
 <br>
 <br>
 
-É importante analisar os dados da Suécia, visto que este país defendeu uma filosofia de combate ao vírus muito diferente dos restantes países europeus, a imunidade de grupo. <br>
-A Suécia teve o primeiro caso de COVID-19 no dia 26 de fevereiro, no qual o valor de Rt era de 8,27. Após este dia, apresentou o valor máximo de transmissibilidade no dia 28 de  fevereiro, de 23,14, apresentando em seguida uma redução drástica destes valores, culminando num mínimo de 1,06 no dia em que as escolas foram encerradas (19 de março). Existiu, em seguida, um novo aumento dos valores de Rt, para 1,57 no dia 28 de março. Neste mesmo dia foi aplicada a proibição de ajuntamentos comm mais de 50 pessoas, o que permitiu a redução da transmissibilidade para valores inferiores a 1 (0,99 no dia 14 de abril). <br>
-Entre abril e setembro os valores de Rt oscilaram ligeiramente, apresentando-se na sua maioria superiroes a 1, mas também alcançando o seu mínimo no dia 10 de julho (0,60). A partir de setembro é visível que estes valores sofreram novamente um aumento, visto que desde o dia 4 de setembro não apresentaram valores inferiores a 1. <br>
-Devido ao aumento preocupante de casos no mês de outubro, no dia 1 de novembro foi feita a recomendação de teletrabalho, o que permitiu uma ligeira diminuição dos valores de Rt para 1,33 (4 de novembro). <br>
+É importante analisar os dados da Suécia, visto que este país defendeu uma filosofia de combate ao vírus distinta da dos restantes países europeus, a imunidade de grupo. <br>
+A Suécia teve o primeiro caso de COVID-19 no dia 26 de fevereiro e apresentou o valor máximo de Rt (Rt = 23,14) no dia 28 de fevereiro, seguido duma redução drástica destes valores, até um mínimo de 1,06 no dia em que as escolas foram encerradas (19 de março). Em seguida, deu-se um ligeiro aumento dos valores de Rt para 1,57 no dia 28 de março. Neste mesmo dia foi aplicada a proibição de ajuntamentos comm mais de 50 pessoas, o que permitiu a redução do Rt para valores inferiores a 1 (0,99 no dia 14 de abril). <br>
+Entre abril e setembro os valores de Rt flutuaram ligeiramente, apresentando-se na sua maioria superiroes a 1, mas também alcançando o seu mínimo no dia 10 de julho (0,60). A partir de setembro é visível que estes valores sofreram novamente um aumento, visto que desde o dia 4 de setembro, que não apresentaram valores inferiores a 1. <br>
+Devido ao aumento preocupante de casos durante o mês de outubro, no dia 1 de novembro foi feita a recomendação de teletrabalho, o que permitiu uma ligeira diminuição dos valores de Rt para 1,33 (4 de novembro). <br>
 Conclui-se que, apesar da Suécia ter apresentado valores de transmissibilidade inferiores a 1, estes foram constantes apenas durante um mês (julho), enquanto que noutros países foi possível manter este valor inferior a 1 durante mais tempo.
 
 <br>
@@ -986,9 +987,9 @@ ggplotly(graph_swe, tooltip = "text")
 No sentido de realizar esta análise, utilizaram-se os seguintes dados: https://coronavirus.data.gov.uk/cases.
 <br>
 <br>
-No caso do Reino Unido, o primeiro pico de transmissão a 8 de Fevereiro (Rt = 4,83) correspondeu aos primeiros casos de COVID19 confirmados no país, tendo posteriormente diminuído uma vez que o número de novos casos voltou a ter valores mínimos até ao início de Janeiro. Assim, a partir de dia 20 de Fevereiro, o Rt sofreu uma subida repentina até valores na ordem dos 4,88, que correspondeu ao período de maior transmissão de infeção no país. <br>
-Ao longo de Março, os valores de contágio foram diminuindo, sendo esta descida ainda mais reforçada após a implementação de confinamento obrigatório no dia 24 de Março (embora um pouco mais tardiamente que os restantes países). Desta forma, só a partir de Maio é que os valores de Rt se mantiveram abaixo de 1 e foi ainda implementada quarentena obrigatória para todos os passageiros de chegada ao Reino Unido a partir de dia 22 deste mês.  <br>
-Apesar de todas as medidas implementadas, a esperada segunda vaga de infeções não foi prevenida e desde Julho que os valores de Rt voltaram a aumentar até um novo pico a 7 de Setembro (Rt = 1,52). Na medida de controlar novos surtos, procedeu-se à proibição de ajuntamentos e, mais tarde, o país viu-se obrigado a recorrer a um novo confinamento obrigatório no dia 5 de Novembro, que é expectável que volte a reduzir os valores de Rt abaixo de 1.
+No caso do Reino Unido, o primeiro pico de transmissão a 8 de fevereiro (Rt = 4,83) correspondeu aos primeiros casos de COVID19 confirmados no país, tendo posteriormente diminuído uma vez que o número de novos casos voltou a ter valores mínimos até ao início de janeiro. Assim, a partir de dia 20 de fevereiro, o Rt sofreu uma subida repentina até valores na ordem dos 4,88, que correspondeu ao período de maior transmissão de infeção no país. <br>
+Ao longo de março, os valores de contágio foram diminuindo, sendo esta descida ainda mais acentuada após a implementação de confinamento obrigatório no dia 24 de março (embora um pouco mais tardiamente que os restantes países). Desta forma, só a partir de maio é que os valores de Rt se mantiveram abaixo de 1 e foi ainda implementada quarentena obrigatória para todos os passageiros de chegada ao Reino Unido a partir de dia 22 deste mês.  <br>
+Apesar de todas as medidas implementadas, a esperada segunda vaga de infeções não foi prevenida e desde julho que os valores de Rt voltaram a aumentar até um novo pico a 7 de setembro (Rt = 1,52). Na medida de controlar novos surtos, procedeu-se à proibição de ajuntamentos e, mais tarde, o país viu-se obrigado a recorrer a um novo confinamento obrigatório no dia 5 de novembro, que é expectável que volte a reduzir os valores de Rt abaixo de 1.
 <br>
 
 ```{r, fig.align='center', warning = FALSE, message = FALSE}
@@ -1352,8 +1353,8 @@ Os dados para a análise da evolução do Rt na Índia foram os seguintes: https
 <br>
 <br>
 
-Como podemos observar no gráfico, a Índia apresentou valores de transmissão na ordem dos 37 no início de março, que poderá ser enviesado devido à possibilidade do número de novos casos confirmados poder ter sido subestimado. Ainda assim, trata-se de um valor mais elevado que os restantes países, o que pode refletir a dificuldade de implementação de medidas de restrição neste país. A partir de 4 de março começou a ser realizada a triagem a todos os passageiros e, mais tarde, a 25 de Março foi implementado o confinamento obrigatório. <br>
-Embora estas medidas tenham contribuído para diminuir os valores até perto do limiar de tranmissão (Rt ≂ 1), não conseguiram controlar a disseminação da doença até, pelo menos, 19 de Setembro (Rt = 1,004). A partir desde dia, o número de reprodução efetivo diminuiu ligeiramente e manteve-se abaixo de 1 até Novembro, embora o país tenha continuado a apresentar um número de novos casos considerável (50465 novos confirmados no dia 4 de Novembro), o que pode ser explicado por uma maior dificuldade de testagem.
+Como podemos observar no gráfico, a Índia apresentou valores de transmissão na ordem dos 37 no início de março, que se deverá à possibilidade do número de novos casos confirmados estar subestimado. Ainda assim, trata-se de um valor mais elevado do que nos restantes países, o que pode refletir a dificuldade de implementação e cumprimento das medidas de restrição neste país. A partir de 4 de março começou a ser realizada a triagem a todos os passageiros e, mais tarde, no dia 25 foi implementado o confinamento obrigatório. <br>
+Embora estas medidas tenham contribuído para diminuir os valores até perto do limiar de transmissão (Rt ≂ 1), não foram suficientes para controlar a disseminação da doença até, pelo menos, 19 de setembro (Rt = 1,004). A partir desde dia, o número de reprodução efetivo diminuiu ligeiramente e manteve-se abaixo de 1 até novembro, embora o país tenha continuado a apresentar um número de novos casos considerável (50465 novos confirmados no dia 4 de novembro), o que pode ser explicado por uma maior limitação na realização da testagem.
 
 <br>
 
@@ -1478,10 +1479,10 @@ Para a análise da evolução do Rt em Hong Kong, utilizou-se a base de dados pr
 <br>
 <br>
 
-Em Hong Kong, como é possível verificar no gráfico, os valores de transmissão iniciais não atingiram valores tão elevados quanto outros países, tendo atingido um valor de Rt de 2,798 a 20 de março. Com o encerramento geral de fronteiras, observou-se uma diminuição considerável dos valores de contágio no final de março, tendo assumido o seu mínimo a 18 de Abril (Rt = 0,258). 
-A partir desta altura, foi-se assistindo a um pequeno aumento no número de novos casos confirmados, que justificou um aumento dos valores de Rt acima do limiar de transmissibilidade (Rt > 1). Apesar do número de transmissões parecer estar novamente a ser controlado após dia 30 de abril, surgiram dois novos picos, a 23 de junho e 10 de julho, que justificaram o consequente maior número de novos positivos em Hong Kong até então. <br>
-Com a implementação de novas medidas de restrição a 20 de julho, observou-se um decréscimo acentuado da transmissibilidade, só voltando a apresentar valores de Rt acima de 1 a partir de Setembro. <br>
-Na sequência dos protestos a que se tem assistido em Hong Kong, implementou-se a proibição de utilização de máscara neste contexto, que apesar de apenas entrar em vigor para as pessoas que participem em manifestações ilegais e recorram à violência, pode ter contribuído para um aumento do número de transmissões neste período crítico da doença.
+Em Hong Kong, como é possível verificar pelo gráfico, os valores de transmissão iniciais não atingiram valores tão elevados quanto outros países, tendo sido atingido um valor de Rt de 2,798 a 20 de março. Com o encerramento geral de fronteiras, observou-se uma diminuição considerável dos valores de contágio no final de março, assumindo o seu mínimo a 18 de abril (Rt = 0,258). A partir desta altura, foi-se assistindo a um pequeno aumento no número de novos casos confirmados, que justificou um aumento dos valores de Rt acima do limiar de transmissibilidade (Rt > 1). <br>
+Apesar do número de transmissões parecer estar novamente a ser controlado após dia 30 de abril, surgiram dois novos picos, a 23 de junho e 10 de julho, que justificaram o consequente maior número de novos casos positivos em Hong Kong até então. <br>
+Com a implementação de novas medidas de restrição a 20 de julho, observou-se um decréscimo acentuado da transmissibilidade, só voltando a apresentar valores de Rt acima de 1 a partir de setembro. <br>
+Na sequência dos protestos a que se tem assistido em Hong Kong, implementou-se a proibição de utilização de máscara neste contexto, que apesar de apenas ser aplicável às pessoas que participem em manifestações ilegais e recorram à violência, pode ter contribuído para um aumento do número de transmissões neste período crítico da doença.
 
 
 <br>
@@ -1736,7 +1737,7 @@ Para a análise da evolução do Rt nos Estados Unidos da América, utilizou-se 
 <br>
 
 O primeiro valor do número efetivo reprodutivo neste país foi 1,85 no dia 6 de fevereiro, o que não corresponde a um valor significativo comparativamente aos restantes países. Após esta data os valores de transmissão foram aumentando, até atingir um pico de 2,78 no dia 16 de março. <br>
-No dia 15 de março foi declarado o Estado de Emergência, e no dia 25 de março o confinamento total. Estas medidas de restrição permitiram que a transmissão fosse reduzida a 1,11 (3 de abril). Foi, então, declarado o Estado de Calamidade a 13 de abril, e após este dia os valores de R foram os mais baixos desde então (RT = 0,94; 25 de abril). A partir deste dia os valores oscilaram ligeiramente próximos de 1, até ao dia 25 de maio, em que é visível um aumento do número de transmissão, possivelmente devido ao movimento "Black Lives Matter" que ocorreu após a morte de George Floyd a 20 de maio. Desde esse dia até ao dia 1 de julho, os valores oscilam entre 0,6 e 2,04, e após esse dia os valores mantiveram-se mas não voltaram a atingir valores tão elevados. <br>
+No dia 15 de março foi declarado o Estado de Emergência, e no dia 25 de março o confinamento total. Estas medidas de restrição permitiram que a transmissão fosse reduzida a 1,11 (3 de abril). Foi então declarado o Estado de Calamidade a 13 de abril, e após este dia os valores de R foram os mais baixos desde então (Rt = 0,94; 25 de abril). A partir deste dia os valores oscilaram ligeiramente próximos de 1, até ao dia 25 de maio, em que é visível um aumento do número de transmissão, possivelmente devido ao movimento "Black Lives Matter" que ocorreu após a morte de George Floyd a 20 de maio. Desde esse dia e até ao dia 1 de julho que os valores oscilaramm entre 0,6 e 2,04, e, após esse dia, os valores mantiveram-se mas não voltaram a atingir valores tão elevados. <br>
 A partir de setembro, o Rt voltou a assumir valores ligeiramente superiores ao limiar de transmissão. <br>
 Acreditamos que as eleições americanas possam ter influenciado a transmissão de casos nos Estados Unidos, no sentido em que existiram mensagens contraditórias relativamente às medidas a tomar para controlar a disseminação da doença.
 
@@ -1868,8 +1869,7 @@ Para esta análise, utilizou-se a base de dados presente em: https://github.com/
 <br>
 <br>
 
-No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de fevereiro (Rt = 3.09), altura em que ainda não tinham sido implementadas medidas de restrição e de distanciamento social, levando assim a uma maior transmissão de vírus. <br>
-No dia 29 do mês seguinte, foi atingido um novo pico de 2.03, no entanto, a curva iniciou a sua descida logo após esta data com a declaração do Estado de Emergência no dia 7 de abril. Apesar deste não obrigar ao confinamento da população, sendo apenas voluntário, foi suficiente para fazer o Rt decrescer até ao valor mínimo de 0.49 ao dia 11 de maio. Duas semanas mais tarde, o Estado de Emergência foi suspenso (25 de maio) e desde essa data e 4 de julho, registou-se um aumento progressivo do Rt. Desde então o Rt diminuiu e, a partir de Setembro, veio a estabilizar com valores bastante próximos do 1, o que indica que a doença se manteve uniformemente na população.
+No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de fevereiro (Rt = 3.09), altura em que ainda não tinham sido implementadas medidas de restrição e de distanciamento social, levando assim a uma maior transmissão de vírus. No dia 29 do mês seguinte, foi atingido um novo pico de 2.03, no entanto a curva iniciou a sua descida logo após esta data com a declaração do Estado de Emergência no dia 7 de abril. Apesar deste não obrigar ao confinamento da população, sendo apenas voluntário, foi suficiente para fazer o Rt decrescer até ao valor mínimo de 0.49 ao dia 11 de maio. Duas semanas mais tarde, o Estado de Emergência foi suspenso (25 de maio) e, a partir essa data e até 4 de julho, que se registou um aumento progressivo do Rt. Desde então o Rt diminuiu e, a partir de Setembro, veio a estabilizar com valores bastante próximos do 1, o que indica que a doença se manteve uniformemente na população.
 
 <br>
 
@@ -1993,8 +1993,7 @@ Para a análise da evolução do Rt no México, utilizou-se a base de dados docu
 <br>
 <br>
 
-No México, os primeiros casos foram registados no fim de fevereiro e o pico no Rt (Rt = 6.68) foi atingido no dia 15 de março, refletindo a elevada transmissão de vírus, uma vez que nesta altura ainda não existiam medidas de restrição em vigor. No fim de março foi declarado o Estado de Emergência e observou-se uma descida gradual no Rt até valores próximos de 1. <br>
-Até meados de outubro, apenas se registaram pequenas flutuações e no dia 10 de outubro deu-se um novo pico (Rt = 1.77), retomando depois valores mais constantes, sempre próximos de 1. 
+No México, os primeiros casos foram registados no fim de fevereiro e o pico no Rt (Rt = 6.68) foi atingido no dia 15 de março, refletindo a elevada transmissão de vírus, uma vez que nesta altura ainda não existiam medidas de restrição em vigor. No fim de março foi declarado o Estado de Emergência e observou-se uma descida gradual no Rt até valores próximos de 1. Até meados de outubro, apenas se registaram pequenas flutuações e no dia 10 de outubro deu-se um novo pico (Rt = 1.77), retomando depois valores mais constantes, sempre próximos de 1. 
 
 <br>
 
@@ -2116,8 +2115,7 @@ Neste caso, a análise da evolução do Rt foi realizada com base nos seguintes 
 <br>
 <br>
 
-Numa primeira fase da pandemia na Coreia do Sul, verificou-se uma elevada transmissão de vírus, com o Rt a atingir valores na ordem dos 14 no dia 22 de fevereiro. O governo coreano apresentou uma abordagem baseada na testagem da população, permitindo detetar, isolar e tratar todos os positivos, contrastanto com as medidas de confinamento total e obrigatório implementadas nos outros países. Desde meados de março, que esta medida se fez refletir na transmissão, com uma consequente diminuição do Rt.<br>
-No dia 17 de agosto, surgiu um novo pico (Rt = 2.63) porém, este aumento da transmissão foi rapidamente controlado através do confinamento parcial decretado no dia anterior, voltando o valor de Rt a diminuir e estabilizar em valores perto de 1. 
+Numa primeira fase da pandemia na Coreia do Sul, verificou-se uma elevada transmissão de vírus, com o Rt a atingir valores na ordem dos 14 no dia 22 de fevereiro. O governo coreano apresentou uma abordagem baseada na testagem da população, permitindo detetar, isolar e tratar todos os positivos, contrastanto com as medidas de confinamento total e obrigatório implementadas nos outros países. Desde meados de março, que esta medida se fez refletir na transmissão, com uma consequente diminuição do Rt. No dia 17 de agosto, surgiu um novo pico (Rt = 2.63) porém, este aumento da transmissão foi rapidamento controlado através do confinamento parcial decretado no dia anterior, voltando o valor de Rt a diminuir e estabilizar em valores perto de 1. 
 
 <br>
 
@@ -2243,7 +2241,7 @@ Por fim, para a análise da evolução do Rt no Brasil, recorreu-se ao seguinte 
 <br>
 <br>
 
-No Brasil, o pico no Rt (Rt = 8.26) foi registado no dia 7 de março, cerca de 10 dias depois de surgirem os primeiros casos no país, indicando uma elevada transmissão de vírus numa altura em que ainda não tinham sido implementadas medidas de restrição e distanciamento social. No dia 7 de março, com a declaração do Estado de Emergência em duas das maiores cidades brasileiras, ocorreu um decréscimo no Rt até valores mais baixo do que 1 (Rt = 0.967; 16 de junho). Desde meados de junho que o índice apenas tem sofrido pequenas oscilações variando sempre entre valores próximos de 1, mesmo com o levantamento das medidas de restrição que teve o seu início no dia 4 de junho. 
+No Brasil, o pico no Rt (Rt = 8,26) foi registado no dia 7 de março, cerca de 10 dias depois de surgirem os primeiros casos no país, indicando uma elevada transmissão de vírus numa altura em que ainda não tinham sido implementadas medidas de restrição e distanciamento social. No dia 7 de março, com a declaração do Estado de Emergência em duas das maiores cidades brasileiras, ocorreu um decréscimo no Rt até valores mais baixo do que 1 (Rt = 0,967; 16 de junho). Desde meados de junho que o índice apenas tem sofrido pequenas oscilações variando sempre entre valores próximos de 1, mesmo com o levantamento das medidas de restrição que teve o seu início no dia 4 de junho. 
 
 <br>
 
