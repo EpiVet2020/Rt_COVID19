@@ -606,7 +606,7 @@ ggplotly(graph_bel, tooltip = "text")
 
 <br>
 
-O priemiro caso confirmado de COVID-19 na República checa foi no dia 1 de Março, e neste mesmo dia o Rt = 18,05, que representou o pico da transmissibilidade neste país. No dia 12 de Março foi declarado o Estado de Emergência, com a durção de um mês, o que permitiu que exixtisse uma redução dos valores de transmissibilidade, até um minimo de 0,62 no dia 16 de Abril. No dia 11 de Maio foram reabertas as lojas, permitindo uma maior abertura, após esta decisão existiram ligeiras oscilações nos valores de Rt, com um máximo de 0,94 no dia 
+O primeiro caso confirmado de COVID-19 na República checa foi no dia 1 de Março, e neste mesmo dia o Rt = 18,05, que representou o pico da transmissibilidade neste país. No dia 12 de Março foi declarado o Estado de Emergência, com a durção de um mês, o que permitiu que exixtisse uma redução dos valores de transmissibilidade, até um minimo de 0,62 no dia 16 de Abril. No dia 11 de Maio foram reabertas as lojas, permitindo uma maior abertura, após esta decisão existiram ligeiras oscilações nos valores de Rt, com um máximo de 0,94 no dia 
 28 de Junho, posteriormente atingindo um mínimo de 0.66 no dia 6 de Julho. Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas novas medidas de restrição, um novo Estado de Emergência no dia 5 de outubro, e a proibição das movimentações no dia 22 de outubro, existindo uma redução dos valores de Rt. Atualmente este valor é inferior a 1 (0,99).
 
 <br>
@@ -952,8 +952,7 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_swe$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = seq(from = 0, to = 50, by = 5)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
