@@ -606,7 +606,7 @@ ggplotly(graph_bel, tooltip = "text")
 
 <br>
 
-O priemiro caso confirmado de COVID-19 na República checa foi no dia 1 de Março, e por esta mesma razão o Rt neste dia foi 18,05, que representou o pico da transmissibilidade neste país. No dia 12 de Março foi declarado o Estado de Emergência, com a durção de um mês, o que permitiu que exixtisse uma redução dos valores de transmissibilidade, até um minimo de 0,62 no dia 16 de Abril. No dia 11 de Maio foram reabertas as lojas, permitindo uma maior abertura, após esta decisão existiram ligeiras oscilações nos valores de Rt, com um máximo de 0,94 no dia 
+O primeiro caso confirmado de COVID-19 na República checa foi no dia 1 de Março e, por esta mesma razão, o Rt neste dia foi 18,05, que representou o pico da transmissibilidade neste país. No dia 12 de Março foi declarado o Estado de Emergência, com a durção de um mês, o que permitiu que exixtisse uma redução dos valores de transmissibilidade, até um minimo de 0,62 no dia 16 de Abril. No dia 11 de Maio foram reabertas as lojas, permitindo uma maior abertura, após esta decisão existiram ligeiras oscilações nos valores de Rt, com um máximo de 0,94 no dia 
 28 de Junho, posteriormente atingindo um mínimo de 0.66 no dia 6 de Julho. Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas novas medidas de restrição, um novo Estado de Emergência no dia 5 de outubro, e a proibição das movimentações no dia 22 de outubro, existindo uma redução dos valores de Rt. Atualmente este valor é inferior a 1 (0,99).
 
 <br>
@@ -848,7 +848,7 @@ ggplotly(graph_swi, tooltip = "text")
 <br>
 
 É importante analisar os dados da Suécia, visto que este país defendeu uma filosofia de combate ao vírus muito diferente dos restantes países europeus, a imunidade de grupo.
-A Suiça teve o primeiro caso de COVID-19 no dia 26 de fevereiro, no qual o valor de Rt era de 8,27. Após este dia, apresentou o valor máximo de transmissibilidade no dia 28 de  fevereiro, de 23,14, apresentando em seguida uma redução drástica destes valores, apresentando um mínimo de 1,06 no dia em que as escolas foram encerradas (19 de março). Existiu, em seguida, um novo aumento dos valores de Rt, para 1,57 no dia 28 de março. Neste mesmo dia foi aplicada a proibição de ajuntamentos comm mais de 50 pessoas, o que permitiu a redução da transmissibilidade para valores inferiores a 1 (0,99 no dia 14 de abril). Entre abril e setembro os valores de Rt oscilaram ligeiramente, apresentando-se na sua maioria superiroes a 1, mas também alcançando o seu mínimo no dia 10 de julho (0,60). A partir de setembro é visisvel que estes valores sofreram, novamente, um aumento, visto que desde o dia 4 de setembro não apresentaram valores inferiores a 1. Devido ao aumento preocupante de casos no mês de outubro, no dia 1 de novembro foi feita a recomendação de teletrabalho, o que permiitu uma ligeira diminuição dos valores de Rt para o atual 1,33 (4 de novembro). Conclui-se que, apesar da Suécia ter apresentado valores de transmissibilidade inferiores a 1, estes foram constantes apenas durante um mês (julho), enquanto que noutros países foi possível manter este valor inferior a 1 durante mais tempo.
+A Suiça teve o primeiro caso de COVID-19 no dia 26 de fevereiro, no qual o valor de Rt era de 8,27. Após este dia, apresentou o valor máximo de transmissibilidade no dia 28 de  fevereiro, de 23,14, apresentando em seguida uma redução drástica destes valores, apresentando um mínimo de 1,06 no dia em que as escolas foram encerradas (19 de março). Existiu, em seguida, um novo aumento dos valores de Rt, para 1,57 no dia 28 de março. Neste mesmo dia foi aplicada a proibição de ajuntamentos comm mais de 50 pessoas, o que permitiu a redução da transmissibilidade para valores inferiores a 1 (0,99 no dia 14 de abril). Entre abril e setembro os valores de Rt oscilaram ligeiramente, apresentando-se na sua maioria superiroes a 1, mas também alcançando o seu mínimo no dia 10 de julho (0,60). A partir de setembro é visisvel que estes valores sofreram, novamente, um aumento, visto que desde o dia 4 de setembro não apresentaram valores inferiores a 1. Devido ao aumento preocupante de casos no mês de outubro, no dia 1 de novembro foi feita a recomendação de teletrabalho, o que permitiu uma ligeira diminuição dos valores de Rt para o atual 1,33 (4 de novembro). Conclui-se que, apesar da Suécia ter apresentado valores de transmissibilidade inferiores a 1, estes foram constantes apenas durante um mês (julho), enquanto que noutros países foi possível manter este valor inferior a 1 durante mais tempo.
 
 <br>
 
@@ -1596,8 +1596,14 @@ ggplotly(graph_hk, tooltip = "text")
 
 <br>
 
-TEXTO
+No caso da China, país onde o vírus teve origem, o maior valor de transmissão de doença verificou-se inicialmente (Rt = 7.86; 12 de janeiro), uma vez que toda a população se encontrava suscetível e potencialmente exposta a um microrganismo até então desconhecido. Apesar do Rt ter sofrido um pequeno decréscimo até 18 de Janeiro, a partir desta data foi-se acentuando até um novo pico no dia 22 de Janeiro, apresentando um valor bastante considerável (Rt = 5.29). 
+Em meados de fevereiro, o número de novos casos voltou a ser mais reduzido, pelo que o Rt dos dias anteriores acompanhou esta tendência e voltou a apresentar valores decrescentes até dia 14 de março, com o Rt mais baixo desde o início da pandemia (Rt = 0.23). Embora a transmissibilidade tenha voltado a aumentar nos dias seguintes, a implementação de confinamento parcial em Xinjiang contribuiu para a limitação da propagação de doença e dia 26 de Abril o Rt voltou a apresentar o valor mais baixo desde então (Rt = 0.24).
+De Maio a Junho podemos verificar que foi difícil limitar a transmissão de infeção, com um novo pico de Rt a 16 de Junho (Rt = 2.97).
 
+.....
+
+
+A partir de Setembro, os valores de Rt mantiveram-se bastante próximos do 1, no limiar de transmissão. 
 <br>
 
 ```{r pressure, fig.align='center', warning=FALSE}
@@ -1843,7 +1849,7 @@ ggplotly(graph_usa, tooltip = "text")
 
 <br>
 
-No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de fevereiro (Rt = 3.09), altura em que ainda não tinham sido implementadas medidas de restrição e de distanciamento social, levando assim a uma maior transmissão de vírus. No dia 29 do mês seguinte, foi atingido um novo pico de 2.03, no entanto a curva iniciou a sua descida logo após esta data com a declaração do Estado de Emergência no dia 7 de abril. Apesar deste não obrigar ao confinamento da população, sendo apenas voluntário, foi suficiente para fazer o Rt decrescer até ao valor mínimo de 0.49 ao dia 11 de maio. Duas semanas mais tarde, o Estado de Emergência foi suspenso (25 de maio) e, a partir essa data e até 4 de julho, que se registou um aumento progressivo do Rt. Desde então que o Rt tem vindo a diminuir e, mais recentemente, a estabilizar em valores bastante próximos do 1, o que indica uma desaceleração na transmissão. 
+No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de fevereiro (Rt = 3.09), altura em que ainda não tinham sido implementadas medidas de restrição e de distanciamento social, levando assim a uma maior transmissão de vírus. No dia 29 do mês seguinte, foi atingido um novo pico de 2.03, no entanto a curva iniciou a sua descida logo após esta data com a declaração do Estado de Emergência no dia 7 de abril. Apesar deste não obrigar ao confinamento da população, sendo apenas voluntário, foi suficiente para fazer o Rt decrescer até ao valor mínimo de 0.49 ao dia 11 de maio. Duas semanas mais tarde, o Estado de Emergência foi suspenso (25 de maio) e, a partir essa data e até 4 de julho, que se registou um aumento progressivo do Rt. Desde então o Rt diminuiu e, a partir de Setembro, veio a estabilizar com valores bastante próximos do 1, o que indica que a doença se manteve uniformemente na população.
 
 <br>
 
