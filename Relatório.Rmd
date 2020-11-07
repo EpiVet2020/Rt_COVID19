@@ -658,9 +658,7 @@ graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                        '<br>Rt médio: ', R_e_median))) +    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
-    labs( title = " ARS Alentejo - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
+    labs( x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
@@ -989,18 +987,12 @@ ggplotly(graph_Madeira, tooltip = "text")
 
 <br>
 
-## **Análise Comparativa entre Administrações Regionais de Saúde (ARS's)** {.tabset .tabset-fade .tabset-pills}
+## **Análise Comparativa entre Administrações Regionais de Saúde (ARS's)**
 ***
 
-TEXTO
-
 <br>
 
-### Evolução do número de reprodução efetivo por ARS ao longo do tempo
-
-<br>
-
-TEXTO
+## Evolução do número de reprodução efetivo por ARS ao longo do tempo
 
 <br>
 
