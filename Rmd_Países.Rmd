@@ -608,7 +608,7 @@ Para a análise da evolução do Rt na República Checa, utilizou-se a base de d
 <br>
 <br>
 
-O primeiro caso confirmado de COVID-19 na República checa foi no dia 1 de Março e, por esta mesma razão, o Rt neste dia foi 18,05, que representou o pico da transmissibilidade neste país. No dia 12 de Março foi declarado o Estado de Emergência, com a durção de um mês, o que permitiu que exixtisse uma redução dos valores de transmissibilidade, até um minimo de 0,62 no dia 16 de Abril. No dia 11 de Maio foram reabertas as lojas, permitindo uma maior abertura, após esta decisão existiram ligeiras oscilações nos valores de Rt, com um máximo de 0,94 no dia 
+O primeiro caso confirmado de COVID-19 na República checa foi no dia 1 de Março, e neste mesmo dia o Rt = 18,05, que representou o pico da transmissibilidade neste país. No dia 12 de Março foi declarado o Estado de Emergência, com a durção de um mês, o que permitiu que exixtisse uma redução dos valores de transmissibilidade, até um minimo de 0,62 no dia 16 de Abril. No dia 11 de Maio foram reabertas as lojas, permitindo uma maior abertura, após esta decisão existiram ligeiras oscilações nos valores de Rt, com um máximo de 0,94 no dia 
 28 de Junho, posteriormente atingindo um mínimo de 0.66 no dia 6 de Julho. Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas novas medidas de restrição, um novo Estado de Emergência no dia 5 de outubro, e a proibição das movimentações no dia 22 de outubro, existindo uma redução dos valores de Rt. Atualmente este valor é inferior a 1 (0,99).
 
 <br>
@@ -731,7 +731,7 @@ Esta análise foi efetuada com acesso aos seguintes dados: https://www.bag.admin
 <br>
 <br>
 
-Na Suiça as primeiras medidas começaram a ser tomadas no final do mês de fevereiro, devido às celebrações de Carnaval, quando se deram os primeiros casos, a 24 de fevereiro. Pelo que, os valores iniciais de Rt foram de 23,14 a 26 de fevereiro. No dia 13 de março foram aplicadas algumas medidas restritivas, como o encerramento de escolas, e no dia 16 de março declarado o Estado de Emergência. Estes acontecimentos levaram a que existisse uma redução nos valores de transmissibilidade, até um mínimo de 0,62 no dia 16 de abril. A partir do dia 27 de abril as restrições foram sendo levantadas, levando a um aumento do núemro de casos, e consequentemente do Rt para valores de 1,78 (1 de julho). A partir de meados de setembro existe um aumento de casos generalizado em toda a Europa, o que provocou o aumento do número de reprodução para 1,79 no dia 9 de outubro. Foram aplicadas novamente medidas de restrição, como a proibição de ajuntamentos no dia 19 de outubro, o que permitiu que existisse uma ligeira redução dos valores de Rt, até ao autual de 1,08 (4 de novembro).
+Na Suiça as primeiras medidas começaram a ser tomadas no final do mês de fevereiro, devido às celebrações de Carnaval, quando se deram os primeiros casos, a 24 de fevereiro. Os valores iniciais de Rt foram de 23,14 a 26 de fevereiro. No dia 13 de março foram aplicadas algumas medidas restritivas, como o encerramento de escolas, e no dia 16 de março declarado o Estado de Emergência. Estes acontecimentos levaram a que existisse uma redução nos valores de transmissibilidade, até um mínimo de 0,62 no dia 16 de abril. A partir do dia 27 de abril as restrições foram sendo levantadas, levando a um aumento do númemro de casos, e consequentemente do Rt para valores de 1,78 (1 de julho). A partir de meados de setembro existe um aumento de casos generalizado em toda a Europa, o que provocou o aumento do número de reprodução para 1,79 no dia 9 de outubro. Foram aplicadas novamente medidas de restrição, como a proibição de ajuntamentos no dia 19 de outubro, o que permitiu que existisse uma ligeira redução dos valores de Rt, até ao atual de 1,08 (4 de novembro).
 
 <br>
 
@@ -853,7 +853,7 @@ Para a análise da evolução do Rt na Suécia, utilizou-se a base de dados pres
 <br>
 
 É importante analisar os dados da Suécia, visto que este país defendeu uma filosofia de combate ao vírus muito diferente dos restantes países europeus, a imunidade de grupo.
-A Suiça teve o primeiro caso de COVID-19 no dia 26 de fevereiro, no qual o valor de Rt era de 8,27. Após este dia, apresentou o valor máximo de transmissibilidade no dia 28 de  fevereiro, de 23,14, apresentando em seguida uma redução drástica destes valores, apresentando um mínimo de 1,06 no dia em que as escolas foram encerradas (19 de março). Existiu, em seguida, um novo aumento dos valores de Rt, para 1,57 no dia 28 de março. Neste mesmo dia foi aplicada a proibição de ajuntamentos comm mais de 50 pessoas, o que permitiu a redução da transmissibilidade para valores inferiores a 1 (0,99 no dia 14 de abril). Entre abril e setembro os valores de Rt oscilaram ligeiramente, apresentando-se na sua maioria superiroes a 1, mas também alcançando o seu mínimo no dia 10 de julho (0,60). A partir de setembro é visisvel que estes valores sofreram, novamente, um aumento, visto que desde o dia 4 de setembro não apresentaram valores inferiores a 1. Devido ao aumento preocupante de casos no mês de outubro, no dia 1 de novembro foi feita a recomendação de teletrabalho, o que permitiu uma ligeira diminuição dos valores de Rt para o atual 1,33 (4 de novembro). Conclui-se que, apesar da Suécia ter apresentado valores de transmissibilidade inferiores a 1, estes foram constantes apenas durante um mês (julho), enquanto que noutros países foi possível manter este valor inferior a 1 durante mais tempo.
+A Suécia teve o primeiro caso de COVID-19 no dia 26 de fevereiro, no qual o valor de Rt era de 8,27. Após este dia, apresentou o valor máximo de transmissibilidade no dia 28 de  fevereiro, de 23,14, apresentando em seguida uma redução drástica destes valores, culminando num mínimo de 1,06 no dia em que as escolas foram encerradas (19 de março). Existiu, em seguida, um novo aumento dos valores de Rt, para 1,57 no dia 28 de março. Neste mesmo dia foi aplicada a proibição de ajuntamentos comm mais de 50 pessoas, o que permitiu a redução da transmissibilidade para valores inferiores a 1 (0,99 no dia 14 de abril). Entre abril e setembro os valores de Rt oscilaram ligeiramente, apresentando-se na sua maioria superiroes a 1, mas também alcançando o seu mínimo no dia 10 de julho (0,60). A partir de setembro é visisvel que estes valores sofreram, novamente, um aumento, visto que desde o dia 4 de setembro não apresentaram valores inferiores a 1. Devido ao aumento preocupante de casos no mês de outubro, no dia 1 de novembro foi feita a recomendação de teletrabalho, o que permiitu uma ligeira diminuição dos valores de Rt para o atual 1,33 (4 de novembro). Conclui-se que, apesar da Suécia ter apresentado valores de transmissibilidade inferiores a 1, estes foram constantes apenas durante um mês (julho), enquanto que noutros países foi possível manter este valor inferior a 1 durante mais tempo.
 
 <br>
 
@@ -957,8 +957,7 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
   ) +
   
   scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_swe$R_e_q0975)),
-    limits = c(0, NA)
+    breaks = seq(from = 0, to = 50, by = 5)
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
@@ -1351,7 +1350,7 @@ Os dados para a análise da evolução do Rt na Índia foram os seguintes: https
 <br>
 <br>
 
-Como podemos observar no gráfico, a Índia apresentou valores de transmissão na ordem dos 37 no início de março o que, ainda assim, poderá ser enviesado devido à possibilidade do número de novos casos confirmados poder ter sido subestimado. Ainda assim, trata-se de um valor mais elevado que os restantes países, o que pode refletir a dificuldade de implementação de medidas de restrição neste país. A partir de 4 de março começou a ser realizada a triagem a todos os passageiros e, mais tarde, a 25 de Março foi implementado o confinamento obrigatório. 
+Como podemos observar no gráfico, a Índia apresentou valores de transmissão na ordem dos 37 no início de março, que poderá ser enviesado devido à possibilidade do número de novos casos confirmados poder ter sido subestimado. Ainda assim, trata-se de um valor mais elevado que os restantes países, o que pode refletir a dificuldade de implementação de medidas de restrição neste país. A partir de 4 de março começou a ser realizada a triagem a todos os passageiros e, mais tarde, a 25 de Março foi implementado o confinamento obrigatório. 
 Embora estas medidas tenham contribuído para diminuir os valores até perto do limiar de tranmissão (Rt ≂ 1), não conseguiram controlar a disseminação da doença até, pelo menos, 19 de Setembro (Rt = 1,004). A partir desde dia, o número de reprodução efetivo diminuiu ligeiramente e manteve-se abaixo de 1 até Novembro, embora o país tenha continuado a apresentar um número de novos casos considerável (50465 novos confirmados no dia 4 de Novembro), o que pode ser explicado por uma maior dificuldade de testagem.
 
 <br>
@@ -1738,8 +1737,8 @@ Para a análise da evolução do Rt nos Estados Unidos da América, utilizou-se 
 <br>
 <br>
 
-TEXTO
-
+Os primeiros casos confirmados nos Estados Unidos ocorreram a 1 de janeiro, e o primeiro valor de Rt é de 1,85 a 6 de fevereiro. Após esta data os valores de transmissão foram aumentando, até atingir um pico de 2,78 no dia 16 de março.
+No dia 15 de março foi declarado o Estado de Emergência, e no dia 25 de março o confinamento total. Estas medidas de restrição permitiram que a transmissão fosse reduzida a 1,11 (3 de abril). Foi, então, declarado o Estado de Calamidade a 13 de abril, e após este dia os valores de R foram os mais baixos desde então, 0,94 a 25 de abril. A partir deste dia os valores oscilaram ligeiramente próximos de 1, até ao dia 25 de maio, em que é visível um aumento do número de transmissão, possívelmente devido ao movimento "Black Lives Matter" que ocorreu após a morte de George Floyd a 20 de maio. Desde esse dia até ao dia 1 de julho os valores oscilam entre 0,6 e 2,04, e após esse dia os valores sofrem oscilações mas não voltam a atingir valores tão elevados. O número de reprodução mais recente, a 16 de outubro, foi de 1,29. "Acreditamos que as eleições americanas possam ter influenciado a transmissão de casos nos Estados Unidos " 
 <br>
 
 ```{r, fig.align='center', warning=FALSE}
