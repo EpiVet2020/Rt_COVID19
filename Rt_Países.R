@@ -34,9 +34,6 @@ library(scales)
 library(tibble)
 
 setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
-setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
-
-
 
 
 #Data OUTROS PAÍSES e transformação para formato de data
