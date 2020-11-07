@@ -1532,12 +1532,12 @@ ggplotly(graph_hk2, tooltip = "text")
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-china$Date_reported <- as.Date(china$Date_reported, "%Y-%m-%d")
+china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 chi_var <- china %>%
   filter(Country == "China") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -1597,12 +1597,12 @@ posterior_Rt_chi <-
 
 ## Gráfico China ggplot
 ## Linhas a adicionar no gráfico
-d_chi = data.frame(date=as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26")), Evento=c("Desconfinamento gradual em Hubei", "Confinamento total em Xinjiang", "Desconfinamento gradual em Xinjiang", "Confinamento parcial em Xinjiang"))
+d_chi = data.frame(date=as.Date(c("2020-01-23", "2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26")), Evento=c("Confinamento total em Hubei", "Desconfinamento gradual em Hubei", "Confinamento total em Xinjiang", "Desconfinamento gradual em Xinjiang", "Confinamento parcial em Xinjiang"))
 
 graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
-                                                                                         '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+  geom_line(colour = "aquamarine4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+                                                                                        '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "aquamarine4") +
   
   labs( title = " China - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
@@ -1629,10 +1629,8 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
     limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-01-23", "2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26"))), linetype = c("twodash", "dotdash", "dotted","dashed", "solid"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
-
-
 ### Tornar gráfico interativo
 ggplotly(graph_chi, tooltip = "text")
 
@@ -2115,12 +2113,12 @@ ggplotly(graph_kor, tooltip = "text")
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-brasil$Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
+brasil$ï..Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 bra_var <- brasil %>%
   filter(Country == "Brazil") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(bra_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -2179,12 +2177,12 @@ posterior_Rt_bra <-
   reduce(bind_rows)
 
 ## Gráfico Brasil ggplot
-d_bra = data.frame(date=as.Date(c("2020-03-17", "2020-05-07", "2020-06-04")), Evento=c("Estado de Emergência - São Paulo e Rio de Janeiro", "Confinamento parcial obrigatório", "Levantamento de medidas de restrição"))
+d_bra = data.frame(date=as.Date(c("2020-03-17", "2020-05-07", "2020-06-04")), Evento=c("Estado de Emergência - São Paulo e Rio de Janeiro", "Confinamento parcial obrigatório", "Levantamento gradual das medidas de restrição"))
 
 graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "chocolate3",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "cadetblue",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                          '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "chocolate1") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "cadetblue") +
   
   labs( title = " Brasil - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
         subtitle = "Fonte de dados:  ",
