@@ -1,7 +1,16 @@
 ---
 title: "Estimativa do Número de Reprodução Efetivo (Rt) da COVID19"
 subtitle: "Portugal e Administrações Regionais de Saúde"
-author: "By: Estagiárias de Epidemiologia da FMV"
+author: 
+  - name: Inês Antunes
+  - affiliation: FMV, Universidade de Lisboa
+  - email: ines.marcal.antunes@gmail.com
+  - name: Sara Sequeira 
+  - affiliation: FMV, Universidade de Lisboa
+  - email: sarasequeira5@hotmail.com
+  - name: Teresa da Penha Coutinho
+  - affiliation: FMV, Universidade de Lisboa
+  - email: teresa.jesus.coutinho@gmail.com
 date: "Outubro, 2020"
 output:
   html_document:
