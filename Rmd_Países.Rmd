@@ -114,7 +114,7 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
 ### Itália
 <br>
-Esta análise foi realizada com recurso à seguinte base de dados: <a href = "https://github.com/pcm-dpc/COVID-19/blob/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv">.
+Esta análise foi realizada com recurso à seguinte base de dados:  https://github.com/pcm-dpc/COVID-19/blob/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv.
 <br>
 <br>
 Pela visualização deste gráfico é possível verificar que o número reprodutivo efetivo apresentou o valor mais elevado no início da pandemia (3 de março; Rt = 3,16), ligeiramente mais baixo que o Rt inicial para Portugal (embora os casos tenham sido importados mais precocemente em Itália). O confinamento obrigatório, implementado no dia 9 de março, contribuiu para uma descida abrupta do número de contágios, que atingiu o seu valor mínimo de 0,68 no dia 4 de junho. <br>
@@ -243,7 +243,7 @@ ggplotly(graph_it, tooltip = "text")%>%
 
 ### Alemanha
 <br>
-Esta análise foi realizada a partir da base de dados presente no seguinte link: <a href = "https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0/data">.
+Esta análise foi realizada a partir da base de dados presente no seguinte link: https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0/data.
 <br>
 <br>
 No caso da Alemanha, inicialmente 1 pessoa era responsável pelo ocorrência de cerca de 4,07 casos secundários (4 de março; Rt = 4,07), período durante o qual ocorreu a importação dos primeiros casos. Nos seguintes 5 dias, o valor sofreu um pequeno decréscimo seguido de um novo pico no dia 13 de março, com Rt de 3,15. Este novo aumento na transmissão foi eficazmente controlado com o encerramento de escolas (dia 13 de março) e declaração posterior do Estado de Emergência nacional (22 de março), apresentando o valor mais baixo de transmissão no dia 16 de abril (Rt = 0,71). A partir desta data, apesar da reabertura de lojas e escolas ter contribuído para que o número de reprodução efetivo voltasse a apresentar valores acima de 1, este país parece ter conseguido manter os valores de Rt relativamente constantes. <br>
@@ -371,7 +371,7 @@ ggplotly(graph_ger, tooltip = "text")%>%
 
 ### Espanha
 <br>
-Para a análise da evolução do Rt em Espanha, utilizou-se a base de dados presente em: <a href = "https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos">.
+Para a análise da evolução do Rt em Espanha, utilizou-se a base de dados presente em: https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos.
 <br>
 <br>
 À semelhança do que aconteceu nos restantes países, o maior período de transmissão em Espanha ocorreu no início da pandemia, tendo atingido o valor máximo de 3,04 no dia 2 de março. Estes valores levaram a que o país declarasse Estado de Emergência no dia 13 de março, com a intenção de diminuir a probabilidade de contágio. A partir desta altura, os valores de Rt foram decrescendo de forma considerável, até ao valor mínimo de 0,46 no dia 10 de maio. <br>
@@ -494,7 +494,7 @@ ggplotly(graph_spa, tooltip = "text")%>%
 
 ### Bélgica
 <br>
-Para esta análise, utilizou-se a base de dados presente em: <a href = "https://epistat.wiv-isp.be/covid/">.
+Para esta análise, utilizou-se a base de dados presente em: https://epistat.wiv-isp.be/covid/.
 <br>
 <br>
 A partir desde gráfico, é possível constatar que o número de reprodução efetivo inicial atingiu os 2,72 (8 de março), o que não parece ter sido muito diferente em relação aos restantes países da União Europeia. No entanto, no caso da Bélgica, os dados utilizados só terão começado a ser reportados a partir de 1 de março. Desde então, com a implementação do confinamento parcial e posteriormente total a nível nacional, o número de contágios diminuiu até um Rt de 0,60 no dia 1 de maio. <br>
@@ -618,7 +618,7 @@ ggplotly(graph_bel, tooltip = "text") %>%
 
 ### República Checa
 <br>
-Para a análise da evolução do Rt na República Checa, utilizou-se a base de dados presente em: <a href = "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19">.
+Para a análise da evolução do Rt na República Checa, utilizou-se a base de dados presente em: https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19.
 <br>
 <br>
 
@@ -745,7 +745,7 @@ ggplotly(graph_cz, tooltip = "text") %>%
 
 ### Suíça
 <br>
-Esta análise foi efetuada com acesso aos seguintes dados: <a href = "https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html#-640157857">.
+Esta análise foi efetuada com acesso aos seguintes dados: https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html#-640157857.
 <br>
 <br>
 
@@ -870,7 +870,7 @@ ggplotly(graph_swi, tooltip = "text") %>%
 
 ### Suécia
 <br>
-Para a análise da evolução do Rt na Suécia, utilizou-se a base de dados presente em: <h ««a href = "https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/">.
+Para a análise da evolução do Rt na Suécia, utilizou-se a base de dados presente em: https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/.
 <br>
 <br>
 
@@ -1005,7 +1005,7 @@ ggplotly(graph_swe, tooltip = "text") %>%
 
 ### Reino Unido
 <br>
-No sentido de realizar esta análise, utilizaram-se os seguintes dados: <a href = "https://coronavirus.data.gov.uk/cases">.
+No sentido de realizar esta análise, utilizaram-se os seguintes dados: https://coronavirus.data.gov.uk/cases.
 <br>
 <br>
 No caso do Reino Unido, o primeiro pico de transmissão a 8 de fevereiro (Rt = 4,83) correspondeu aos primeiros casos de COVID19 confirmados no país, tendo posteriormente diminuído uma vez que o número de novos casos voltou a ter valores mínimos até ao início de janeiro. Assim, a partir de dia 20 de fevereiro, o Rt sofreu uma subida repentina até valores na ordem dos 4,88, que correspondeu ao período de maior transmissão de infeção no país. <br>
@@ -1133,7 +1133,7 @@ ggplotly(graph_uk, tooltip = "text") %>%
 
 ### Austrália
 <br>
-Para a análise da evolução do Rt na Austrália, utilizou-se a base de dados presente em: <a href = "https://github.com/M3IT/COVID-19_Data/blob/master/Data/COVID_AU_national_daily_change.csv">.
+Para a análise da evolução do Rt na Austrália, utilizou-se a base de dados presente em: https://github.com/M3IT/COVID-19_Data/blob/master/Data/COVID_AU_national_daily_change.csv.
 
 <br>
 
@@ -1256,7 +1256,7 @@ ggplotly(graph_aus, tooltip = "text") %>%
 
 ### Nova Zelândia
 <br>
-Para este país foram analisados os dados da Organização Mundial de Saúde, através do seguinte documento: <a href = "https://covid19.who.int/table">.
+Para este país foram analisados os dados da Organização Mundial de Saúde, através do seguinte documento: https://covid19.who.int/table.
 <br>
 
 ```{r, fig.align='center', warning = FALSE, message = FALSE}
@@ -1379,7 +1379,7 @@ ggplotly(graph_nze, tooltip = "text") %>%
 
 ### Índia
 <br>
-Os dados para a análise da evolução do Rt na Índia foram os seguintes: <a href = "https://api.covid19india.org/documentation/csv/">.
+Os dados para a análise da evolução do Rt na Índia foram os seguintes: https://api.covid19india.org/documentation/csv/.
 <br>
 <br>
 
@@ -1508,7 +1508,7 @@ ggplotly(graph_ind, tooltip = "text") %>%
 
 ### Hong Kong
 <br>
-Para a análise da evolução do Rt em Hong Kong, utilizou-se a base de dados presente em: <a href = "https://data.gov.hk/en-data/dataset/hk-dh-chpsebcddr-novel-infectious-agent">.
+Para a análise da evolução do Rt em Hong Kong, utilizou-se a base de dados presente em: https://data.gov.hk/en-data/dataset/hk-dh-chpsebcddr-novel-infectious-agent.
 <br>
 <br>
 
@@ -1645,7 +1645,7 @@ ggplotly(graph_hk, tooltip = "text") %>%
 
 ### China
 <br>
-Para esta análise, recorreu-se à base de dados presente em: <a href = "https://covid19.who.int/table".
+Para esta análise, recorreu-se à base de dados presente em: https://covid19.who.int/table.
 <br>
 <br>
 
@@ -1769,7 +1769,7 @@ ggplotly(graph_chi, tooltip = "text") %>%
 
 ### Estados Unidos da América
 <br>
-Para a análise da evolução do Rt nos Estados Unidos da América, utilizou-se a seguinte base de dados: <href = "https://github.com/nytimes/covid-19-data">.
+Para a análise da evolução do Rt nos Estados Unidos da América, utilizou-se a seguinte base de dados: https://github.com/nytimes/covid-19-data.
 <br>
 <br>
 
@@ -1898,7 +1898,7 @@ ggplotly(graph_usa, tooltip = "text") %>%
 
 ### Japão
 <br>
-Para esta análise, utilizou-se a base de dados presente em: <a href = "https://github.com/reustle/covid19japan-data/tree/master/docs/summary">.
+Para esta análise, utilizou-se a base de dados presente em: https://github.com/reustle/covid19japan-data/tree/master/docs/summary.
 <br>
 <br>
 
@@ -2025,7 +2025,7 @@ ggplotly(graph_jap, tooltip = "text") %>%
 
 ### México
 <br>
-Para a análise da evolução do Rt no México, utilizou-se a base de dados documentada em: <a href = "https://covid19.who.int/table">.
+Para a análise da evolução do Rt no México, utilizou-se a base de dados documentada em: https://covid19.who.int/table.
 <br>
 <br>
 
@@ -2150,7 +2150,7 @@ ggplotly(graph_mex, tooltip = "text") %>%
 
 ### Coreia do Sul
 <br>
-Neste caso, a análise da evolução do Rt foi realizada com base nos seguintes dados: <a href = "https://github.com/owid/covid-19-data/blob/master/public/data/ecdc/new_cases.csv">.
+Neste caso, a análise da evolução do Rt foi realizada com base nos seguintes dados: https://github.com/owid/covid-19-data/blob/master/public/data/ecdc/new_cases.csv
 <br>
 <br>
 
@@ -2274,7 +2274,7 @@ ggplotly(graph_kor, tooltip = "text") %>%
 
 ### Brasil
 <br>
-Por fim, para a análise da evolução do Rt no Brasil, recorreu-se ao seguinte link: <a href = "https://covid19.who.int/table">.
+Por fim, para a análise da evolução do Rt no Brasil, recorreu-se ao seguinte link: https://covid19.who.int/table.
 <br>
 <br>
 
