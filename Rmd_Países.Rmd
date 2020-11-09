@@ -1,7 +1,16 @@
 ---
 title: "Análise comparativa entre Rt de diferentes países"
-author: "By: Estagiárias de Epidemiologia da FMV"
-date: "Outubro, 2020"
+author: 
+  - name: Inês Antunes
+  - affiliation: FMV, Universidade de Lisboa
+  - email: ines.marcal.antunes@gmail.com
+  - name: Sara Sequeira 
+  - affiliation: FMV, Universidade de Lisboa
+  - email: sarasequeira5@hotmail.com
+  - name: Teresa da Penha Coutinho
+  - affiliation: FMV, Universidade de Lisboa
+  - email: teresa.jesus.coutinho@gmail.com
+date: "Novembro, 2020"
 output:
   html_document:
     code_folding: hide
@@ -619,11 +628,11 @@ Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 ## Alterar formato para data
-czechr$datum <- as.Date(czechr$datum, "%Y-%m-%d")
+czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d") 
 
 ## Tabela confirmados novos
 cz_var <- czechr %>%
-  select(datum, prirustkovy_pocet_nakazenych)
+  select(ï..datum, prirustkovy_pocet_nakazenych)
 names(cz_var) <- c("data", "confirmados_novos")
 
 
@@ -1239,12 +1248,12 @@ Para este país foram analisados os dados da Organização Mundial de Saúde, at
 nzealand <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-nzealand$Date_reported <- as.Date(nzealand$Date_reported, "%Y-%m-%d")
+nzealand$ï..Date_reported <- as.Date(nzealand$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 nzealand_var <- nzealand %>%
   filter(Country == "New Zealand") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(nzealand_var) <- c("data", "confirmados_novos")
 
 ## Alterar para formato Data
@@ -1875,7 +1884,7 @@ No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de
 
 ```{r, fig.align='center', warning = FALSE, message = FALSE}
 #JAPÃO - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
-japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-10-24.json")
+japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-11-08.json")
 japan <- japan$daily
 
 ## Alterar formato para data
@@ -2002,12 +2011,12 @@ No México, os primeiros casos foram registados no fim de fevereiro e o pico no 
 mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-mexico$Date_reported <- as.Date(mexico$Date_reported, "%Y-%m-%d")
+mexico$ï..Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 mex_var <- mexico %>%
   filter(Country == "Mexico") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(mex_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
