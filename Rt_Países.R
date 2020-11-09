@@ -45,7 +45,7 @@ italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/leg
 italy$data <- strftime(italy$data, format = "%Y-%m-%d")
 
 ## Alterar para formato de data
-italy$data <- as.Date(italy$data,  "%Y-%m-%d")
+italy$data <- as.Date(italy$data, "%Y-%m-%d")
 
 ## Tabela: Data e confirmados novos
 it_var <- italy %>%
@@ -1641,23 +1641,16 @@ ggplotly(graph_chi, tooltip = "text")
 
 
 
-# EUA (https://covid.cdc.gov/covid-data-tracker/#cases_casesinlast7days ou https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data/vbim-akqf)
-usa <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
-usa <- as.data.frame(rio::import(file = usa))
+# EUA (https://github.com/nytimes/covid-19-data)
+usa <- read.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv")
 
 ## Alterar para formato Data
-usa$cdc_report_dt <- as.Date(usa$cdc_report_dt, "%Y/%m/%d")
-
-## Ordenar por data
-usa <- as.data.frame(usa[order(usa$cdc_report_dt), ])
-
-## Agrupar confirmados diários
-usa_var <- usa %>%
-  filter(current_status == "Laboratory-confirmed case") #selecionar apenas casos confirmados
-usa_var <- as.data.frame(aggregate(x = usa_var, list(usa_var$cdc_report_dt), FUN = length)) #nº registos por dia
+usa$date <- as.Date(usa$date, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
-usa_var <- usa_var[, 1:2]
+usa_var <- mutate(usa, new = usa$cases-lag(usa$cases))
+usa_var <- usa_var[,c(1,4)]
+usa_var <- usa_var[-1,]
 names(usa_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
