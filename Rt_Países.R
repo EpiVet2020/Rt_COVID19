@@ -149,9 +149,8 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
   geom_vline(data=d_it, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
-ggplotly(graph_it, tooltip = "text")%>%
+ggplotly(graph_it, tooltip = "text") %>%
   layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
-
 
 
 
