@@ -5,7 +5,7 @@ author:
   - name: Inês Antunes (ines.marcal.antunes@gmail.com)
   - name: Sara Sequeira (sarasequeira5@hotmail.com)
   - name: Teresa da Penha Coutinho (teresa.jesus.coutinho@gmail.com)
-date: "Outubro, 2020"
+date: "Novembro, 2020"
 output:
   html_document:
     code_folding: hide
