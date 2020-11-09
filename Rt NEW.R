@@ -152,7 +152,7 @@ posterior_R_t <-
 ## GRÁFICO ggplot
 
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
 
 graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
@@ -186,7 +186,7 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
     limits = c(0, 15)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "dotted", "twodash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 
