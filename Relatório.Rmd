@@ -2,15 +2,9 @@
 title: "Estimativa do Número de Reprodução Efetivo (Rt) da COVID19"
 subtitle: "Portugal e Administrações Regionais de Saúde"
 author: 
-  - name: Inês Antunes
-  - affiliation: FMV, Universidade de Lisboa
-  - email: ines.marcal.antunes@gmail.com
-  - name: Sara Sequeira 
-  - affiliation: FMV, Universidade de Lisboa
-  - email: sarasequeira5@hotmail.com
-  - name: Teresa da Penha Coutinho
-  - affiliation: FMV, Universidade de Lisboa
-  - email: teresa.jesus.coutinho@gmail.com
+  - name: Inês Antunes (ines.marcal.antunes@gmail.com)
+  - name: Sara Sequeira (sarasequeira5@hotmail.com)
+  - name: Teresa da Penha Coutinho (teresa.jesus.coutinho@gmail.com)
 date: "Outubro, 2020"
 output:
   html_document:
