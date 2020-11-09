@@ -244,7 +244,7 @@ posterior_R_t1 <-
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
 graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -277,9 +277,8 @@ graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "dotted", "twodash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
 
 ### Tornar gráfico interativo
 ggplotly(graph_Norte, tooltip = "text")
@@ -332,7 +331,7 @@ posterior_R_t2 <-
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
 graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -365,9 +364,8 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
 
 ### Tornar gráfico interativo
 ggplotly(graph_Centro, tooltip = "text")
@@ -421,7 +419,7 @@ posterior_R_t3 <-
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento = c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
 graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -454,9 +452,8 @@ graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
 
 ### Tornar gráfico interativo
 ggplotly(graph_LVT, tooltip = "text")
@@ -511,15 +508,13 @@ posterior_R_t4 <-
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento = c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
 graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                        '<br>Rt médio: ', R_e_median))) +    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
   
-  labs( title = " ARS Alentejo - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados: DGS ",
-        x = "Data",
+  labs( x = "Data",
         y = "Nº de reprodução efetivo (Rt)"
   ) +
   
@@ -543,7 +538,7 @@ graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "dotted", "twodash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
@@ -599,7 +594,7 @@ posterior_R_t5 <-
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15")), Evento = c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade"))
+d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
 graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -632,7 +627,7 @@ graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15" ))), linetype= c("solid", "dotted", "twodash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
@@ -687,7 +682,7 @@ posterior_R_t6 <-
 
 
 ## GRÁFICO GGPLOT
-d_azo=data.frame(date=as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17")), Evento = c("Encerramento das Escolas", "Estado de Emergência Nacional", "Confinamento Obrigatório de Passageiros", "Testagem e/ou Quarentena Obrigatória de Passageiros"))
+d_azo=data.frame(date=as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17", "2020-11-09")), Evento = c("Encerramento das Escolas", "Estado de Emergência Nacional", "Confinamento Obrigatório de Passageiros", "Testagem e/ou Quarentena Obrigatória de Passageiros", "Estado de Emergência Nacional"))
 
 graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -720,7 +715,7 @@ graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17"))), linetype= c("twodash", "dotted", "solid", "dotdash"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17", "2020-11-09"))), linetype= c("twodash", "dotted", "solid", "dotdash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d_azo, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
@@ -775,7 +770,7 @@ posterior_R_t7 <-
     reduce(bind_rows)
 
 ## GRÁFICO GGPLOT
-d_mad=data.frame(date=as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28")), Evento = c("Quarentena obrigatória para todos os passageiros", "Estado de Emergência Nacional", "Início do desconfinamento", "Obrigatoriedade de teste negativo e/ou quarentena para todos os passageiros"))
+d_mad=data.frame(date=as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28", "2020-11-09")), Evento = c("Quarentena obrigatória para todos os passageiros", "Estado de Emergência Nacional", "Início do desconfinamento", "Obrigatoriedade de teste negativo e/ou quarentena para todos os passageiros", "Estado de Emergência Nacional"))
 
 graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
@@ -808,7 +803,7 @@ graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28"))), linetype= c("dotdash", "solid", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28", "2020-11-09"))), linetype= c("dotdash", "solid", "twodash", "dotted", "solid"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d_mad, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
 
 ### Tornar gráfico interativo
