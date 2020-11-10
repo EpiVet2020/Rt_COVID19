@@ -388,7 +388,6 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
   geom_pointrange(data = last(posterior_Rt_spa), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")+ 
   annotate(geom = "text", x = last(posterior_Rt_spa$date_point), y = last(posterior_Rt_spa$R_e_median) - 0.5, label = round(last(posterior_Rt_spa$R_e_median), digits = 3), size = 3)
 
-
 ### Tornar gráfico interativo
 ggplotly(graph_spa, tooltip = "text") %>%
   layout(title = list(text = paste0("Espanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
@@ -746,7 +745,6 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
   geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
   geom_pointrange(data = last(posterior_Rt_swi), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_swi$date_point), y = last(posterior_Rt_swi$R_e_median) - 0.5, label = round(last(posterior_Rt_swi$R_e_median), digits = 3), size = 3)
-
 
 ### Tornar gráfico interativo
 ggplotly(graph_swi, tooltip = "text") %>%
@@ -1112,7 +1110,6 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
   geom_pointrange(data = last(posterior_Rt_aus), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_aus$date_point), y = last(posterior_Rt_aus$R_e_median) - 0.5, label = round(last(posterior_Rt_aus$R_e_median), digits = 3), size = 3)
 
-
 #Tornar o grafico interativo
 ggplotly(graph_aus, tooltip = "text") %>%
   layout(title = list(text = paste0("Austrália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
@@ -1128,12 +1125,12 @@ ggplotly(graph_aus, tooltip = "text") %>%
 nzealand <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-nzealand$Date_reported <- as.Date(nzealand$Date_reported, "%Y-%m-%d")
+nzealand$ï..Date_reported <- as.Date(nzealand$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 nzealand_var <- nzealand %>%
   filter(Country == "New Zealand") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(nzealand_var) <- c("data", "confirmados_novos")
 
 ## Alterar para formato Data
@@ -1484,9 +1481,6 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
   geom_pointrange(data = last(posterior_Rt_hk), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_hk$date_point), y = last(posterior_Rt_hk$R_e_median) - 0.5, label = round(last(posterior_Rt_hk$R_e_median), digits = 3), size = 3)
 
-
-
-
 ### Tornar gráfico interativo
 ggplotly(graph_hk, tooltip = "text") %>%
   layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
@@ -1596,12 +1590,12 @@ ggplotly(graph_hk2, tooltip = "text")
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-china$Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
+china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 chi_var <- china %>%
   filter(Country == "China") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -1819,8 +1813,6 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
   geom_pointrange(data = last(posterior_Rt_usa), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_usa$date_point), y = last(posterior_Rt_usa$R_e_median) - 0.5, label = round(last(posterior_Rt_usa$R_e_median), digits = 3), size = 3)
 
-
-
 ### Tornar gráfico interativo
 ggplotly(graph_usa, tooltip = "text") %>%
   layout(title = list(text = paste0("Estados Unidos da América", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
@@ -1958,12 +1950,12 @@ ggplotly(graph_jap, tooltip = "text") %>%
 mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-mexico$Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
+mexico$ï..Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 mex_var <- mexico %>%
   filter(Country == "Mexico") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(mex_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -2060,8 +2052,6 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
   geom_vline(data=d_mex, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
   geom_pointrange(data = last(posterior_Rt_mex), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_mex$date_point), y = last(posterior_Rt_mex$R_e_median) - 0.5, label = round(last(posterior_Rt_mex$R_e_median), digits = 3), size = 3)
-
-
 
 ### Tornar gráfico interativo
 ggplotly(graph_mex, tooltip = "text") %>%
