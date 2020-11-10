@@ -1,9 +1,6 @@
 ---
 title: "Análise comparativa entre Rt de diferentes países"
-author: 
-  - name: Inês Antunes (ines.marcal.antunes@gmail.com)
-  - name: Sara Sequeira (sarasequeira5@hotmail.com)
-  - name: Teresa da Penha Coutinho (teresa.jesus.coutinho@gmail.com)
+author: Inês Marçal Antunes, Sara Sequeira e Teresa da Penha Coutinho
 date: "Novembro, 2020"
 output:
   html_document:
@@ -59,8 +56,8 @@ O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disp
 
 <br>
 
-Este relatório tem como objetivo analisar de que forma variou o Rt em Portugal, em comparação com outros países do Mundo. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data, para Portugal, e em bases de dados de COVID dos restantes países, que se encontram respetivamente no final de cada análise específica.
-Dividimos a nossa análise em duas partes, sendo a primeira respetiva a países pertencentes à União Europeia e, posteriormente, aos países extracomunitários.
+Este relatório tem como objetivo analisar de que forma variou o Rt em Portugal, em comparação com outros países do Mundo. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data, para Portugal, e em bases de dados de COVID dos restantes países, que se encontram devidamente indentificadas.
+Dividimos a nossa análise em duas partes, sendo a primeira respetiva a países pertencentes à União Europeia e a segunda, relativa aos países extracomunitários.
 
 <br>
 ```{r, warning = FALSE, message = FALSE}
@@ -106,7 +103,15 @@ covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/m
 covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
 ```
+<br>
+## **Análise dos dados**
+***
 
+À semelhança do relatório "Estimativa do Número de Reprodução Efetivo (Rt) da COVID19" efetuado para Portugal e suas Administrações Regionais de Saúde, disponível no repositório [*Github](https://github.com/EpiVet2020/Rt_COVID19), também para este relatório tomámos como base o modelo referido no artigo [*A New Framework and Software to Estimate Time-Varying Reproduction Numbers During Epidemics*](https://academic.oup.com/aje/article/178/9/1505/89262) publicado no *American Journal of Epidemiology*. <br>
+Utilizando esta ferramenta, através do package [*estimate.R*](https://cran.r-project.org/web/packages/estimatr/estimatr.pdf) disponível, são produzidas estimativas estatisticamente robustas de Rt a partir da distribuição do serial interval, que corresponde ao tempo entre o início dos sintomas num caso primário e o início de sintomas num caso secundário, sendo ainda incorporada incerteza nesta distribuição. Desta forma, conseguimos quantificar as mudanças temporais na intensidade da transmissão de COVID19, tendo em conta a incidência diária, utilizando os dados de vigilância epidemiológica de cada país. 
+<br>
+De forma a obter os valores de incidência, recorremos às base de dados de cada país, devidamente identificadas em cada secção.
+<br>
 <br>
 
 ## **União Europeia** {.tabset .tabset-fade .tabset-pills}
@@ -2425,5 +2430,17 @@ ggplotly(graph_bra, tooltip = "text") %>%
   layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
 
 ```
+<br> 
+<br> 
 
+$~$
+<center> 
+ **Um trabalho de**
 
+Inês Marçal Antunes [`r icon::fa("linkedin")`](https://www.linkedin.com/in/in%C3%AAs-antunes-b332401b9/), Sara Sequeira [`r icon::fa("linkedin")`](https://www.linkedin.com/in/sara-sequeira-1b5085152/) e Teresa da Penha Coutinho [`r icon::fa("linkedin")`](https://www.linkedin.com/in/teresa-da-penha-coutinho/)
+
+ines.marcal.antunes@gmail.com; sarasequeira5@hotmail.com; teresa.jesus.coutinho@gmail.com; 
+
+[`r icon::fa("github")`](https://github.com/EpiVet2020/Rt_COVID19.git)
+
+</center>
