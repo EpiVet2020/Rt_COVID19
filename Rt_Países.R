@@ -1825,7 +1825,7 @@ ggplotly(graph_usa, tooltip = "text") %>%
 
 
 #JAPÃO - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
-japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-10-24.json")
+japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-11-10.json")
 japan <- japan$daily
 
 ## Alterar formato para data
