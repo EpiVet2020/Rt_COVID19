@@ -1688,12 +1688,12 @@ A partir de Setembro, com o início do desconfinamento em Xinjiang, os valores d
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-china$Date_reported <- as.Date(china$Date_reported, "%Y-%m-%d")
+china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 chi_var <- china %>%
   filter(Country == "China") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
