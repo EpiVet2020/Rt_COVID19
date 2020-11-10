@@ -60,13 +60,28 @@ O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disp
 
 <br>
 
-Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em Portugal e, mais especificamente, em cada região do país. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data.
+Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em Portugal e, mais especificamente, em cada região do país. Desta forma, o relatório segue a seguinte ordem de assuntos:
 <br>
 <ul>
+<li>Análise dos dados</li>
+<li>Resultados</li>
+  <ul>
   <li>Portugal</li>
   <li>Administrações Regionais de Saúde (ARS's)</li>
+    <ul>
+    <li>ARS Norte</li>
+    <li>ARS Centro</li>
+    <li>ARS Lisboa e Vale do Tejo</li>
+    <li>ARS Alentejo</li>
+    <li>ARS Algarve</li>
+    <li>ARS Açores</li>
+    <li>ARS Madeira</li>
+    </ul>
+    </li>
   <li>Análise comparativa entre Administrações Regionais de Saúde (ARS's)</li>
-</ul>
+  </ul>
+  </li>
+<li>Conclusões</li>
 
 <br>
 ```{r warning=FALSE, message=FALSE, message= FALSE}
