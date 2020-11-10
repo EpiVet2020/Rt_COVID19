@@ -114,9 +114,9 @@ posterior_Rt_it <-
 d_it = data.frame(date=as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15")), Evento=c("Confinamento obrigatório", "Levantamento das restrições às movimentações", "Obrigatoriedade de máscara", "Encerramento de escolas e universidades"))
 
 graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "indianred",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
+  geom_line(colour = "darkslateblue",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                       '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "indianred3") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "darkslateblue") +
   
   labs( title = "Itália", size= 10,
         subtitle = "Evolução do Número Efetivo Reprodutivo ao longo do tempo",
@@ -146,12 +146,13 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("solid", "dotted", "dotdash", "twodash"), colour = "darkred", alpha = 0.5) +
-  geom_vline(data=d_it, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_it, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE) + 
+  geom_pointrange(data = last(posterior_Rt_it), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", )
 
 ### Tornar gráfico interativo
 ggplotly(graph_it, tooltip = "text") %>%
   layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
-
 
 
 
@@ -266,7 +267,8 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04", "2020-11-02"))), linetype= c("twodash", "dotted", "dashed", "dotdash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_ger, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_ger, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_pointrange(data = last(posterior_Rt_ger), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
 
 ### Tornar gráfico interativo
 ggplotly(graph_ger, tooltip = "text")%>%
@@ -381,7 +383,9 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25"))), linetype = c("solid", "dotdash", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_spa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_spa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_spa), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_spa, tooltip = "text") %>%
@@ -498,7 +502,9 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-18", "2020-06-08", "2020-09-24"))), linetype = c("solid", "twodash", "dotdash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_bel, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_bel, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_bel), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_bel, tooltip = "text") %>%
@@ -615,7 +621,9 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22"))), linetype = c("solid", "dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_cz), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_cz, tooltip = "text") %>%
@@ -731,7 +739,9 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-16", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_swi), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_swi, tooltip = "text") %>%
@@ -849,7 +859,9 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-03-19", "2020-03-27", "2020-11-01"))), linetype = c("dotdash", "solid", "dotted", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_swe), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 #Tornar o grafico interativo
 ggplotly(graph_swe, tooltip = "text") %>%
@@ -968,7 +980,9 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-24", "2020-05-22", "2020-09-14", "2020-11-05"))), linetype = c("solid", "dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_uk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_uk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_uk), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 ### Tornar gráfico interativo
 ggplotly(graph_uk, tooltip = "text") %>%
@@ -1087,7 +1101,9 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-20", "2020-06-30", "2020-08-02", "2020-09-27"))), linetype = c("dotted", "twodash", "solid", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_aus, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_aus, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_aus), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 #Tornar o grafico interativo
 ggplotly(graph_aus, tooltip = "text") %>%
@@ -1206,7 +1222,9 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-18", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_nze, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_nze, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_nze), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 
 ### Tornar gráfico interativo
@@ -1327,7 +1345,9 @@ graph_ind<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-04", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_ind, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_ind, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_india), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 
 #Tornar o grafico interativo
@@ -1450,7 +1470,9 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_hk), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 
 
@@ -1543,7 +1565,9 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_pointrange(data = last(posterior_Rt_hk2), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 
 
@@ -1659,7 +1683,9 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-01-23", "2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26"))), linetype = c("twodash", "dotdash", "dotted","dashed", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_pointrange(data = last(posterior_Rt_chi), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 ### Tornar gráfico interativo
 ggplotly(graph_chi, tooltip = "text") %>%
   layout(title = list(text = paste0("China", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
@@ -1776,7 +1802,9 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-25", "2020-04-13"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_usa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_usa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_pointrange(data = last(posterior_Rt_usa), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 
 ### Tornar gráfico interativo
@@ -1895,7 +1923,9 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-04-07", "2020-05-25"))), linetype = c("solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_jap, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_jap, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_jap), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 
 ### Tornar gráfico interativo
@@ -2012,7 +2042,9 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-31", "2020-06-01"))), linetype = c("twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_mex, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_mex, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_pointrange(data = last(posterior_Rt_mex), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 
 ### Tornar gráfico interativo
@@ -2127,7 +2159,9 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-02-21", "2020-04-01", "2020-08-16", "2020-10-12"))), linetype = c("twodash", "dotdash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_kor, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_kor, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_kor), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 
 ### Tornar gráfico interativo
@@ -2241,9 +2275,10 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
     limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-05-07", "2020-06-04"))), linetype = c("twodash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_bra), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")
+
 
 
 ### Tornar gráfico interativo
