@@ -106,9 +106,9 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
 ```
 <br>
+
 ## **Análise dos dados**
 ***
-
 À semelhança do relatório "Estimativa do Número de Reprodução Efetivo (Rt) da COVID19" efetuado para Portugal e suas Administrações Regionais de Saúde, disponível no repositório [*Github](https://github.com/EpiVet2020/Rt_COVID19), também para este relatório tomámos como base o modelo referido no artigo [*A New Framework and Software to Estimate Time-Varying Reproduction Numbers During Epidemics*](https://academic.oup.com/aje/article/178/9/1505/89262) publicado no *American Journal of Epidemiology*. <br>
 Utilizando esta ferramenta, através do package [*estimate.R*](https://cran.r-project.org/web/packages/estimatr/estimatr.pdf) disponível, são produzidas estimativas estatisticamente robustas de Rt a partir da distribuição do serial interval, que corresponde ao tempo entre o início dos sintomas num caso primário e o início de sintomas num caso secundário, sendo ainda incorporada incerteza nesta distribuição. Desta forma, conseguimos quantificar as mudanças temporais na intensidade da transmissão de COVID19, tendo em conta a incidência diária, utilizando os dados de vigilância epidemiológica de cada país. 
 <br>
@@ -2424,7 +2424,9 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-05-07", "2020-06-04"))), linetype = c("twodash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_pointrange(data = last(posterior_Rt_bra), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_Rt_bra$date_point), y = last(posterior_Rt_bra$R_e_median) - 0.5, label = round(last(posterior_Rt_bra$R_e_median), digits = 3), size = 3)
 
 
 ### Tornar gráfico interativo
