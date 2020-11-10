@@ -129,7 +129,7 @@ A partir de junho, com o levantamento de restrições às movimentações e medi
 No mês de setembro, a transmissão de infeção parece ter sofrido uma diminuição, mas a partir de outubro terá surgido um novo pico (18 de outubro; Rt = 1,57), cujo controlo passou pela implementação de certas medidas novamente, como obrigatoriedade de máscara e encerramento de escolas e universidades.
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # ITÁLIA (https://github.com/pcm-dpc/COVID-19/blob/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv)
 italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv", stringsAsFactors = FALSE)
 
@@ -258,7 +258,7 @@ No caso da Alemanha, inicialmente 1 pessoa era responsável pelo ocorrência de 
 A 2 de outubro foi declarado um novo confinamento, desta vez parcial, de forma a prevenir um novo aumento no número de contágios.
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # ALEMANHA (https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0/data)
 germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
 germany <- germany$features
@@ -389,7 +389,7 @@ Por volta desta altura, com o início do desconfinamento, assistiu-se a um aumen
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # ESPANHA (https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos)
 spain <- read.csv("https://cnecovid.isciii.es/covid19/resources/datos_ccaas.csv")
 
@@ -514,7 +514,7 @@ Até ao final de julho os valores de Rt foram aumentando gradualmente, embora se
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # BÉLGICA (https://epistat.wiv-isp.be/covid/)
 belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
 
@@ -641,7 +641,7 @@ Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # REPÚBLICA CHECA (https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19)
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
@@ -768,7 +768,7 @@ A partir de meados de setembro que se verificou um aumento de casos generalizado
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # SUÍÇA (https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html#-640157857)
 switzerland <- rio::import(file ="https://www.bag.admin.ch/dam/bag/en/dokumente/mt/k-und-i/aktuelle-ausbrueche-pandemien/2019-nCoV/covid-19-basisdaten-labortests.xlsx.download.xlsx/Dashboard_3_COVID19_labtests_positivity.xlsx")
 
@@ -898,7 +898,7 @@ Conclui-se que, apesar da Suécia ter apresentado valores de transmissibilidade 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #SUÉCIA (https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/)
 sweden <- "https://fohm.maps.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data"
 sweden <- rio::import(file = sweden)
@@ -1030,7 +1030,7 @@ Ao longo de março, os valores de contágio foram diminuindo, sendo esta descida
 Apesar de todas as medidas implementadas, a esperada segunda vaga de infeções não foi prevenida e desde julho que os valores de Rt voltaram a aumentar até um novo pico a 7 de setembro (Rt = 1,52). Na medida de controlar novos surtos, procedeu-se à proibição de ajuntamentos e, mais tarde, o país viu-se obrigado a recorrer a um novo confinamento obrigatório no dia 5 de novembro, que é expectável que volte a reduzir os valores de Rt abaixo de 1.
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # REINO UNIDO (https://coronavirus.data.gov.uk/cases)
 uk <- fromJSON("https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json")
 uk <- uk$data
@@ -1156,7 +1156,7 @@ Para a análise da evolução do Rt na Austrália, utilizou-se a base de dados p
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #AUSTRÁLIA (https://github.com/M3IT/COVID-19_Data/blob/master/Data/COVID_AU_national_daily_change.csv)
 australia <- read.csv("https://raw.githubusercontent.com/M3IT/COVID-19_Data/master/Data/COVID_AU_national_daily_change.csv")
 
@@ -1279,7 +1279,7 @@ ggplotly(graph_aus, tooltip = "text") %>%
 Para este país foram analisados os dados da Organização Mundial de Saúde, através do seguinte documento: https://covid19.who.int/table.
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # NOVA ZELÂNDIA
 ## Base de dados WHO
 nzealand <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
@@ -1409,7 +1409,7 @@ Embora estas medidas tenham contribuído para diminuir os valores até perto do 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #ÍNDIA (https://api.covid19india.org/documentation/csv/)
 india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv")
 
@@ -1541,7 +1541,7 @@ Na sequência dos protestos a que se tem assistido em Hong Kong, implementou-se 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # HONG KONG (https://data.gov.hk/en-data/dataset/hk-dh-chpsebcddr-novel-infectious-agent)
 hk <- read.csv("http://www.chp.gov.hk/files/misc/enhanced_sur_covid_19_eng.csv")
 
@@ -1677,7 +1677,7 @@ A partir de Setembro, com o início do desconfinamento em Xinjiang, os valores d
 <br>
 
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #CHINA (https://covid19.who.int/table)
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
@@ -1805,7 +1805,7 @@ Acreditamos que as eleições americanas possam ter influenciado a transmissão 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # EUA (https://github.com/nytimes/covid-19-data)
 usa <- read.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv")
 
@@ -1932,7 +1932,7 @@ No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #JAPÃO - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
 japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-11-10.json")
 japan <- japan$daily
@@ -2060,7 +2060,7 @@ No México, os primeiros casos foram registados no fim de fevereiro e o pico no 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # MÉXICO (https://covid19.who.int/table)
 mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
@@ -2186,7 +2186,7 @@ Numa primeira fase da pandemia na Coreia do Sul, verificou-se uma elevada transm
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # COREIA DO SUL (https://github.com/owid/covid-19-data/blob/master/public/data/ecdc/new_cases.csv)
 korea <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/ecdc/new_cases.csv")
 
@@ -2311,7 +2311,7 @@ No Brasil, o pico no Rt (Rt = 8,26) foi registado no dia 7 de março, cerca de 1
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # BRASIL (https://covid19.who.int/table)
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
