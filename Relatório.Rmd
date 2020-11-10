@@ -111,23 +111,18 @@ covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 ```
 
 <br>
-
-## **Portugal**
+## **Análise dos dados**
 ***
 
-Neste capítulo, iremos abordar a forma como tem evoluído a transmissão de infeção em Portugal com base na evolução do Rt.
+No sentido de realizar uma estimativa do Número Efetivo Reprodutivo (Rt), baseámo-nos no modelo referido no artigo [*A New Framework and Software to Estimate Time-Varying Reproduction Numbers During Epidemics*] publicado no [American Journal of Epidemiology](https://academic.oup.com/aje/article/178/9/1505/89262). <br>
+Utilizando esta ferramenta, através do R, são produzidas estimativas estatisticamente robustas de Rt a partir da distribuição do serial interval, que corresponde ao tempo entre o início dos sintomas num caso primário e o início de sintomas num caso secundário, sendo ainda incorporada incerteza nesta distribuição. Desta forma, conseguimos quantificar as mudanças temporais na intensidade da transmissão de COVID19, tendo em conta a incidência diária, utilizando os dados de vigilância epidemiológica no país. 
 <br>
-Através do gráfico abaixo, observa-se que o número médio de pessoas contagiadas por cada infetado chegou a assumir valores de Rt de 4,97 no início da pandemia (07/03/2020), tendo posteriormente diminuído na sequência do encerramento das escolas em Portugal (dia 16 de Março) e a declaração do estado de emergência a nível nacional (dia 18 de Março).
+Em primeiro lugar, para obtermos estes os valores de incidência, recorremos à base de dados disponível no GitHub (https://github.com/dssg-pt/covid19pt-data), cujas fontes incluem a Direcção Geral de Saúde - Ministério da Saúde Português e a base de dados da ESRI Portugal. <br>
 
-A média do R(t) para o período entre 16 de Abril e 6 de Maio manteve-se abaixo de 1, significando que, neste período, um caso infetado originou em média menos de 1 caso secundário, o que indica uma redução expressiva da transmissão da infeção desde a implementação das medidas de contenção em Portugal.
+ 
 
-Em finais de Agosto, os valores de Rt voltaram a aumentar, possivelmente devido ao levantamento de algumas restrições. Em Setembro, o Rt chegou a atingir valores de 1,358 com o consequente regresso ao período de atividade (trabalho, escolas, transportes públicos, etc), tendo atingido o valor mais alto no dia 16 de Outubro de 2020 (Rt = 1,477). A declaração do estado de calamidade a nível nacional, no dia 15 de Outubro, permitiu garantir um decréscimo da transmissibilidade neste período.
-
-<br>
-
-```{r pressure, fig.align='center', warning=FALSE, message= FALSE}
-
-# Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
+```{r fig.align='center', warning=FALSE, message= FALSE}
+# Em primeiro lugar, criámos novas variáveis com a incidência para cada uma das regiões (t - (t-1));
 covid19pt <- mutate(covid19pt, 
                     confirmados_lag = lag(confirmados),
                     confirmados_var=confirmados-confirmados_lag,
@@ -154,19 +149,19 @@ covid19pt <- mutate(covid19pt,
                     confirmados_var_madeira=confirmados_madeira-confirmados_lag_madeira,
 )
 
-# Criar tabela
+# Após obter as variáveis, criámos uma tabela com a data e incidência respetiva de cada região;
 covid19pt_var <- covid19pt %>%
     select(
         data, confirmados_var, confirmados_var_norte, confirmados_var_centro, confirmados_var_lvt, confirmados_var_alentejo, confirmados_var_algarve, confirmados_var_acores, confirmados_var_madeira
     )
 
-# Previsão da evolução
+# Definição da data de partida para os nossos cálculos;
 covid_pt_var <- covid19pt_var  %>%
     filter(covid19pt_var$data > as.Date("2020-02-28")) %>%       
     dplyr::mutate(t_start = dplyr::row_number())
 
 
-### Cálculo do Rt - Uncertainty method --> "uncertain_si"
+### Cálculo do Rt Uncertainty method --> "uncertain_si"
 ### Serial Interval (By André Peralta)
 ### A estimativa do nº reprodutivo efetivo diário foi realizada segundo uma janela de 7dias;
 ### Recorremos ao EpiEstim, ajustado aos casos importados e assumindo o seguinte serial interval (método uncertain):
@@ -189,6 +184,27 @@ sens_configs <-
             seed = 123456789
         )
     )
+```
+
+
+## **Resultados**
+***
+
+## **Portugal**
+***
+
+Neste capítulo, iremos abordar a forma como tem evoluído a transmissão de infeção em Portugal com base nos nossos resultados da evolução do Rt.
+<br>
+Através do gráfico abaixo, observa-se que o número médio de pessoas contagiadas por cada infetado chegou a assumir valores de Rt de 4,97 no início da pandemia (07/03/2020), tendo posteriormente diminuído na sequência do encerramento das escolas em Portugal (dia 16 de Março) e a declaração do estado de emergência a nível nacional (dia 18 de Março).
+
+A média do R(t) para o período entre 16 de Abril e 6 de Maio manteve-se abaixo de 1, significando que, neste período, um caso infetado originou em média menos de 1 caso secundário, o que indica uma redução expressiva da transmissão da infeção desde a implementação das medidas de contenção em Portugal.
+
+Em finais de Agosto, os valores de Rt voltaram a aumentar, possivelmente devido ao levantamento de algumas restrições. Em Setembro, o Rt chegou a atingir valores de 1,358 com o consequente regresso ao período de atividade (trabalho, escolas, transportes públicos, etc), tendo atingido o valor mais alto no dia 16 de Outubro de 2020 (Rt = 1,477). A declaração do estado de calamidade a nível nacional, no dia 15 de Outubro, permitiu garantir um decréscimo da transmissibilidade neste período.
+
+<br>
+
+
+```{r}
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si <- estimate_R(covid_pt_var$confirmados_var, 
@@ -270,7 +286,70 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_PT, tooltip = "text")
+
 ```
+
+
+
+
+
+
+```{r warning=FALSE, message=FALSE}
+
+gr_evolucao_grafico <- ggplot(gr, aes(x = data, y = Growth_Rate)) +
+  geom_point(size = 0.7, aes(text = paste('Data: ', data,
+                              '<br>Taxa de Crescimento de Novos Casos:', Growth_Rate))) +
+  geom_smooth(color = "#4fa1b3", se = FALSE, formula = y~x, size = 0.7) +
+  ylim(0.7, 1.5) + # ver se isto pode ser mesmo aplicado
+  labs(title = "Evolução da Taxa de Crescimento de Novos Casos (GR)",
+       x = "Mês",
+       y = "GR") +
+  theme(plot.title = element_text(size=10, face="bold", hjust = 0.5),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_x_date(breaks = "months", date_labels = "%b") +
+  geom_line(aes(y = 1, text = "Valor Padrão"), size = 0.5, color = "black", linetype = "dotted")
+  
+
+gr_evolucao_grafico_interativo <- ggplotly(gr_evolucao_grafico, tooltip = "text")
+
+
+# Grafico da evolucao da media de casos dos ultimos 3 dias
+
+rollmean_3_nacional <- as.data.frame(cbind(covid19pt[3:nrow(covid19pt),1], as.data.frame(rollmean(covid19pt[,12], k=3))))
+
+rollmean_3_nacional_grafico <- ggplot(rollmean_3_nacional, aes(x = data, y = confirmados_novos)) + 
+  geom_point(size = 0.7, aes(text = paste('Data: ', data,
+                                          '<br>Novos casos (Média):', confirmados_novos))) +
+  geom_smooth(color = "#4fa1b3", se = FALSE, formula = y~x, size = 0.7) +
+  labs(title = "Evolução dos Novos Casos (Média dos Últimos 3 dias)",
+       x = "Mês",
+       y = "Novos Casos (Média dos Últimos 3 dias)") +
+  theme(plot.title = element_text(size=10, face="bold", hjust = 0.5),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_x_date(breaks = "months", date_labels = "%b")
+
+rollmean_3_nacional_grafico_interativo <- ggplotly(rollmean_3_nacional_grafico, tooltip = "text")
+
+
+browsable(
+  tagList(list(
+    tags$div(
+      style = 'width:50%;display:block;float:left;',
+      rollmean_3_nacional_grafico_interativo
+    ),
+    tags$div(
+      style = 'width:50%;display:block;float:left;',
+      gr_evolucao_grafico_interativo
+    )
+  ))
+)
+
+```
+
+
+
 
 <br>
 
@@ -1059,6 +1138,26 @@ ggplotly(Rt_regioes_tempo_graph, tooltip = "text") %>%
                                      collapse = "")),
          legend = list(x = 1, y = 0))
 ```
+
+
+
+
+### POSSÍVEIS CONCLUSÕES
+
+As estimativas de R obtidas com nosso método são bastante sensíveis ao tamanho da janela deslizante sobre a qual as estimativas são calculadas. Janelas pequenas podem levar a estimativas altamente variáveis com intervalos amplos de credibilidade, enquanto janelas mais longas levam a estimativas suavizadas com intervalos de credibilidade mais estreitos.
+
+Finalmente, nosso método faz várias suposições que se beneficiariam com a reiteração. 
+
+Primeiro, aplicamos nosso método a séries temporais de início dos sintomas e usamos a distribuição de intervalo em série como uma aproximação para o perfil de infectividade ws. Mostramos nos Dados Suplementares que, para doenças para as quais a infecciosidade começa apenas no momento do início dos sintomas, com um perfil de infecciosidade após o início dos sintomas independente do período de incubação, isso leva a estimativas exatas, mas defasadas, do número de reprodução. Embora para muitas doenças, incluindo aquelas estudadas aqui, essa suposição seja sensata, ela não é válida para patógenos como a COVID19, para os quais a infecciosidade precede os sintomas.
+
+Desvantagens/ Possiveis erros:
+No entanto, esta abordagem pode levar a séries temporais de incidência suaves em comparação com a verdadeira incidência de infecção, uma vez que não leva em conta o periodo de incubaçao.
+Em segundo lugar, presumimos que todos os casos foram detectados. Mostramos em um estudo de simulação que isso não deve afetar drasticamente as estimativas, desde que a proporção de casos assintomáticos e a taxa de notificação sejam constantes ao longo do tempo (Dados Suplementares). Como exemplo, um precursor inicial do método aplicado aqui foi usado para analisar séries temporais de incidência de poliomielite, em que aproximadamente 1 em 200 infecções era sintomática (33). Em algumas situações, é provável que a taxa de notificação mude ao longo do curso de uma epidemia, por exemplo, como resultado de uma melhor averiguação de casos ou definições de casos ou mudanças no comportamento de busca de cuidados de saúde ao longo do tempo. Se houver dados disponíveis sobre relatórios, é possível estender nosso método para levar em consideração as taxas variáveis de relatórios (6).
+Partimos do pressuposto de que não houve casos importados, de forma que cada caso incidente poderia ser atribuído a um caso anterior na série temporal de incidência. No entanto, se os casos importados fossem identificados como tais, nosso método poderia ser facilmente adaptado para contabilizá-los, como foi feito em estudos anteriores usando outros métodos de estimativa (12, 34–36).
+Finalmente, presumimos que a distribuição serial do intervalo foi constante ao longo da epidemia. No entanto, se houvesse dados independentes (por exemplo, de estudos de rastreamento de contato) sugerindo evidências de mudanças na distribuição de intervalo em série, nosso método poderia ser aplicado com diferentes distribuições de intervalo em série para diferentes períodos de tempo da epidemia.
+Apesar dessas suposições, sentimos que a simplicidade do método que apresentamos aqui supera as limitações destacadas acima. 
+
+facilitado pelo pacote R, que permite uma análise rápida das séries temporais de incidência de qualquer doença infecciosa dentro do escopo descrito acima e devem ser ferramentas valiosas para futuras investigações de surtos.
 
 
 

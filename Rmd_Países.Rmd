@@ -1625,12 +1625,12 @@ A partir de Setembro, com o início do desconfinamento em Xinjiang, os valores d
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
+china$Date_reported <- as.Date(china$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 chi_var <- china %>%
   filter(Country == "China") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -2251,12 +2251,12 @@ No Brasil, o pico no Rt (Rt = 8,26) foi registado no dia 7 de março, cerca de 1
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-brasil$ï..Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
+brasil$Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 bra_var <- brasil %>%
   filter(Country == "Brazil") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(bra_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
