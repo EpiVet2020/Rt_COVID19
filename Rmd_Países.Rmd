@@ -94,6 +94,8 @@ library(rjson)
 library(readr)
 library(readxl)
 library(scales)
+install_github("ropenscilabs/icon")
+library(icon)
 
 #Importar dados
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)

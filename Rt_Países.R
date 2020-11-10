@@ -32,6 +32,9 @@ library(readr)
 library(readxl)
 library(scales)
 library(tibble)
+install_github("ropenscilabs/icon")
+library(icon)
+
 
 setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
 
