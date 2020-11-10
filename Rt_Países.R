@@ -146,16 +146,15 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("solid", "dotted", "dotdash", "twodash"), colour = "darkred", alpha = 0.5) +
-  geom_vline(data=d_it, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_it, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_it), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_it$date_point), y = last(posterior_Rt_it$R_e_median) - 0.5, label = round(last(posterior_Rt_it$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_it, tooltip = "text") %>%
-  layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -270,13 +269,13 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04", "2020-11-02"))), linetype= c("twodash", "dotted", "dashed", "dotdash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_ger, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_ger, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_ger), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_ger$date_point), y = last(posterior_Rt_ger$R_e_median) - 0.5, label = round(last(posterior_Rt_ger$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_ger, tooltip = "text")%>%
-  layout(title = list(text = paste0("Alemanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Alemanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -387,16 +386,13 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25"))), linetype = c("solid", "dotdash", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_spa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_spa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_spa), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")+ 
   annotate(geom = "text", x = last(posterior_Rt_spa$date_point), y = last(posterior_Rt_spa$R_e_median) - 0.5, label = round(last(posterior_Rt_spa$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_spa, tooltip = "text") %>%
-  layout(title = list(text = paste0("Espanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
-
-
-
+  layout(title = list(text = paste0("Espanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -503,17 +499,15 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-18", "2020-06-08", "2020-09-24"))), linetype = c("solid", "twodash", "dotdash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_bel, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_bel, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_bel), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")+ 
   annotate(geom = "text", x = last(posterior_Rt_bel$date_point), y = last(posterior_Rt_bel$R_e_median) - 0.5, label = round(last(posterior_Rt_bel$R_e_median), digits = 3), size = 3)
 
-
 ### Tornar gráfico interativo
 ggplotly(graph_bel, tooltip = "text") %>%
-  layout(title = list(text = paste0("Bélgica", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Bélgica", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -623,17 +617,15 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22"))), linetype = c("solid", "dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_cz), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_cz$date_point), y = last(posterior_Rt_cz$R_e_median) - 0.5, label = round(last(posterior_Rt_cz$R_e_median), digits = 3), size = 3)
 
-
 ### Tornar gráfico interativo
 ggplotly(graph_cz, tooltip = "text") %>%
-  layout(title = list(text = paste0("República Checa", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("República Checa", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -745,13 +737,13 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-16", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_swi), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_swi$date_point), y = last(posterior_Rt_swi$R_e_median) - 0.5, label = round(last(posterior_Rt_swi$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_swi, tooltip = "text") %>%
-  layout(title = list(text = paste0("Suiça", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Suiça", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -862,17 +854,15 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-03-19", "2020-03-27", "2020-11-01"))), linetype = c("dotdash", "solid", "dotted", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_swe), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_swe$date_point), y = last(posterior_Rt_swe$R_e_median) - 0.5, label = round(last(posterior_Rt_swe$R_e_median), digits = 3), size = 3)
 
-
 #Tornar o grafico interativo
 ggplotly(graph_swe, tooltip = "text") %>%
-  layout(title = list(text = paste0("Suécia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Suécia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -987,14 +977,13 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-24", "2020-05-22", "2020-09-14", "2020-11-05"))), linetype = c("solid", "dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_uk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_uk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_uk), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_uk$date_point), y = last(posterior_Rt_uk$R_e_median) - 0.5, label = round(last(posterior_Rt_uk$R_e_median), digits = 3), size = 3)
 
-
 ### Tornar gráfico interativo
 ggplotly(graph_uk, tooltip = "text") %>%
-  layout(title = list(text = paste0("Reino Unido", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Reino Unido", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -1106,16 +1095,15 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-20", "2020-06-30", "2020-08-02", "2020-09-27"))), linetype = c("dotted", "twodash", "solid", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_aus, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_aus, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_aus), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_aus$date_point), y = last(posterior_Rt_aus$R_e_median) - 0.5, label = round(last(posterior_Rt_aus$R_e_median), digits = 3), size = 3)
 
 #Tornar o grafico interativo
 ggplotly(graph_aus, tooltip = "text") %>%
-  layout(title = list(text = paste0("Austrália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Austrália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -1230,15 +1218,13 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-18", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_nze, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_nze, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_nze), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_nze$date_point), y = last(posterior_Rt_nze$R_e_median) - 0.5, label = round(last(posterior_Rt_nze$R_e_median), digits = 3), size = 3)
 
-
-
 ### Tornar gráfico interativo
 ggplotly(graph_nze, tooltip = "text") %>%
-  layout(title = list(text = paste0("Nova Zelândia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Nova Zelândia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -1351,18 +1337,15 @@ graph_ind<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
     breaks = seq(from = 0, to = 90, by = 5),
     limits = c(0, 90)
   ) +
-  
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-04", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_ind, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_ind, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_india), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_india$date_point), y = last(posterior_Rt_india$R_e_median) - 0.5, label = round(last(posterior_Rt_india$R_e_median), digits = 3), size = 3)
 
-
-
 #Tornar o grafico interativo
 ggplotly(graph_ind, tooltip = "text") %>%
-  layout(title = list(text = paste0("Índia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Índia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -1480,13 +1463,13 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_hk), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_hk$date_point), y = last(posterior_Rt_hk$R_e_median) - 0.5, label = round(last(posterior_Rt_hk$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_hk, tooltip = "text") %>%
-  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 ------
@@ -1573,7 +1556,7 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_hk2), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_hk2$date_point), y = last(posterior_Rt_hk2$R_e_median) - 0.5, label = round(last(posterior_Rt_hk2$R_e_median), digits = 3), size = 3)
 
@@ -1581,7 +1564,9 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_hk2, tooltip = "text")
+ggplotly(graph_hk2, tooltip = "text") %>%
+  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+
 
 -------
 
@@ -1692,13 +1677,13 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-01-23", "2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26"))), linetype = c("twodash", "dotdash", "dotted","dashed", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_chi), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_chi$date_point), y = last(posterior_Rt_chi$R_e_median) - 0.5, label = round(last(posterior_Rt_chi$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_chi, tooltip = "text") %>%
-  layout(title = list(text = paste0("China", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("China", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -1812,13 +1797,13 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-25", "2020-04-13"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_usa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_usa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_usa), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_usa$date_point), y = last(posterior_Rt_usa$R_e_median) - 0.5, label = round(last(posterior_Rt_usa$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_usa, tooltip = "text") %>%
-  layout(title = list(text = paste0("Estados Unidos da América", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Estados Unidos da América", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -1932,15 +1917,13 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-04-07", "2020-05-25"))), linetype = c("solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_jap, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_jap, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_jap), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_jap$date_point), y = last(posterior_Rt_jap$R_e_median) - 0.5, label = round(last(posterior_Rt_jap$R_e_median), digits = 3), size = 3)
 
-
-
 ### Tornar gráfico interativo
 ggplotly(graph_jap, tooltip = "text") %>%
-  layout(title = list(text = paste0("Japão", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Japão", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -2052,13 +2035,13 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-31", "2020-06-01"))), linetype = c("twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_mex, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_mex, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_mex), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_mex$date_point), y = last(posterior_Rt_mex$R_e_median) - 0.5, label = round(last(posterior_Rt_mex$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_mex, tooltip = "text") %>%
-  layout(title = list(text = paste0("México", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("México", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -2168,15 +2151,13 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-02-21", "2020-04-01", "2020-08-16", "2020-10-12"))), linetype = c("twodash", "dotdash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_kor, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_kor, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_kor), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_kor$date_point), y = last(posterior_Rt_kor$R_e_median) - 0.5, label = round(last(posterior_Rt_kor$R_e_median), digits = 3), size = 3)
 
-
-
 ### Tornar gráfico interativo
 ggplotly(graph_kor, tooltip = "text") %>%
-  layout(title = list(text = paste0("Coreia do Sul", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Coreia do Sul", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
@@ -2286,7 +2267,7 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-05-07", "2020-06-04"))), linetype = c("twodash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_bra), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_bra$date_point), y = last(posterior_Rt_bra$R_e_median) - 0.5, label = round(last(posterior_Rt_bra$R_e_median), digits = 3), size = 3)
 
@@ -2294,7 +2275,7 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_bra, tooltip = "text") %>%
-  layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 
 
