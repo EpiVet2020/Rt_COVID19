@@ -1,9 +1,6 @@
 ---
 title: "Análise comparativa entre Rt de diferentes países"
-author: 
-  - name: Inês Antunes (ines.marcal.antunes@gmail.com)
-  - name: Sara Sequeira (sarasequeira5@hotmail.com)
-  - name: Teresa da Penha Coutinho (teresa.jesus.coutinho@gmail.com)
+author: Inês Marçal Antunes, Sara Sequeira e Teresa da Penha Coutinho
 date: "Novembro, 2020"
 output:
   html_document:
@@ -59,8 +56,8 @@ O objetivo mais importante será manter um Rt inferior ou igual a 1 até à disp
 
 <br>
 
-Este relatório tem como objetivo analisar de que forma variou o Rt em Portugal, em comparação com outros países do Mundo. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data, para Portugal, e em bases de dados de COVID dos restantes países, que se encontram respetivamente no final de cada análise específica.
-Dividimos a nossa análise em duas partes, sendo a primeira respetiva a países pertencentes à União Europeia e, posteriormente, aos países extracomunitários.
+Este relatório tem como objetivo analisar de que forma variou o Rt em Portugal, em comparação com outros países do Mundo. Esta análise foi feita com base nos dados da DGS disponíveis em: https://github.com/dssg-pt/covid19pt-data, para Portugal, e em bases de dados de COVID dos restantes países, que se encontram devidamente indentificadas.
+Dividimos a nossa análise em duas partes, sendo a primeira respetiva a países pertencentes à União Europeia e a segunda, relativa aos países extracomunitários.
 
 <br>
 ```{r, warning = FALSE, message = FALSE}
@@ -97,6 +94,8 @@ library(rjson)
 library(readr)
 library(readxl)
 library(scales)
+install_github("ropenscilabs/icon")
+library(icon)
 
 #Importar dados
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -106,7 +105,15 @@ covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/m
 covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
 
 ```
+<br>
 
+## **Análise dos dados**
+***
+À semelhança do relatório "Estimativa do Número de Reprodução Efetivo (Rt) da COVID19" efetuado para Portugal e suas Administrações Regionais de Saúde, disponível no repositório [*Github](https://github.com/EpiVet2020/Rt_COVID19), também para este relatório tomámos como base o modelo referido no artigo [*A New Framework and Software to Estimate Time-Varying Reproduction Numbers During Epidemics*](https://academic.oup.com/aje/article/178/9/1505/89262) publicado no *American Journal of Epidemiology*. <br>
+Utilizando esta ferramenta, através do package [*estimate.R*](https://cran.r-project.org/web/packages/estimatr/estimatr.pdf) disponível, são produzidas estimativas estatisticamente robustas de Rt a partir da distribuição do serial interval, que corresponde ao tempo entre o início dos sintomas num caso primário e o início de sintomas num caso secundário, sendo ainda incorporada incerteza nesta distribuição. Desta forma, conseguimos quantificar as mudanças temporais na intensidade da transmissão de COVID19, tendo em conta a incidência diária, utilizando os dados de vigilância epidemiológica de cada país. 
+<br>
+De forma a obter os valores de incidência, recorremos às base de dados de cada país, devidamente identificadas em cada secção.
+<br>
 <br>
 
 ## **União Europeia** {.tabset .tabset-fade .tabset-pills}
@@ -122,7 +129,7 @@ A partir de junho, com o levantamento de restrições às movimentações e medi
 No mês de setembro, a transmissão de infeção parece ter sofrido uma diminuição, mas a partir de outubro terá surgido um novo pico (18 de outubro; Rt = 1,57), cujo controlo passou pela implementação de certas medidas novamente, como obrigatoriedade de máscara e encerramento de escolas e universidades.
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # ITÁLIA (https://github.com/pcm-dpc/COVID-19/blob/master/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv)
 italy <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/legacy/dati-andamento-nazionale/dpc-covid19-ita-andamento-nazionale.csv", stringsAsFactors = FALSE)
 
@@ -229,16 +236,15 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15"))), linetype= c("solid", "dotted", "dotdash", "twodash"), colour = "darkred", alpha = 0.5) +
-  geom_vline(data=d_it, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_it, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'darkred', alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_it), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_it$date_point), y = last(posterior_Rt_it$R_e_median) - 0.5, label = round(last(posterior_Rt_it$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_it, tooltip = "text")%>%
-  layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+ggplotly(graph_it, tooltip = "text") %>%
+  layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -252,7 +258,7 @@ No caso da Alemanha, inicialmente 1 pessoa era responsável pelo ocorrência de 
 A 2 de outubro foi declarado um novo confinamento, desta vez parcial, de forma a prevenir um novo aumento no número de contágios.
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # ALEMANHA (https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0/data)
 germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.geojson")
 germany <- germany$features
@@ -362,13 +368,13 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-22", "2020-04-20", "2020-05-04", "2020-11-02"))), linetype= c("twodash", "dotted", "dashed", "dotdash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_ger, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_ger, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_ger), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_ger$date_point), y = last(posterior_Rt_ger$R_e_median) - 0.5, label = round(last(posterior_Rt_ger$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_ger, tooltip = "text")%>%
-  layout(title = list(text = paste0("Alemanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Alemanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 <br>
@@ -383,7 +389,7 @@ Por volta desta altura, com o início do desconfinamento, assistiu-se a um aumen
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # ESPANHA (https://cnecovid.isciii.es/covid19/#documentaci%C3%B3n-y-datos)
 spain <- read.csv("https://cnecovid.isciii.es/covid19/resources/datos_ccaas.csv")
 
@@ -484,15 +490,15 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-05-11", "2020-10-07", "2020-10-25"))), linetype = c("solid", "dotdash", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_spa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_spa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_spa), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")+ 
   annotate(geom = "text", x = last(posterior_Rt_spa$date_point), y = last(posterior_Rt_spa$R_e_median) - 0.5, label = round(last(posterior_Rt_spa$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_spa, tooltip = "text")%>%
-  layout(title = list(text = paste0("Espanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+ggplotly(graph_spa, tooltip = "text") %>%
+  layout(title = list(text = paste0("Espanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -508,7 +514,7 @@ Até ao final de julho os valores de Rt foram aumentando gradualmente, embora se
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # BÉLGICA (https://epistat.wiv-isp.be/covid/)
 belgium <- read.csv("https://epistat.sciensano.be/Data/COVID19BE_CASES_AGESEX.csv")
 
@@ -609,16 +615,15 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-18", "2020-06-08", "2020-09-24"))), linetype = c("solid", "twodash", "dotdash", "dotted"), colour = "darkred" , alpha = 0.5) +
- geom_vline(data=d_bel, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_bel, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_bel), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid")+ 
   annotate(geom = "text", x = last(posterior_Rt_bel$date_point), y = last(posterior_Rt_bel$R_e_median) - 0.5, label = round(last(posterior_Rt_bel$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_bel, tooltip = "text") %>%
-  layout(title = list(text = paste0("Bélgica", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Bélgica", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -636,7 +641,7 @@ Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # REPÚBLICA CHECA (https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19)
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
@@ -738,16 +743,15 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
+ geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-12", "2020-05-11", "2020-10-05", "2020-10-22"))), linetype = c("solid", "dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_cz, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_cz), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_cz$date_point), y = last(posterior_Rt_cz$R_e_median) - 0.5, label = round(last(posterior_Rt_cz$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_cz, tooltip = "text") %>%
-  layout(title = list(text = paste0("República Checa", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("República Checa", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -764,7 +768,7 @@ A partir de meados de setembro que se verificou um aumento de casos generalizado
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # SUÍÇA (https://www.bag.admin.ch/bag/en/home/krankheiten/ausbrueche-epidemien-pandemien/aktuelle-ausbrueche-epidemien/novel-cov/situation-schweiz-und-international.html#-640157857)
 switzerland <- rio::import(file ="https://www.bag.admin.ch/dam/bag/en/dokumente/mt/k-und-i/aktuelle-ausbrueche-pandemien/2019-nCoV/covid-19-basisdaten-labortests.xlsx.download.xlsx/Dashboard_3_COVID19_labtests_positivity.xlsx")
 
@@ -867,15 +871,15 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+ geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-16", "2020-04-27", "2020-10-19"))), linetype = c("solid", "twodash", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_swi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_swi), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_swi$date_point), y = last(posterior_Rt_swi$R_e_median) - 0.5, label = round(last(posterior_Rt_swi$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_swi, tooltip = "text") %>%
-  layout(title = list(text = paste0("Suiça", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Suiça", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 <br>
@@ -894,7 +898,7 @@ Conclui-se que, apesar da Suécia ter apresentado valores de transmissibilidade 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #SUÉCIA (https://experience.arcgis.com/experience/09f821667ce64bf7be6f9f87457ed9aa/page/page_0/)
 sweden <- "https://fohm.maps.arcgis.com/sharing/rest/content/items/b5e7488e117749c19881cce45db13f7e/data"
 sweden <- rio::import(file = sweden)
@@ -998,16 +1002,15 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-03-19", "2020-03-27", "2020-11-01"))), linetype = c("dotdash", "solid", "dotted", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_swe, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_swe), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_swe$date_point), y = last(posterior_Rt_swe$R_e_median) - 0.5, label = round(last(posterior_Rt_swe$R_e_median), digits = 3), size = 3)
 
 #Tornar o grafico interativo
 ggplotly(graph_swe, tooltip = "text") %>%
-  layout(title = list(text = paste0("Suécia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Suécia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -1027,7 +1030,7 @@ Ao longo de março, os valores de contágio foram diminuindo, sendo esta descida
 Apesar de todas as medidas implementadas, a esperada segunda vaga de infeções não foi prevenida e desde julho que os valores de Rt voltaram a aumentar até um novo pico a 7 de setembro (Rt = 1,52). Na medida de controlar novos surtos, procedeu-se à proibição de ajuntamentos e, mais tarde, o país viu-se obrigado a recorrer a um novo confinamento obrigatório no dia 5 de novembro, que é expectável que volte a reduzir os valores de Rt abaixo de 1.
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # REINO UNIDO (https://coronavirus.data.gov.uk/cases)
 uk <- fromJSON("https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=json")
 uk <- uk$data
@@ -1135,13 +1138,13 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-24", "2020-05-22", "2020-09-14", "2020-11-05"))), linetype = c("solid", "dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_uk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_uk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_uk), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_uk$date_point), y = last(posterior_Rt_uk$R_e_median) - 0.5, label = round(last(posterior_Rt_uk$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_uk, tooltip = "text") %>%
-  layout(title = list(text = paste0("Reino Unido", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Reino Unido", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -1153,7 +1156,7 @@ Para a análise da evolução do Rt na Austrália, utilizou-se a base de dados p
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #AUSTRÁLIA (https://github.com/M3IT/COVID-19_Data/blob/master/Data/COVID_AU_national_daily_change.csv)
 australia <- read.csv("https://raw.githubusercontent.com/M3IT/COVID-19_Data/master/Data/COVID_AU_national_daily_change.csv")
 
@@ -1257,16 +1260,15 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-20", "2020-06-30", "2020-08-02", "2020-09-27"))), linetype = c("dotted", "twodash", "solid", "dotted", "dotdash"), colour = "darkred" , alpha = 0.5) +
-   geom_vline(data=d_aus, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_aus, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_aus), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_aus$date_point), y = last(posterior_Rt_aus$R_e_median) - 0.5, label = round(last(posterior_Rt_aus$R_e_median), digits = 3), size = 3)
 
 #Tornar o grafico interativo
 ggplotly(graph_aus, tooltip = "text") %>%
-  layout(title = list(text = paste0("Austrália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Austrália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -1277,7 +1279,7 @@ ggplotly(graph_aus, tooltip = "text") %>%
 Para este país foram analisados os dados da Organização Mundial de Saúde, através do seguinte documento: https://covid19.who.int/table.
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # NOVA ZELÂNDIA
 ## Base de dados WHO
 nzealand <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
@@ -1383,16 +1385,15 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-18", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_nze, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_nze, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_nze), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_nze$date_point), y = last(posterior_Rt_nze$R_e_median) - 0.5, label = round(last(posterior_Rt_nze$R_e_median), digits = 3), size = 3)
 
-
 ### Tornar gráfico interativo
 ggplotly(graph_nze, tooltip = "text") %>%
-  layout(title = list(text = paste0("Nova Zelândia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Nova Zelândia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 <br>
@@ -1408,7 +1409,7 @@ Embora estas medidas tenham contribuído para diminuir os valores até perto do 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #ÍNDIA (https://api.covid19india.org/documentation/csv/)
 india <- read.csv("https://api.covid19india.org/csv/latest/case_time_series.csv")
 
@@ -1512,17 +1513,15 @@ graph_ind<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
     breaks = seq(from = 0, to = 90, by = 5),
     limits = c(0, 90)
   ) +
-  
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-04", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_ind, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_ind, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_india), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_india$date_point), y = last(posterior_Rt_india$R_e_median) - 0.5, label = round(last(posterior_Rt_india$R_e_median), digits = 3), size = 3)
 
-
 #Tornar o grafico interativo
 ggplotly(graph_ind, tooltip = "text") %>%
-  layout(title = list(text = paste0("Índia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Índia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -1542,7 +1541,7 @@ Na sequência dos protestos a que se tem assistido em Hong Kong, implementou-se 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # HONG KONG (https://data.gov.hk/en-data/dataset/hk-dh-chpsebcddr-novel-infectious-agent)
 hk <- read.csv("http://www.chp.gov.hk/files/misc/enhanced_sur_covid_19_eng.csv")
 
@@ -1653,13 +1652,13 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-   geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_hk), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_hk$date_point), y = last(posterior_Rt_hk$R_e_median) - 0.5, label = round(last(posterior_Rt_hk$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_hk, tooltip = "text") %>%
-  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -1678,17 +1677,17 @@ A partir de Setembro, com o início do desconfinamento em Xinjiang, os valores d
 <br>
 
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #CHINA (https://covid19.who.int/table)
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-china$Date_reported <- as.Date(china$Date_reported, "%Y-%m-%d")
+china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 chi_var <- china %>%
   filter(Country == "China") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -1782,13 +1781,13 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-01-23", "2020-03-22", "2020-07-15", "2020-08-27", "2020-10-26"))), linetype = c("twodash", "dotdash", "dotted","dashed", "solid"), colour = "darkred" , alpha = 0.5) +
-   geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_chi, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_chi), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_chi$date_point), y = last(posterior_Rt_chi$R_e_median) - 0.5, label = round(last(posterior_Rt_chi$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_chi, tooltip = "text") %>%
-  layout(title = list(text = paste0("China", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("China", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 <br>
@@ -1806,7 +1805,7 @@ Acreditamos que as eleições americanas possam ter influenciado a transmissão 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # EUA (https://github.com/nytimes/covid-19-data)
 usa <- read.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv")
 
@@ -1909,15 +1908,15 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-13", "2020-03-25", "2020-04-13"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_usa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_usa, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_usa), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_usa$date_point), y = last(posterior_Rt_usa$R_e_median) - 0.5, label = round(last(posterior_Rt_usa$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_usa, tooltip = "text") %>%
-  layout(title = list(text = paste0("Estados Unidos da América", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Estados Unidos da América", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -1933,7 +1932,7 @@ No Japão, podemos verificar que o valor máximo de Rt se verificou no dia 18 de
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 #JAPÃO - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
 japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-11-10.json")
 japan <- japan$daily
@@ -2039,14 +2038,13 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-04-07", "2020-05-25"))), linetype = c("solid", "twodash"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_jap, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_jap, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_jap), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_jap$date_point), y = last(posterior_Rt_jap$R_e_median) - 0.5, label = round(last(posterior_Rt_jap$R_e_median), digits = 3), size = 3)
 
-
 ### Tornar gráfico interativo
 ggplotly(graph_jap, tooltip = "text") %>%
-  layout(title = list(text = paste0("Japão", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Japão", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -2062,7 +2060,7 @@ No México, os primeiros casos foram registados no fim de fevereiro e o pico no 
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # MÉXICO (https://covid19.who.int/table)
 mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
@@ -2164,15 +2162,15 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
     breaks = 0:10,
     limits = c(0, 10)
   ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
+   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-31", "2020-06-01"))), linetype = c("twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_mex, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE) + 
+  geom_vline(data=d_mex, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
   geom_pointrange(data = last(posterior_Rt_mex), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_mex$date_point), y = last(posterior_Rt_mex$R_e_median) - 0.5, label = round(last(posterior_Rt_mex$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_mex, tooltip = "text") %>%
-  layout(title = list(text = paste0("México", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("México", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -2188,7 +2186,7 @@ Numa primeira fase da pandemia na Coreia do Sul, verificou-se uma elevada transm
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # COREIA DO SUL (https://github.com/owid/covid-19-data/blob/master/public/data/ecdc/new_cases.csv)
 korea <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/ecdc/new_cases.csv")
 
@@ -2291,13 +2289,13 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-02-21", "2020-04-01", "2020-08-16", "2020-10-12"))), linetype = c("twodash", "dotdash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_kor, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)+ 
+  geom_vline(data=d_kor, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_kor), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_kor$date_point), y = last(posterior_Rt_kor$R_e_median) - 0.5, label = round(last(posterior_Rt_kor$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_kor, tooltip = "text") %>%
-  layout(title = list(text = paste0("Coreia do Sul", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Coreia do Sul", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -2313,7 +2311,7 @@ No Brasil, o pico no Rt (Rt = 8,26) foi registado no dia 7 de março, cerca de 1
 
 <br>
 
-```{r, fig.align='center', warning = FALSE, message = FALSE}
+```{r, fig.align="center", warning = FALSE, message = FALSE}
 # BRASIL (https://covid19.who.int/table)
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
@@ -2415,15 +2413,27 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
     limits = c(0, 10)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-05-07", "2020-06-04"))), linetype = c("twodash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = TRUE)
-
+  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
+  geom_pointrange(data = last(posterior_Rt_bra), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_Rt_bra$date_point), y = last(posterior_Rt_bra$R_e_median) - 0.5, label = round(last(posterior_Rt_bra$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_bra, tooltip = "text") %>%
-  layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+  layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
+<br> 
+<br> 
 
+$~$
+<center> 
+ **Um trabalho de**
 
+Inês Marçal Antunes [`r icon::fa("linkedin")`](https://www.linkedin.com/in/in%C3%AAs-antunes-b332401b9/) | Sara Sequeira [`r icon::fa("linkedin")`](https://www.linkedin.com/in/sara-sequeira-1b5085152/) | Teresa da Penha Coutinho [`r icon::fa("linkedin")`](https://www.linkedin.com/in/teresa-da-penha-coutinho/)
+
+ines.marcal.antunes@gmail.com; sarasequeira5@hotmail.com; teresa.jesus.coutinho@gmail.com; 
+
+[`r icon::fa("github")`](https://github.com/EpiVet2020/Rt_COVID19.git)
+
+</center>

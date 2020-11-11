@@ -186,47 +186,38 @@ posterior_R_t <-
 ### Linhas a adicionar no gráfico
 d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
-
-graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
+gráfico_PT <- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                        '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
   
-  labs(title = " Evolução do Número Efetivo Reprodutivo ao longo do tempo",
-       subtitle = "Fonte de dados: DGS ",
+  labs(title = "Evolução do Número Reprodutivo Efetivo em Portugal",
        x = "Data",
-       y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
+       y = "Número Reprodutivo Efetivo (Rt)") +
   theme_minimal() +
-  
   theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
         axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.title.x = element_text(size = 7),
-  ) +
+        axis.title.x = element_text(size = 7)) +
+ 
+   scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
+                limits = c(min(covid_pt_var$data), max(posterior_R_t$date_point))) +
   
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_pt_var$data), max(posterior_R_t$date_point))
-  ) +
-  
-  scale_y_continuous(
-    breaks = c(0:15),
-    limits = c(0, 15)
-  ) +
+  scale_y_continuous(breaks = c(0:15), limits = c(0, 15)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
-  
-  ##Adicionar último valor de Rt no gráfico
+ 
+   ##Adicionar último valor de Rt no gráfico
   geom_pointrange(data = last(posterior_R_t), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_R_t$date_point), y = last(posterior_R_t$R_e_median) - 0.5, label = round(last(posterior_R_t$R_e_median), digits = 3), size = 3)
 
-### Tornar gráfico interativo
-ggplotly(graph_PT, tooltip = "text") %>%
-  layout(title = list(text = paste0("Portugal", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+
+ggplotly(gráfico_PT, tooltip = "text") %>%
+  layout(title = list(text = paste0("Portugal", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")),
+         legend = list(x = 100, y = 0.5))
+
 
 
 
@@ -278,44 +269,37 @@ posterior_R_t1 <-
 ## Linhas a adicionar no gráfico
 d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
-graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
+gráfico_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                        '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
   
-  labs(x = "Data",
-       y = "Nº de reprodução efetivo (Rt)") +
-  
+  labs(title = "Evolução do Número Reprodutivo Efetivo na ARS Norte",
+       x = "Data",
+       y = "Número Reprodutivo Efetivo (Rt)") +
   theme_minimal() +
-  
   theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
-        axis.text.x = element_text(size = 8, angle = 60, hjust = 1),
+        axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.title.x = element_text(size = 7),
-        legend.title = element_blank()) +
-
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_pt_var$data), max(posterior_R_t1$date_point))) +
+        axis.title.x = element_text(size = 7)) +
   
-  scale_y_continuous(
-    breaks = c(0:15),
-    limits = c(0, 15)) +
+  scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
+               limits = c(min(covid_pt_var$data), max(posterior_R_t1$date_point))) +
   
+  scale_y_continuous(breaks = c(0:15), limits = c(0, 15)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
   
-  
-##Adicionar último valor de Rt no gráfico
+  ##Adicionar último valor de Rt no gráfico
   geom_pointrange(data = last(posterior_R_t1), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_R_t1$date_point), y = last(posterior_R_t1$R_e_median) - 0.5, label = round(last(posterior_R_t1$R_e_median), digits = 3), size = 3)
 
-### Tornar gráfico interativo
-ggplotly(graph_Norte, tooltip = "text") %>%
-  layout(title = list(text = paste0("ARS Norte", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
+ggplotly(gráfico_Norte, tooltip = "text") %>%
+  layout(title = list(text = paste0("ARS Norte", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
+                      legend = list(x = 100, y = 0.5))
 
 
 
@@ -361,48 +345,37 @@ posterior_R_t2 <-
   reduce(bind_rows)
 
 ## GRÁFICO GGPLOT
-## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
-
-graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
+gráfico_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                        '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
   
-  labs( x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
+  labs(title = "Evolução do Número Reprodutivo Efetivo na ARS Centro",
+       x = "Data",
+       y = "Número Reprodutivo Efetivo (Rt)") +
   theme_minimal() +
-  
-  theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
+  theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
         axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.title.x = element_text(size = 7),
-  ) +
+        axis.title.x = element_text(size = 7)) +
   
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_pt_var$data), max(posterior_R_t2$date_point))
-  ) +
+  scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
+               limits = c(min(covid_pt_var$data), max(posterior_R_t2$date_point))) +
   
-  scale_y_continuous(
-    breaks = c(0:15),
-    limits = c(0, 15)
-  ) +
-  
+  scale_y_continuous(breaks = c(0:15), limits = c(0, 15)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
   
   ##Adicionar último valor de Rt no gráfico
   geom_pointrange(data = last(posterior_R_t2), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_R_t2$date_point), y = last(posterior_R_t2$R_e_median) - 0.5, label = round(last(posterior_R_t2$R_e_median), digits = 3), size = 3)
 
-### Tornar gráfico interativo
-ggplotly(graph_Centro, tooltip = "text") %>%
-  layout(title = list(text = paste0("ARS Centro", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
 
+ggplotly(gráfico_Centro, tooltip = "text") %>%
+  layout(title = list(text = paste0("ARS Centro", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
+         legend = list(x = 100, y = 0.5))
 
 
 
@@ -454,45 +427,39 @@ posterior_R_t3 <-
 
 
 ## GRÁFICO GGPLOT
-## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
-
-graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
+gráfico_LVT <- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                        '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
   
-  labs( title = " ARS LVT - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados: DGS ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
+  labs(title = "Evolução do Número Reprodutivo Efetivo na ARS LVT",
+       x = "Data",
+       y = "Número Reprodutivo Efetivo (Rt)") +
   theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
+  theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
-  ) +
+        axis.title.x = element_text(size = 7)) +
   
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_pt_var$data), max(posterior_R_t3$date_point))
-  ) +
+  scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
+               limits = c(min(covid_pt_var$data), max(posterior_R_t3$date_point))) +
   
-  scale_y_continuous(
-    breaks = c(0:15),
-    limits = c(0, 15)
-  ) +
-  
+  scale_y_continuous(breaks = c(0:15), limits = c(0, 15)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t3), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t3$date_point), y = last(posterior_R_t3$R_e_median) - 0.5, label = round(last(posterior_R_t3$R_e_median), digits = 3), size = 3)
 
-### Tornar gráfico interativo
-ggplotly(graph_LVT, tooltip = "text")
+
+ggplotly(gráfico_LVT, tooltip = "text") %>%
+  layout(title = list(text = paste0("ARS Lisboa e Vale do Tejo", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
+         legend = list(x = 100, y = 0.5))
+
+
 
 
 
@@ -543,42 +510,37 @@ posterior_R_t4 <-
 
 
 ## GRÁFICO GGPLOT
-## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
-
-graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
+gráfico_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
-                                                                                       '<br>Rt médio: ', R_e_median))) +    geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+                                                                                       '<br>Rt médio: ', R_e_median))) +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
   
-  labs( x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
+  labs(title = "Evolução do Número Reprodutivo Efetivo na ARS Alentejo",
+       x = "Data",
+       y = "Número Reprodutivo Efetivo (Rt)") +
   theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
+  theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
-  ) +
+        axis.title.x = element_text(size = 7)) +
   
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_pt_var$data), max(posterior_R_t4$date_point))
-  ) +
+  scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
+               limits = c(min(covid_pt_var$data), max(posterior_R_t4$date_point))) +
   
-  scale_y_continuous(
-    limits = c(0, 15),
-    breaks = c(0:15),
-  ) +
-  
+  scale_y_continuous(breaks = c(0:15), limits = c(0, 15)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t4), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t4$date_point), y = last(posterior_R_t4$R_e_median) - 0.5, label = round(last(posterior_R_t4$R_e_median), digits = 3), size = 3)
 
-### Tornar gráfico interativo
-ggplotly(graph_Alentejo, tooltip = "text")
+
+ggplotly(gráfico_Alentejo, tooltip = "text") %>%
+  layout(title = list(text = paste0("ARS Alentejo", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
+         legend = list(x = 100, y = 0.5))
 
 
 
@@ -629,45 +591,37 @@ posterior_R_t5 <-
 
 
 ## GRÁFICO GGPLOT
-## Linhas a adicionar no gráfico
-d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
-
-graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
+gráfico_Algarve <- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                        '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
   
-  labs( title = " ARS Algarve - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados: DGS ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
+  labs(title = "Evolução do Número Reprodutivo Efetivo na ARS Algarve",
+       x = "Data",
+       y = "Número Reprodutivo Efetivo (Rt)") +
   theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
+  theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
-  ) +
+        axis.title.x = element_text(size = 7)) +
   
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_pt_var$data), max(posterior_R_t5$date_point))
-  ) +
+  scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
+               limits = c(min(covid_pt_var$data), max(posterior_R_t5$date_point))) +
   
-  scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_R_t5$R_e_q0975)),
-    limits = c(0, 20)
-  ) +
-  
+  scale_y_continuous(breaks = c(0:15), limits = c(0, 15)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t5), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t5$date_point), y = last(posterior_R_t5$R_e_median) - 0.5, label = round(last(posterior_R_t5$R_e_median), digits = 3), size = 3)
 
-### Tornar gráfico interativo
-ggplotly(graph_Algarve, tooltip = "text")
+
+ggplotly(gráfico_Algarve, tooltip = "text") %>%
+  layout(title = list(text = paste0("ARS Norte", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
+         legend = list(x = 100, y = 0.5))
 
 
 
@@ -720,44 +674,38 @@ posterior_R_t6 <-
 ## GRÁFICO GGPLOT
 d_azo=data.frame(date=as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17", "2020-11-09")), Evento = c("Encerramento das Escolas", "Estado de Emergência Nacional", "Confinamento Obrigatório de Passageiros", "Testagem e/ou Quarentena Obrigatória de Passageiros", "Estado de Emergência Nacional"))
 
-graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
+gráfico_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                        '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
   
-  labs( title = " ARS Açores - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados: DGS ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
+  labs(title = "Evolução do Número Reprodutivo Efetivo na ARS Açores",
+       x = "Data",
+       y = "Número Reprodutivo Efetivo (Rt)") +
   theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
+  theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
-  ) +
+        axis.title.x = element_text(size = 7)) +
   
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_pt_var$data), max(posterior_R_t6$date_point))
-  ) +
+  scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
+               limits = c(min(covid_pt_var$data), max(posterior_R_t6$date_point))) +
   
-  scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_R_t6$R_e_q0975)),
-    limits = c(0, 20)
-  ) +
+  scale_y_continuous(breaks = c(0:15), limits = c(0, 15)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17", "2020-11-09"))), linetype= c("twodash", "dotted", "solid", "dotdash", "dotted"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d_azo, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_azo, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
 
-### Tornar gráfico interativo
-ggplotly(graph_Açores, tooltip = "text")
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t6), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t6$date_point), y = last(posterior_R_t6$R_e_median) - 0.5, label = round(last(posterior_R_t6$R_e_median), digits = 3), size = 3)
 
 
+ggplotly(gráfico_Açores, tooltip = "text") %>%
+  layout(title = list(text = paste0("ARS Açores", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
+         legend = list(x = 100, y = 0.5))
 
 
 
@@ -808,43 +756,39 @@ posterior_R_t7 <-
 ## GRÁFICO GGPLOT
 d_mad=data.frame(date=as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28", "2020-11-09")), Evento = c("Quarentena obrigatória para todos os passageiros", "Estado de Emergência Nacional", "Início do desconfinamento", "Obrigatoriedade de teste negativo e/ou quarentena para todos os passageiros", "Estado de Emergência Nacional"))
 
-graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
+
+gráfico_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "palegreen4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
                                                                                        '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
+  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.3, fill = "palegreen3") +
   
-  labs( title = " ARS Madeira - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados: DGS ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
+  labs(title = "Evolução do Número Reprodutivo Efetivo na ARS Madeira",
+       x = "Data",
+       y = "Número Reprodutivo Efetivo (Rt)") +
   theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
+  theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
-  ) +
+        axis.title.x = element_text(size = 7)) +
   
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_pt_var$data), max(posterior_R_t7$date_point))
-  ) +
+  scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
+               limits = c(min(covid_pt_var$data), max(posterior_R_t7$date_point))) +
   
-  scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_R_t7$R_e_q0975)),
-    limits = c(0, NA)
-  ) +
+  scale_y_continuous(breaks = c(0:15), limits = c(0, 15)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28", "2020-11-09"))), linetype= c("dotdash", "solid", "twodash", "dotted", "solid"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d_mad, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d_mad, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t7), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t7$date_point), y = last(posterior_R_t7$R_e_median) - 0.5, label = round(last(posterior_R_t7$R_e_median), digits = 3), size = 3)
 
-### Tornar gráfico interativo
-ggplotly(graph_Madeira, tooltip = "text")
 
+ggplotly(gráfico_Madeira, tooltip = "text") %>%
+  layout(title = list(text = paste0("ARS Madeira", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
+         legend = list(x = 100, y = 0.5))
 
 
 
