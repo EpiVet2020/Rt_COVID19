@@ -117,8 +117,7 @@ posterior_Rt_it <-
 d_it = data.frame(date=as.Date(c("2020-03-09", "2020-06-04", "2020-10-08", "2020-10-15")), Evento=c("Confinamento obrigatório", "Levantamento das restrições às movimentações", "Obrigatoriedade de máscara", "Encerramento de escolas e universidades"))
 
 graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "darkslateblue",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
-                                                                                      '<br>Rt médio: ', R_e_median))) +
+  geom_line(colour = "darkslateblue",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point, '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "darkslateblue") +
   
   labs( title = "Itália", size= 10,
@@ -153,8 +152,8 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_it$date_point), y = last(posterior_Rt_it$R_e_median) - 0.5, label = round(last(posterior_Rt_it$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_it, tooltip = "text") %>%
-  layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_it, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -274,8 +273,8 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_ger$date_point), y = last(posterior_Rt_ger$R_e_median) - 0.5, label = round(last(posterior_Rt_ger$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_ger, tooltip = "text")%>%
-  layout(title = list(text = paste0("Alemanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_ger, tooltip = "text", width = 900, height = 450)%>%
+  layout(title = list(text = paste0("Alemanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -391,8 +390,8 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_spa$date_point), y = last(posterior_Rt_spa$R_e_median) - 0.5, label = round(last(posterior_Rt_spa$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_spa, tooltip = "text") %>%
-  layout(title = list(text = paste0("Espanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_spa, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Espanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -506,8 +505,8 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_bel$date_point), y = last(posterior_Rt_bel$R_e_median) - 0.5, label = round(last(posterior_Rt_bel$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_bel, tooltip = "text") %>%
-  layout(title = list(text = paste0("Bélgica", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_bel, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Bélgica", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -624,8 +623,8 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_cz$date_point), y = last(posterior_Rt_cz$R_e_median) - 0.5, label = round(last(posterior_Rt_cz$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_cz, tooltip = "text") %>%
-  layout(title = list(text = paste0("República Checa", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_cz, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("República Checa", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -742,8 +741,8 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_swi$date_point), y = last(posterior_Rt_swi$R_e_median) - 0.5, label = round(last(posterior_Rt_swi$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_swi, tooltip = "text") %>%
-  layout(title = list(text = paste0("Suiça", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_swi, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Suiça", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -861,8 +860,8 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_swe$date_point), y = last(posterior_Rt_swe$R_e_median) - 0.5, label = round(last(posterior_Rt_swe$R_e_median), digits = 3), size = 3)
 
 #Tornar o grafico interativo
-ggplotly(graph_swe, tooltip = "text") %>%
-  layout(title = list(text = paste0("Suécia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_swe, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Suécia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -982,8 +981,8 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_uk$date_point), y = last(posterior_Rt_uk$R_e_median) - 0.5, label = round(last(posterior_Rt_uk$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_uk, tooltip = "text") %>%
-  layout(title = list(text = paste0("Reino Unido", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_uk, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Reino Unido", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -1102,8 +1101,8 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_aus$date_point), y = last(posterior_Rt_aus$R_e_median) - 0.5, label = round(last(posterior_Rt_aus$R_e_median), digits = 3), size = 3)
 
 #Tornar o grafico interativo
-ggplotly(graph_aus, tooltip = "text") %>%
-  layout(title = list(text = paste0("Austrália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_aus, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Austrália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -1223,8 +1222,8 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_nze$date_point), y = last(posterior_Rt_nze$R_e_median) - 0.5, label = round(last(posterior_Rt_nze$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_nze, tooltip = "text") %>%
-  layout(title = list(text = paste0("Nova Zelândia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_nze, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Nova Zelândia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -1335,17 +1334,17 @@ graph_ind<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
   
   scale_y_continuous(
     breaks = seq(from = 0, to = 90, by = 5),
-    limits = c(0, 90)
+    limits = c(-1, 40)
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-04", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "solid", "twodash"), colour = "darkred" , alpha = 0.5) +
   geom_vline(data=d_ind, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_india), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
-  annotate(geom = "text", x = last(posterior_Rt_india$date_point), y = last(posterior_Rt_india$R_e_median) - 0.5, label = round(last(posterior_Rt_india$R_e_median), digits = 3), size = 3)
+  annotate(geom = "text", x = last(posterior_Rt_india$date_point), y = last(posterior_Rt_india$R_e_median) - 1.5, label = round(last(posterior_Rt_india$R_e_median), digits = 3), size = 3)
 
 #Tornar o grafico interativo
-ggplotly(graph_ind, tooltip = "text") %>%
-  layout(title = list(text = paste0("Índia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_ind, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Índia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -1468,8 +1467,8 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_hk$date_point), y = last(posterior_Rt_hk$R_e_median) - 0.5, label = round(last(posterior_Rt_hk$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_hk, tooltip = "text") %>%
-  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_hk, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 ------
@@ -1564,8 +1563,8 @@ graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_hk2, tooltip = "text") %>%
-  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_hk2, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 -------
@@ -1682,8 +1681,8 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_chi$date_point), y = last(posterior_Rt_chi$R_e_median) - 0.5, label = round(last(posterior_Rt_chi$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_chi, tooltip = "text") %>%
-  layout(title = list(text = paste0("China", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_chi, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("China", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -1802,8 +1801,8 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_usa$date_point), y = last(posterior_Rt_usa$R_e_median) - 0.5, label = round(last(posterior_Rt_usa$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_usa, tooltip = "text") %>%
-  layout(title = list(text = paste0("Estados Unidos da América", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_usa, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Estados Unidos da América", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -1922,8 +1921,8 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_jap$date_point), y = last(posterior_Rt_jap$R_e_median) - 0.5, label = round(last(posterior_Rt_jap$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_jap, tooltip = "text") %>%
-  layout(title = list(text = paste0("Japão", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_jap, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Japão", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -2040,8 +2039,8 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_mex$date_point), y = last(posterior_Rt_mex$R_e_median) - 0.5, label = round(last(posterior_Rt_mex$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_mex, tooltip = "text") %>%
-  layout(title = list(text = paste0("México", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_mex, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("México", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -2156,8 +2155,8 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
   annotate(geom = "text", x = last(posterior_Rt_kor$date_point), y = last(posterior_Rt_kor$R_e_median) - 0.5, label = round(last(posterior_Rt_kor$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_kor, tooltip = "text") %>%
-  layout(title = list(text = paste0("Coreia do Sul", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_kor, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Coreia do Sul", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
@@ -2274,8 +2273,8 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
 
 
 ### Tornar gráfico interativo
-ggplotly(graph_bra, tooltip = "text") %>%
-  layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+ggplotly(graph_bra, tooltip = "text", width = 900, height = 450) %>%
+  layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
 
 
 
