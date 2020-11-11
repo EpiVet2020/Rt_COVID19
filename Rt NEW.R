@@ -788,7 +788,7 @@ gráfico_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) 
 
 ggplotly(gráfico_Madeira, tooltip = "text") %>%
   layout(title = list(text = paste0("ARS Madeira", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
-         legend = list(x = 100, y = 0.5))
+         legend = list(x = 100, y = 0.95))
 
 
 
