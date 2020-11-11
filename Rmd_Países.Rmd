@@ -1165,8 +1165,9 @@ ggplotly(graph_uk, tooltip = "text", width = 900, height = 450) %>%
 ### Austrália
 <br>
 Para a análise da evolução do Rt na Austrália, utilizou-se a base de dados presente em: https://github.com/M3IT/COVID-19_Data/blob/master/Data/COVID_AU_national_daily_change.csv.
-
 <br>
+<br>
+Na fase inicial da pandemia, a Austrália apresentou valores de transmissibilidade bastante elevados como se pode comprovar pelo valor de Rt no dia 21 de fevereiro (Rt = 9,56), justificados pela ausência de medidas de restrição e de distanciamento social. Com a aplicação de medidas a partir do dia 16 de março, ocorreu um decréscimo dos valores de Rt, ultrapassando o limiar de transmissão (Rt < 1) e atingindo o valor mínimo de 0,34 no dia 26 de abril. Desde o final de abril, verifou-se um aumento progressivo na transmissão do vírus, embora com algumas oscilações, culminando no dia 1 julho (Rt = 1,89), que se pode dever ao novo surto que surgiu no Estado de Victoria. Deste modo, no dia 30 de junho, foi decretado confinamento obrigatório neste Estado, o que levou a uma nova didminuição dos contágios até ao dia 27 de setembro, data na qual se iniciou o levantamento gradual das restrições. Nas seguintes semanas, apesar de terem aumentado ligeiramente, os valores de Rt têm-se mantido próximos de 1. 
 
 ```{r, fig.align="center", warning = FALSE, message = FALSE}
 #AUSTRÁLIA (https://github.com/M3IT/COVID-19_Data/blob/master/Data/COVID_AU_national_daily_change.csv)
@@ -1284,130 +1285,6 @@ ggplotly(graph_aus, tooltip = "text", width = 900, height = 450) %>%
 
 ```
 
-<br>
-
-### Nova Zelândia
-<br>
-Para este país foram analisados os dados da Organização Mundial de Saúde, através do seguinte documento: https://covid19.who.int/table.
-<br>
-
-```{r, fig.align="center", warning = FALSE, message = FALSE}
-# NOVA ZELÂNDIA
-## Base de dados WHO
-nzealand <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
-
-## Alterar formato para data
-nzealand$ï..Date_reported <- as.Date(nzealand$ï..Date_reported, "%Y-%m-%d")
-
-## Criar tabela confirmados novos
-nzealand_var <- nzealand %>%
-  filter(Country == "New Zealand") %>%
-  select(ï..Date_reported, New_cases)
-names(nzealand_var) <- c("data", "confirmados_novos")
-
-## Alterar para formato Data
-nzealand_var$data <- as.Date(nzealand_var$data, "%Y-%m-%d")
-
-## Previsão da evolução
-covid_nze_var <- nzealand_var  %>%
-  filter(nzealand_var$data > as.Date("2020-01-03")) %>% 
-  dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt Nova Zelândia - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-## Aplicar a função Estimate_R
-Rt_nonparam_si_nze <- estimate_R(as.numeric(covid_nze_var$confirmados_novos), 
-                                 method = "uncertain_si",
-                                 config = sens_configs
-)
-
-sample_windows_nze <- seq(length(Rt_nonparam_si_nze$R$t_start))
-
-## Criar um data frame com valores de R
-posterior_Rt_nze <- 
-  map(.x = sample_windows_nze,
-      .f = function(x) {
-        
-        posterior_sample_obj_nze <- 
-          sample_posterior_R(
-            R = Rt_nonparam_si_nze,
-            n = 1000, 
-            window = x )
-        
-        posterior_sample_estim_nze <- 
-          data.frame(
-            window_index = x,
-            window_t_start = Rt_nonparam_si_nze$R$t_start[x],
-            window_t_end = Rt_nonparam_si_nze$R$t_end[x],
-            date_point = covid_nze_var[covid_nze_var$t_start == Rt_nonparam_si_nze$R$t_end[x], "data"],
-            R_e_median = median(posterior_sample_obj_nze),
-            R_e_q0025 = quantile(posterior_sample_obj_nze, probs = 0.025),
-            R_e_q0975 = quantile(posterior_sample_obj_nze, probs = 0.975))
-        
-        return(posterior_sample_estim_nze)}
-  ) %>% 
-  
-  reduce(bind_rows)
-
-## Gráfico Nova Zelândia ggplot
-## Linhas a adicionar no gráfico
-d_nze = data.frame(date=as.Date(c("2020-03-18", "2020-03-25", "2020-06-08")), Evento=c("Encerramento de fronteiras", "Confinamento obrigatório", "Levantamento gradual das medidas de restrição"))
-
-graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "darkorange",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
-                                                                                         '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "darkorange") +
-  
-  labs( title = " Nova Zelândia", size= 10,
-        subtitle = "Evolução do Número Efetivo Reprodutivo ao longo do tempo",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)", 
-        caption = "Fonte: OMS"
-  ) +
-  
-  theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
-        plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
-        axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
-  ) +
-  
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_nze_var$data), max((posterior_Rt_nze$date_point)))
-  ) +
-  
-  scale_y_continuous(
-    breaks = 0:10,
-    limits = c(0, 10)
-  ) +
-   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) + 
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-18", "2020-03-25", "2020-06-08"))), linetype = c("dotted", "twodash", "solid"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_nze, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
-  geom_pointrange(data = last(posterior_Rt_nze), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
-  annotate(geom = "text", x = last(posterior_Rt_nze$date_point), y = last(posterior_Rt_nze$R_e_median) - 0.5, label = round(last(posterior_Rt_nze$R_e_median), digits = 3), size = 3)
-
-### Tornar gráfico interativo
-ggplotly(graph_nze, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Nova Zelândia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
-
-```
 <br>
 
 ### Índia
