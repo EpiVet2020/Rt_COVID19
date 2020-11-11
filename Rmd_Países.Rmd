@@ -244,7 +244,7 @@ graph_it<- ggplot(posterior_Rt_it, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_it, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Itália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -374,7 +374,7 @@ graph_ger<- ggplot(posterior_Rt_ger, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_ger, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Alemanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Alemanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 <br>
@@ -498,7 +498,7 @@ graph_spa<- ggplot(posterior_Rt_spa, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_spa, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Espanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Espanha", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -623,7 +623,7 @@ graph_bel<- ggplot(posterior_Rt_bel, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_bel, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Bélgica", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Bélgica", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -751,7 +751,7 @@ graph_cz <- ggplot(posterior_Rt_cz, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_cz, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("República Checa", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("República Checa", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -879,7 +879,7 @@ graph_swi<- ggplot(posterior_Rt_swi, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_swi, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Suiça", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Suiça", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 <br>
@@ -1010,7 +1010,7 @@ graph_swe <- ggplot(posterior_Rt_swe, aes(x = date_point, y = R_e_median)) +
 
 #Tornar o grafico interativo
 ggplotly(graph_swe, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Suécia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Suécia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -1144,7 +1144,7 @@ graph_uk <- ggplot(posterior_Rt_uk, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_uk, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Reino Unido", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Reino Unido", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -1268,7 +1268,7 @@ graph_aus<- ggplot(posterior_Rt_aus, aes(x = date_point, y = R_e_median)) +
 
 #Tornar o grafico interativo
 ggplotly(graph_aus, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Austrália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Austrália", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -1393,7 +1393,7 @@ graph_nze <- ggplot(posterior_Rt_nze, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_nze, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Nova Zelândia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Nova Zelândia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 <br>
@@ -1521,7 +1521,7 @@ graph_ind<- ggplot(posterior_Rt_india, aes(x = date_point, y = R_e_median)) +
 
 #Tornar o grafico interativo
 ggplotly(graph_ind, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Índia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Índia", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -1658,7 +1658,7 @@ graph_hk <- ggplot(posterior_Rt_hk, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_hk, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -1787,7 +1787,7 @@ graph_chi <- ggplot(posterior_Rt_chi, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_chi, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("China", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("China", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 <br>
@@ -1916,7 +1916,7 @@ graph_usa <- ggplot(posterior_Rt_usa, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_usa, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Estados Unidos da América", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Estados Unidos da América", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -2044,7 +2044,7 @@ graph_jap <- ggplot(posterior_Rt_jap, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_jap, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Japão", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Japão", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -2170,7 +2170,7 @@ graph_mex <- ggplot(posterior_Rt_mex, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_mex, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("México", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("México", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -2295,7 +2295,7 @@ graph_kor <- ggplot(posterior_Rt_kor, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_kor, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Coreia do Sul", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Coreia do Sul", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
 
@@ -2420,9 +2420,20 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
 
 ### Tornar gráfico interativo
 ggplotly(graph_bra, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5))
+  layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 ```
+
+## **Conclusão**
+***
+De uma forma geral, pode-se concluir que a implementação de medidas de restrição e de distanciamento social desempenha um papel fulcral na evolução da doença, nomeadamente no Número Efetivo Reprodutivo (Rt). Assim, uma ação precoce para pôr em prática estas medidas pode ser a chave para um controlo efetivo da doença e, consequentemente, dos seus impactos tanto a nível de saúde pública, como a nível social e económico.
+
+As estimativas de R obtidas com nosso método são bastante sensíveis ao tamanho da janela deslizante sobre a qual as estimativas são calculadas. Ainda assim, identificamos algumas limitações associadas ao método utilizado, nomeadamente: 
+ - Presumiu-se que todos os casos foram detetados (inclusive assintomáticos), o que pode não levar a grandes desvios na estimativa, desde que a proporção de casos assintomáticos e taxa de notificação sejam constantes no tempo; 
+ - Partiu-se do pressuposto de que não houve casos importados de forma que, cada novo caso confirmado pode ser atribuído a um caso anterior na série temporal de incidência;
+ - Assumiu-se uma distribuição do serial interval constante ao longo da pandemia, o que pode não se refletir na realidade. Esta limitação poderia ter sido ultrapassada, definindo-se diferentes distribuições de serial interval para cada período da doença, no entanto, não obtiveram dados suficientes para realizar esta diferenciação;
+ - Este método pressupõe que o período infetante tem como ponto de partida o momento do início dos sintomas (independente do período de incubação), o que leva a estimativas exatas mas desfasadas do Rt. Embora para muitas doenças seja uma suposição aceitável, esta poderá não ser válida para doenças cuja infecciosidade precede os sintomas.
+ 
 <br> 
 <br> 
 
