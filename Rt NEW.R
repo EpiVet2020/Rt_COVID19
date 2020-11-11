@@ -83,17 +83,11 @@ covid_pt_var <- covid19pt_var  %>%
     dplyr::mutate(t_start = dplyr::row_number())
 
 
-### Cálculo do Rt - Uncertainty method --> "uncertain_si"
-### Serial Interval (By André Peralta)
-### A estimativa do nº reprodutivo efetivo diário foi realizada segundo uma janela de 7dias;
-### Recorremos ao EpiEstim, ajustado aos casos importados e assumindo o seguinte serial interval (método uncertain):
-### data from https://cmmid.github.io/topics/covid19/current-patterns-transmission/global-time-varying-transmission.html
-### -- mean 4.7 (95% CrI: 3.7, 6.0), truncated at 3,7 and 6,0
-### -- sd 2.9 (95% CrI: 1.9, 4.9), truncated at 1,9 and 4,9
+# Estimativa do Rt, segundo uma janela de 7 dias, recorrendo ao EpiEstim, ajustado aos casos importados e assumindo o seguinte serial interval (método uncertain), presente em https://cmmid.github.io/topics/covid19/current-patterns-transmission/global-time-varying-transmission.html:
+## mean 4.7 (95% CrI: 3.7, 6.0), truncated at 3,7 and 6,0
+## sd 2.9 (95% CrI: 1.9, 4.9), truncated at 1,9 and 4,9
 
-
-# Rt Portugal (total)
-## Definir o Serial Interval e window
+## Definir o Serial Interval e janela de visualização para Portugal e Regiões
 sens_configs <- 
     make_config(
         list(
@@ -107,12 +101,14 @@ sens_configs <-
         )
     )
 
+
+
+# Portugal
 ## Aplicar a função Estimate_R
 Rt_nonparam_si <- estimate_R(covid_pt_var$confirmados_var, 
                              method = "uncertain_si",
                              config = sens_configs
 )
-
 
 ### Caracterização dos valores em gráfico 
 #plot(Rt_nonparam_si, legend = FALSE)
@@ -149,9 +145,45 @@ posterior_R_t <-
     reduce(bind_rows)
 
 
-## GRÁFICO ggplot
+# Aplicar a função Estimate_R
+Rt_nonparam_si <- estimate_R(covid_pt_var$confirmados_var, 
+                             method = "uncertain_si",
+                             config = sens_configs )
 
-## Linhas a adicionar no gráfico
+## Determinação do Rt (sample from the posterior R distribution)
+## Definir a nossa janela com base no t_start
+sample_windows <- seq(length(Rt_nonparam_si$R$t_start))
+
+## Map function: applies a function to each element of a list and returns an object of the same type as the input 
+### Criar um data frame com valores de R
+posterior_R_t <- 
+  map(.x = sample_windows,
+      .f = function(x) {
+        ## Sample from  the posterior R distribution
+        posterior_sample_obj <- 
+          sample_posterior_R(
+            R = Rt_nonparam_si,
+            n = 1000, 
+            window = x )
+        ## Returns a data frame
+        posterior_sample_estim <- 
+          data.frame(
+            window_index = x,
+            window_t_start = Rt_nonparam_si$R$t_start[x],
+            window_t_end = Rt_nonparam_si$R$t_end[x],
+            date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si$R$t_end[x], "data"],
+            R_e_median = median(posterior_sample_obj),
+            R_e_q0025 = quantile(posterior_sample_obj, probs = 0.025),
+            R_e_q0975 = quantile(posterior_sample_obj, probs = 0.975))
+        
+        return(posterior_sample_estim)}
+  ) %>% 
+  ##Combines elements into a single value
+  reduce(bind_rows)
+
+
+## GRÁFICO ggplot
+### Linhas a adicionar no gráfico
 d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
 
@@ -168,8 +200,7 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
   
   theme_minimal() +
   
-  theme(title = element_text(size=15),
-        axis.title = element_text(size = 12, hjust =0.5),
+  theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
         axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
@@ -187,60 +218,61 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t$date_point), y = last(posterior_R_t$R_e_median) - 0.5, label = round(last(posterior_R_t$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT, tooltip = "text")
+ggplotly(graph_PT, tooltip = "text") %>%
+  layout(title = list(text = paste0("Portugal", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+
 
 
 # Rt Diário ARS Norte
-## Substituir valores negativos por 0
+## Substituir valores negativos por 0 (funciona para todas as regiões)
 covid_pt_var[-c(2)] <- replace(covid_pt_var[-c(2)], covid_pt_var[-c(2)] < 0, 0)
 
 ## Função
 Rt_nonparam_si1 <- 
-    estimate_R(
-        covid_pt_var$confirmados_var_norte, 
-        method = "uncertain_si",
-        config = sens_configs
-    )
-
-## Gráfico
-#plot(Rt_nonparam_si1, legend = FALSE)
+  estimate_R(
+    covid_pt_var$confirmados_var_norte, 
+    method = "uncertain_si",
+    config = sens_configs
+  )
 
 ## Posterior sample Rt estimate
 sample_windows1 <- seq(length(Rt_nonparam_si1$R$t_start))
 
 posterior_R_t1 <- 
-    map(
-        .x = sample_windows1,
-        .f = function(x) {
-            
-            posterior_sample_obj1 <- 
-                sample_posterior_R(
-                    R = Rt_nonparam_si1,
-                    n = 1000, 
-                    window = x
-                )
-            
-            posterior_sample_estim1 <- 
-                data.frame(
-                    window_index = x,
-                    window_t_start = Rt_nonparam_si1$R$t_start[x],
-                    window_t_end = Rt_nonparam_si1$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si1$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj1),
-                    R_e_q0025 = quantile(posterior_sample_obj1, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj1, probs = 0.975)
-                )
-            
-            return(posterior_sample_estim1)
-            
-        }
-    ) %>% 
-    reduce(bind_rows)
-
+  map(
+    .x = sample_windows1,
+    .f = function(x) {
+      
+      posterior_sample_obj1 <- 
+        sample_posterior_R(
+          R = Rt_nonparam_si1,
+          n = 1000, 
+          window = x
+        )
+      
+      posterior_sample_estim1 <- 
+        data.frame(
+          window_index = x,
+          window_t_start = Rt_nonparam_si1$R$t_start[x],
+          window_t_end = Rt_nonparam_si1$R$t_end[x],
+          date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si1$R$t_end[x], "data"],
+          R_e_median = median(posterior_sample_obj1),
+          R_e_q0025 = quantile(posterior_sample_obj1, probs = 0.025),
+          R_e_q0975 = quantile(posterior_sample_obj1, probs = 0.975)
+        )
+      
+      return(posterior_sample_estim1)
+      
+    }
+  ) %>% 
+  reduce(bind_rows)
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
@@ -251,83 +283,82 @@ graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
                                                                                        '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
   
-  labs( title = " ARS Norte - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados: DGS ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
+  labs(x = "Data",
+       y = "Nº de reprodução efetivo (Rt)") +
   
   theme_minimal() +
   
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
+  theme(plot.title = element_text(size=10, face= "bold"),
         plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
+        axis.text.x = element_text(size = 8, angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
-  ) +
-  
+        axis.title.x = element_text(size = 7),
+        legend.title = element_blank()) +
+
   scale_x_date(
     date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_pt_var$data), max(posterior_R_t1$date_point))
-  ) +
+    limits = c(min(covid_pt_var$data), max(posterior_R_t1$date_point))) +
   
   scale_y_continuous(
     breaks = c(0:15),
-    limits = c(0, 15)
-  ) +
+    limits = c(0, 15)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
+  
+  
+##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t1), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t1$date_point), y = last(posterior_R_t1$R_e_median) - 0.5, label = round(last(posterior_R_t1$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Norte, tooltip = "text")
+ggplotly(graph_Norte, tooltip = "text") %>%
+  layout(title = list(text = paste0("ARS Norte", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+
+
 
 
 
 
 # Rt Diário ARS Centro 
 Rt_nonparam_si2 <- 
-    estimate_R(
-        covid_pt_var$confirmados_var_centro, 
-        method = "uncertain_si",
-        config = sens_configs
-    )
-
-## Gráfico
-#plot(Rt_nonparam_si2, legend = FALSE)
+  estimate_R(
+    covid_pt_var$confirmados_var_centro, 
+    method = "uncertain_si",
+    config = sens_configs
+  )
 
 ## Posterior sample Rt estimate
 sample_windows2 <- seq(length(Rt_nonparam_si2$R$t_start))
 
 posterior_R_t2 <- 
-    map(
-        .x = sample_windows2,
-        .f = function(x) {
-            
-            posterior_sample_obj2 <- 
-                sample_posterior_R(
-                    R = Rt_nonparam_si2,
-                    n = 1000, 
-                    window = x
-                )
-            
-            posterior_sample_estim2 <- 
-                data.frame(
-                    window_index = x,
-                    window_t_start = Rt_nonparam_si2$R$t_start[x],
-                    window_t_end = Rt_nonparam_si2$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si2$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj2),
-                    R_e_q0025 = quantile(posterior_sample_obj2, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj2, probs = 0.975)
-                )
-            
-            return(posterior_sample_estim2)
-        }
-    ) %>% 
-    reduce(bind_rows)
-
+  map(
+    .x = sample_windows2,
+    .f = function(x) {
+      
+      posterior_sample_obj2 <- 
+        sample_posterior_R(
+          R = Rt_nonparam_si2,
+          n = 1000, 
+          window = x
+        )
+      
+      posterior_sample_estim2 <- 
+        data.frame(
+          window_index = x,
+          window_t_start = Rt_nonparam_si2$R$t_start[x],
+          window_t_end = Rt_nonparam_si2$R$t_end[x],
+          date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si2$R$t_end[x], "data"],
+          R_e_median = median(posterior_sample_obj2),
+          R_e_q0025 = quantile(posterior_sample_obj2, probs = 0.025),
+          R_e_q0975 = quantile(posterior_sample_obj2, probs = 0.975)
+        )
+      
+      return(posterior_sample_estim2)
+    }
+  ) %>% 
+  reduce(bind_rows)
 
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
@@ -338,19 +369,17 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
                                                                                        '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
   
-  labs( title = " ARS Centro - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados: DGS ",
-        x = "Data",
+  labs( x = "Data",
         y = "Nº de reprodução efetivo (Rt)"
   ) +
   
   theme_minimal() +
   
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
+  theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
         plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
+        axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
+        axis.title.x = element_text(size = 7),
   ) +
   
   scale_x_date(
@@ -365,10 +394,17 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t2), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t2$date_point), y = last(posterior_R_t2$R_e_median) - 0.5, label = round(last(posterior_R_t2$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Centro, tooltip = "text")
+ggplotly(graph_Centro, tooltip = "text") %>%
+  layout(title = list(text = paste0("ARS Centro", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")))
+
+
+
 
 
 

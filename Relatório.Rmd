@@ -24,17 +24,38 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-```
+<style type="text/css">
+.main-container {
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
+body {
+text-align: justify}
+</style>
 
 ```{css, echo=FALSE}
 /* Whole document: */
 body{
   font-size: 12pt;
 }
+/* unvisited link */
+a:link {
+  color: #4fa1b3;
+}
+/* visited link */
+a:visited {
+  color: #326b78;
+}
 ```
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = 'center')
+```
+
 
 <br>
 <br>
@@ -72,7 +93,7 @@ Este relatório tem como objetivo analisar de que forma se tem alterado o Rt em 
 <li>Conclusões</li>
 
 <br>
-```{r warning=FALSE, message=FALSE, message= FALSE}
+```{r, warning=FALSE, message= FALSE}
 #Libraries
 library(testthat)
 library(rlang)
@@ -106,6 +127,8 @@ library(rjson)
 library(readr)
 library(readxl)
 library(scales)
+install_github("ropenscilabs/icon")
+library(icon)
 
 #Importar dados
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -113,7 +136,6 @@ covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/m
 
 #Data de chr para Date
 covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
-
 ```
 
 <br>
@@ -126,6 +148,7 @@ Utilizando esta ferramenta, através do package [*estimate.R*](https://cran.r-pr
 Em primeiro lugar, para obtermos estes valores de incidência, recorremos à base de dados disponível no [*GitHub*](https://github.com/dssg-pt/covid19pt-data), cujas fontes incluem a Direcção Geral de Saúde - Ministério da Saúde Português e a base de dados da ESRI Portugal.<br>
 Ainda a referir o Dr. André Peralta Santos, cujo projeto presente no [*GitHub*](https://github.com/aperaltasantos/covid_pt.git), serviu como base para a nossa abordagem.
 <br>
+
 
 ```{r fig.align='center', warning=FALSE, message= FALSE}
 # Em primeiro lugar, criámos novas variáveis com a incidência para cada uma das regiões (t - (t-1));
@@ -257,9 +280,9 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
     
     theme_minimal() +
   
-    theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
+    theme(plot.title = element_text(size=10, face= "bold"),
           plot.subtitle = element_text(size= 8),
-          axis.text.x = element_text(angle = 60, hjust = 1),
+          axis.text.x = element_text(size= 8, angle = 60, hjust = 1),
           axis.title.y = element_text(size = 7),
           axis.title.x = element_text(size = 7),
     ) +
@@ -275,14 +298,17 @@ graph_PT<- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
     ) +
     geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
     geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-      
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t$date_point), y = last(posterior_R_t$R_e_median) - 0.5, label = round(last(posterior_R_t$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_PT, tooltip = "text")
+ggplotly(graph_PT, tooltip = "text") %>%
+    layout(title = list(text = paste0("Portugal", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
-
 <br>
 
 ### **Administrações Regionais de Saúde (ARS's)** {.tabset .tabset-fade .tabset-pills}
@@ -296,9 +322,9 @@ Neste capítulo, iremos abordar de que forma tem evoluído a transmissão de inf
 
 <br>
 
-Através da análise deste gráfico, pode-se verificar que a ARS Norte apresentou o valor mais alto de Rt no início da pandemia (6,13 no dia 7 de Março), o que justifica o elevado número de casos nesta região no período inicial. O elevado número de contágios não foi eficazmente controlado até serem implementadas medidas de restrição em todo o país (dias 16 e 18 de Março). 
-Até dia 1 de Junho os valores de Rt foram diminuindo, embora com algumas oscilações, chegando a apresentar o valor mais baixo desde o início da pandemia (0,33) nesta data. Desde então, com o ínicio da terceira fase de desconfinamento a 1 de Junho, o Rt voltou a apresentar valores acima de 1, verificando-se um segundo pico no dia 8 de Junho (1,67). 
-Após esta data, os valores mantiveram-se acima de 1 na sua maioria, ????? (explicar oscilações após 8 junho e posterior decrescimo ate 24 julho)
+Através da análise deste gráfico, pode-se verificar que a ARS Norte apresentou o valor mais alto de Rt no início da pandemia (6,13 no dia 7 de Março), o que justifica o elevado número de casos nesta região no período inicial. O elevado número de contágios não foi eficazmente controlado até serem implementadas medidas de restrição em todo o país (dias 16 e 18 de Março). <br>
+Até dia 1 de Junho os valores de Rt foram diminuindo, embora com algumas oscilações, chegando a apresentar o valor mais baixo desde o início da pandemia (0,33) nesta data. Desde então, com o ínicio da terceira fase de desconfinamento a 1 de Junho, o Rt voltou a apresentar valores acima de 1, verificando-se um segundo pico no dia 8 de Junho (1,67). <br>
+Após esta data, os valores mantiveram-se acima de 1 na sua maioria, embora sofrendo algumas oscilações.
 A partir de dia 24 de Julho, cujo Rt equivale a 0,65, os valores de Rt apresentaram-se constantemente acima de 1. De forma a tentar reduzir estes valores novamente abaixo de 1, foi implementado o estado de calamidade nacional no dia 15 de Outubro.
 
 <br>
@@ -315,9 +341,6 @@ Rt_nonparam_si1 <-
         method = "uncertain_si",
         config = sens_configs
     )
-
-## Gráfico
-#plot(Rt_nonparam_si1, legend = FALSE)
 
 ## Posterior sample Rt estimate
 sample_windows1 <- seq(length(Rt_nonparam_si1$R$t_start))
@@ -351,15 +374,9 @@ posterior_R_t1 <-
     ) %>% 
     reduce(bind_rows)
 
-
-posterior_R_e1 <- posterior_R_t1 %>%
-    mutate(fit = round(R_e_median, 2),
-           lwr=round(R_e_q0025, 2),
-           upr=round(R_e_q0975, 2))
-
-
 ## GRÁFICO GGPLOT
 ## Linhas a adicionar no gráfico
+
 d=data.frame(date=as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09")), Evento=c("Encerramento das Escolas", "Estado de Emergência", "Estado de Calamidade", "Estado de Emergência"))
 
 graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
@@ -367,17 +384,15 @@ graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
                                                                                        '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
-    labs( title = " Evolução do Número Efetivo Reprodutivo ao longo do tempo",
-          subtitle = "Fonte de dados: DGS",
-          x = "Data",
+    labs( x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
     theme_minimal() +
     
-      theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
+      theme(plot.title = element_text(size=10, face= "bold"),
           plot.subtitle = element_text(size= 8),
-          axis.text.x = element_text(angle = 60, hjust = 1),
+          axis.text.x = element_text(size = 8, angle = 60, hjust = 1),
           axis.title.y = element_text(size = 7),
           axis.title.x = element_text(size = 7),
     ) +
@@ -393,12 +408,17 @@ graph_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
     ) +
   
     geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t1), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t1$date_point), y = last(posterior_R_t1$R_e_median) - 0.5, label = round(last(posterior_R_t1$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Norte, tooltip = "text")
+graph_norte_plotly <- ggplotly(graph_Norte, width = 100, height = 100, tooltip = "text") %>%
+    layout(title = list(text = paste0("ARS Norte", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
+
+
 ```
 
 <br>
@@ -464,17 +484,15 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
                                                                                        '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
-    labs( title = " ARS Centro - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
+    labs( x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
     theme_minimal() +
     
-     theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
+     theme(plot.title = element_text(size=10, face= "bold"),
           plot.subtitle = element_text(size= 8),
-          axis.text.x = element_text(angle = 60, hjust = 1),
+          axis.text.x = element_text(size = 8, angle = 60, hjust = 1),
           axis.title.y = element_text(size = 7),
           axis.title.x = element_text(size = 7),
     ) +
@@ -491,11 +509,15 @@ graph_Centro <- ggplot(posterior_R_t2, aes(x = date_point, y = R_e_median)) +
     
     geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
     geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
+    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t2), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t2$date_point), y = last(posterior_R_t2$R_e_median) - 0.5, label = round(last(posterior_R_t2$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Centro, tooltip = "text")
+ggplotly(graph_Centro, tooltip = "text") %>%
+    layout(title = list(text = paste0("ARS Centro", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 
 ```
 
@@ -512,7 +534,6 @@ Findado o período de férias, os valores de Rt mantiveram-se maioritariamente a
 <br>
 ```{r,fig.align='center', warning=FALSE, message= FALSE}
 # Rt ARS Lisboa e Vale do Tejo
-
 Rt_nonparam_si3 <- 
     estimate_R(
         covid_pt_var$confirmados_var_lvt, 
@@ -565,17 +586,15 @@ graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
                                                                                        '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
-    labs( title = " ARS LVT - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
+    labs( x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
     theme_minimal() +
     
-    theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
+    theme(plot.title = element_text(size=10, face= "bold"),
           plot.subtitle = element_text(size= 8),
-          axis.text.x = element_text(angle = 60, hjust = 1),
+          axis.text.x = element_text(size = 8, angle = 60),
           axis.title.y = element_text(size = 7),
           axis.title.x = element_text(size = 7),
     ) +
@@ -591,12 +610,15 @@ graph_LVT<- ggplot(posterior_R_t3, aes(x = date_point, y = R_e_median)) +
     ) +
     
     geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5, show.legend = FALSE) +
+  
+     ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t3), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t3$date_point), y = last(posterior_R_t3$R_e_median) - 0.5, label = round(last(posterior_R_t3$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_LVT, tooltip = "text")
+ggplotly(graph_LVT, tooltip = "text") %>%
+    layout(title = list(text = paste0("ARS Lisboa e Vale do Tejo", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 ```
 
 <br>
@@ -604,7 +626,6 @@ ggplotly(graph_LVT, tooltip = "text")
 #### **ARS Alentejo**
 
 <br>
-
 No dia 4 de Março, correspondente ao período de contágio dos primeiros casos de COVID-19 no país, o valor de Rt nesta ARS foi de 3,75. A partir deste dia os valores sofreram um aumento considerável até atingir um pico no dia 15 de Março de 13,66, o que coincide com o aumento generalizado de casos no país. Desta forma, é possível constatar que a ARS do Alentejo foi a que apresentou maior número médio de casos secundários resultantes de um caso infectado.
 Após este pico e a implementação do estado de emergência nacional os valores decresceram, com algumas oscilações, até apresentarem um minímo de 0.09 no dia 4 de Maio.
 Com a aplicação das fases de desconfinamento a partir de 4 de Maio, iniciando-se a última fase de desconfinamento no dia 1 de Junho, surgiu novamente um aumento de casos, que culminou com um novo pico de transmissão no dia 17 de Junho (Rt = 5,09). Existiu posteriormente uma redução destes valores, que se mantiveram inferiores a 1 até ao dia 14 de Julho. Após este dia os valores sofreream oscilações, mantendo-se maioritariamente acima de 1 até atingir um novo pico de transmissão no dia 13 de Outubro (Rt = 3,14), 
@@ -671,9 +692,9 @@ graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
     
     theme_minimal() +
     
-    theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
+    theme(plot.title = element_text(size=10, face= "bold"),
           plot.subtitle = element_text(size= 8),
-          axis.text.x = element_text(angle = 60, hjust = 1),
+          axis.text.x = element_text(size = 8, angle = 60, hjust = 1),
           axis.title.y = element_text(size = 7),
           axis.title.x = element_text(size = 7),
     ) +
@@ -689,13 +710,15 @@ graph_Alentejo <- ggplot(posterior_R_t4, aes(x = date_point, y = R_e_median)) +
     ) +
     
     geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
-
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t4), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t4$date_point), y = last(posterior_R_t4$R_e_median) - 0.5, label = round(last(posterior_R_t4$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Alentejo, tooltip = "text")
+ggplotly(graph_Alentejo, tooltip = "text") %>%
+    layout(title = list(text = paste0("ARS Alentejo", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 ```
 
 <br>
@@ -764,17 +787,15 @@ graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
                                                                                        '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
     
-    labs( title = " ARS Algarve",
-          subtitle = "Fonte de dados: DGS ",
-          x = "Data",
+    labs( x = "Data",
           y = "Nº de reprodução efetivo (Rt)"
     ) +
     
     theme_minimal() +
     
-    theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
+    theme(plot.title = element_text(size=10, face= "bold"),
           plot.subtitle = element_text(size= 8),
-          axis.text.x = element_text(angle = 60, hjust = 1),
+          axis.text.x = element_text(size = 8, angle = 60, hjust = 1),
           axis.title.y = element_text(size = 7),
           axis.title.x = element_text(size = 7),
     ) +
@@ -790,13 +811,15 @@ graph_Algarve<- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) +
     ) +
   
     geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
-    geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
-
+    geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t5), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t5$date_point), y = last(posterior_R_t5$R_e_median) - 0.5, label = round(last(posterior_R_t5$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Algarve, tooltip = "text")
+ggplotly(graph_Algarve, tooltip = "text") %>%
+    layout(title = list(text = paste0("ARS Algarve", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 ```
 
 <br>
@@ -861,17 +884,15 @@ graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
                                                                                        '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
   
-  labs( title = " ARS Açores",
-        subtitle = "Fonte de dados: DGS ",
-        x = "Data",
+  labs( x = "Data",
         y = "Nº de reprodução efetivo (Rt)"
   ) +
   
   theme_minimal() +
   
-    theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
+    theme(plot.title = element_text(size=10, face= "bold"),
           plot.subtitle = element_text(size= 8),
-          axis.text.x = element_text(angle = 60, hjust = 1),
+          axis.text.x = element_text(size = 8, angle = 60, hjust = 1),
           axis.title.y = element_text(size = 7),
           axis.title.x = element_text(size = 7),
     ) +
@@ -887,12 +908,15 @@ graph_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17", "2020-11-09"))), linetype= c("twodash", "dotted", "solid", "dotdash", "dotted"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d_azo, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17", "2020-11-09"))), linetype= c("twodash", "dotted", "solid", "dotdash", "dotted"), colour = "indianred4", alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t6), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t6$date_point), y = last(posterior_R_t6$R_e_median) - 0.5, label = round(last(posterior_R_t6$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Açores, tooltip = "text")
+ggplotly(graph_Açores, tooltip = "text") %>%
+    layout(title = list(text = paste0("ARS Açores", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 ```
 
 <br>
@@ -905,7 +929,7 @@ Tendo o gráfico abaixo como referência e analisando a evolução do Rt, verifi
 
 <br>
 
-```{r,fig.align='center', warning=FALSE, message= FALSE}
+```{r fig.align='center', warning=FALSE, message= FALSE}
 Rt_nonparam_si7 <- 
     estimate_R(
         covid_pt_var$confirmados_var_madeira, 
@@ -953,17 +977,15 @@ graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
                                                                                        '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "palegreen3") +
   
-  labs( title = " ARS Madeira",
-        subtitle = "Fonte de dados: DGS ",
-        x = "Data",
+  labs( x = "Data",
         y = "Nº de reprodução efetivo (Rt)"
   ) +
   
   theme_minimal() +
   
-    theme(plot.title = element_text(size=10, face= "bold", hjust= 0.5),
+    theme(plot.title = element_text(size=10, face= "bold"),
           plot.subtitle = element_text(size= 8),
-          axis.text.x = element_text(angle = 60, hjust = 1),
+          axis.text.x = element_text(size = 8, angle = 60, hjust = 1),
           axis.title.y = element_text(size = 7),
           axis.title.x = element_text(size = 7),
     ) +
@@ -979,13 +1001,15 @@ graph_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) +
   ) +
   
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28", "2020-11-09"))), linetype= c("dotdash", "solid", "twodash", "dotted", "solid"), colour = "indianred4", alpha = 0.5) +
-  geom_vline(data=d_mad, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = TRUE)
-
-
+  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28", "2020-11-09"))), linetype= c("dotdash", "solid", "twodash", "dotted", "solid"), colour = "indianred4", alpha = 0.5, show.legend = FALSE) +
+  
+  ##Adicionar último valor de Rt no gráfico
+  geom_pointrange(data = last(posterior_R_t7), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
+  annotate(geom = "text", x = last(posterior_R_t7$date_point), y = last(posterior_R_t7$R_e_median) - 0.5, label = round(last(posterior_R_t7$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
-ggplotly(graph_Madeira, tooltip = "text")
+ggplotly(graph_Madeira, tooltip = "text") %>%
+    layout(title = list(text = paste0("ARS Madeira", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>")), legend = list(x = 100, y = 0.5, title = list(text = "<br> Evento <br>")))
 ```
 
 
@@ -996,7 +1020,7 @@ ggplotly(graph_Madeira, tooltip = "text")
 
 <br>
 
-```{r,fig.align='center', warning=FALSE, message= FALSE}
+```{r fig.align='center', warning=FALSE, message= FALSE}
 # Análise comparativa entre regiões
 ## Data frame com as regiões que começam no dia 7 de Março
 regioes_Rt7 <- as.data.frame(cbind(posterior_R_t1$R_e_median, posterior_R_t2$R_e_median, posterior_R_t3$R_e_median, posterior_R_t6$R_e_median, posterior_R_t7$R_e_median))
@@ -1077,14 +1101,14 @@ Finalmente, presumimos que a distribuição serial do intervalo foi constante ao
 Apesar dessas suposições, sentimos que a simplicidade do método que apresentamos aqui supera as limitações destacadas acima. 
 
 facilitado pelo pacote R, que permite uma análise rápida das séries temporais de incidência de qualquer doença infecciosa dentro do escopo descrito acima e devem ser ferramentas valiosas para futuras investigações de surtos.
-<br>
-<br>
 
+<br>
+<br>
 $~$
 <center> 
  **Um trabalho de**
 
-Inês Marçal Antunes [`r icon::fa("linkedin")`](...), Sara Sequeira [`r icon::fa("linkedin")`](https://www.linkedin.com/in/sara-sequeira-1b5085152/) e Teresa da Penha Coutinho [`r icon::fa("linkedin")`](https://www.linkedin.com/in/teresa-da-penha-coutinho/)
+Inês Marçal Antunes [`r icon::fa("linkedin")`](https://www.linkedin.com/in/in%C3%AAs-antunes-b332401b9/), Sara Sequeira [`r icon::fa("linkedin")`](https://www.linkedin.com/in/sara-sequeira-1b5085152/) e Teresa da Penha Coutinho [`r icon::fa("linkedin")`](https://www.linkedin.com/in/teresa-da-penha-coutinho/)
 
 ines.marcal.antunes@gmail.com; sarasequeira5@hotmail.com; teresa.jesus.coutinho@gmail.com; 
 
