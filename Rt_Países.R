@@ -2288,6 +2288,7 @@ ggplot(last_Rt_paises, aes(x = paises, y = R_e_median, color = paises)) +
        y = "Número Reprodutivo Efetivo (Rt)") +
   theme_minimal() +
   theme(plot.title = element_text(size=10, face= "bold"),
+        axis.text.x = element_text(angle = 90, hjust = 1),
         axis.title.y = element_text(size = 10),
         axis.title.x = element_text(size = 10)) +
   scale_y_continuous(breaks = seq(0, max(last_Rt$R_e_q0975), by = 0.1)) + 
