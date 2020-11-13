@@ -860,5 +860,22 @@ Rt_regioes_tempo_graph_interativo <- ggplotly(Rt_regioes_tempo_graph, tooltip = 
          legend = list(x = 1, y = 0))
 Rt_regioes_tempo_graph_interativo
 
+# Gráfico bolinhas último Rt
+## Tabela com último Rt para cada região
+last_Rt <- as.data.frame(rbind(last(posterior_R_t), last(posterior_R_t1), last(posterior_R_t2), last(posterior_R_t3), last(posterior_R_t4), last(posterior_R_t5), last(posterior_R_t6), last(posterior_R_t7)))
+last_Rt <- last_Rt[, -c(1:4)]
+last_Rt <- cbind(c("Portugal", "Norte", "Centro", "LVT", "Alentejo", "Algarve", "Açores", "Madeira"), last_Rt)
+names(last_Rt)[1] <- "regioes"
 
-  
+##GGPlot
+ggplot(last_Rt, aes(x = regioes, y = R_e_median, color = regioes)) + 
+  labs(title = "Rt atual em Portugal e nas suas ARS",
+       x = "Região",
+       y = "Número Reprodutivo Efetivo (Rt)") +
+  theme_minimal() +
+  theme(plot.title = element_text(size=10, face= "bold"),
+        axis.title.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10)) +
+  scale_y_continuous(breaks = seq(0, max(last_Rt$R_e_q0975), by = 0.1)) + 
+  geom_pointrange(aes(ymin = R_e_q0025, ymax = R_e_q0975), size = 1.1, alpha = 1) + 
+  geom_hline(yintercept = 1, colour = "grey65")

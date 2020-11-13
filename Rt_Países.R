@@ -1810,7 +1810,7 @@ ggplotly(graph_usa, tooltip = "text", width = 900, height = 450) %>%
 
 
 #JAPÃO - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
-japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-11-10.json")
+japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-11-13.json")
 japan <- japan$daily
 
 ## Alterar formato para data
@@ -2268,9 +2268,32 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   geom_pointrange(data = last(posterior_Rt_bra), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_bra$date_point), y = last(posterior_Rt_bra$R_e_median) - 0.5, label = round(last(posterior_Rt_bra$R_e_median), digits = 3), size = 3)
 
-
-
 ### Tornar gráfico interativo
 ggplotly(graph_bra, tooltip = "text", width = 900, height = 450) %>%
   layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
+
+
+
+# Gráfico bolinhas último Rt
+## Tabela com último Rt para cada país
+last_Rt_paises <- last_Rt <- as.data.frame(rbind(last(posterior_R_t), last(posterior_Rt_it), last(posterior_Rt_ger), last(posterior_Rt_spa), last(posterior_Rt_bel), last(posterior_Rt_cz), last(posterior_Rt_swi), last(posterior_Rt_swe), last(posterior_Rt_uk), last(posterior_Rt_aus), last(posterior_Rt_india), last(posterior_Rt_hk), last(posterior_Rt_chi), last(posterior_Rt_usa), last(posterior_Rt_jap), last(posterior_Rt_mex), last(posterior_Rt_kor), last(posterior_Rt_bra)))
+last_Rt_paises <- last_Rt_paises[, -c(1:4)]
+last_Rt_paises <- cbind(c("Portugal", "Itália", "Alemanha", "Espanha", "Bélgica", "República Checa", "Suiça", "Suécia", "Reino Unido", "Austrália", "Índia", "Hong Kong", "China", "Estados Unidos", "Japão", "México", "Coreia do Sul", "Brasil"), last_Rt_paises)
+names(last_Rt_paises)[1] <- "paises"
+
+##GGPlot
+ggplot(last_Rt_paises, aes(x = paises, y = R_e_median, color = paises)) + 
+  labs(title = "Rt atual em países da UE e Extracomunitários ",
+       x = "País",
+       y = "Número Reprodutivo Efetivo (Rt)") +
+  theme_minimal() +
+  theme(plot.title = element_text(size=10, face= "bold"),
+        axis.title.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10)) +
+  scale_y_continuous(breaks = seq(0, max(last_Rt$R_e_q0975), by = 0.1)) + 
+  geom_pointrange(aes(ymin = R_e_q0025, ymax = R_e_q0975), size = 1.1, alpha = 1) + 
+  geom_hline(yintercept = 1, colour = "grey65")
+
+
+
 
