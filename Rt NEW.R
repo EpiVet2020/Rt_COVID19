@@ -31,10 +31,12 @@ library(rjson)
 library(readr)
 library(readxl)
 library(scales)
+library(htmltools)
 
 
 setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
 setwd("~/Desktop/Treino Estágio 2020-2021/Rt_COVID19")
+setwd("C:/Users/ines/Documents/Estágio Epidemiologia/COVID19/Rt_COVID19")
 
 
 #Data
@@ -73,14 +75,14 @@ covid19pt <- mutate(covid19pt,
 
 # Criar tabela
 covid19pt_var <- covid19pt %>%
-    select(
-        data, confirmados_var, confirmados_var_norte, confirmados_var_centro, confirmados_var_lvt, confirmados_var_alentejo, confirmados_var_algarve, confirmados_var_acores, confirmados_var_madeira
-    )
+  select(
+    data, confirmados_var, confirmados_var_norte, confirmados_var_centro, confirmados_var_lvt, confirmados_var_alentejo, confirmados_var_algarve, confirmados_var_acores, confirmados_var_madeira
+  )
 
 # Previsão da evolução
 covid_pt_var <- covid19pt_var  %>%
-    filter(covid19pt_var$data > as.Date("2020-02-28")) %>%       
-    dplyr::mutate(t_start = dplyr::row_number())
+  filter(covid19pt_var$data > as.Date("2020-02-28")) %>%       
+  dplyr::mutate(t_start = dplyr::row_number())
 
 
 # Estimativa do Rt, segundo uma janela de 7 dias, recorrendo ao EpiEstim, ajustado aos casos importados e assumindo o seguinte serial interval (método uncertain), presente em https://cmmid.github.io/topics/covid19/current-patterns-transmission/global-time-varying-transmission.html:
@@ -89,17 +91,17 @@ covid_pt_var <- covid19pt_var  %>%
 
 ## Definir o Serial Interval e janela de visualização para Portugal e Regiões
 sens_configs <- 
-    make_config(
-        list(
-            mean_si = 4.7, std_mean_si = 0.7,
-            min_mean_si = 3.7, max_mean_si = 6.0,
-            std_si = 2.9, std_std_si = 0.5,
-            min_std_si = 1.9, max_std_si = 4.9,
-            n1 = 1000,
-            n2 = 100,
-            seed = 123456789
-        )
+  make_config(
+    list(
+      mean_si = 4.7, std_mean_si = 0.7,
+      min_mean_si = 3.7, max_mean_si = 6.0,
+      std_si = 2.9, std_std_si = 0.5,
+      min_std_si = 1.9, max_std_si = 4.9,
+      n1 = 1000,
+      n2 = 100,
+      seed = 123456789
     )
+  )
 
 
 
@@ -120,29 +122,29 @@ sample_windows <- seq(length(Rt_nonparam_si$R$t_start))
 # Map function: applies a function to each element of a list and returns an object of the same type as the input 
 # Criar um data frame com valores de R
 posterior_R_t <- 
-    map(.x = sample_windows,
-        .f = function(x) {
-            ## Sample from  the posterior R distribution
-            posterior_sample_obj <- 
-                sample_posterior_R(
-                    R = Rt_nonparam_si,
-                    n = 1000, 
-                    window = x )
-            ## Returns a data frame
-            posterior_sample_estim <- 
-                data.frame(
-                    window_index = x,
-                    window_t_start = Rt_nonparam_si$R$t_start[x],
-                    window_t_end = Rt_nonparam_si$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj),
-                    R_e_q0025 = quantile(posterior_sample_obj, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj, probs = 0.975))
-            
-            return(posterior_sample_estim)}
-    ) %>% 
-    ##Combines elements into a single value
-    reduce(bind_rows)
+  map(.x = sample_windows,
+      .f = function(x) {
+        ## Sample from  the posterior R distribution
+        posterior_sample_obj <- 
+          sample_posterior_R(
+            R = Rt_nonparam_si,
+            n = 1000, 
+            window = x )
+        ## Returns a data frame
+        posterior_sample_estim <- 
+          data.frame(
+            window_index = x,
+            window_t_start = Rt_nonparam_si$R$t_start[x],
+            window_t_end = Rt_nonparam_si$R$t_end[x],
+            date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si$R$t_end[x], "data"],
+            R_e_median = median(posterior_sample_obj),
+            R_e_q0025 = quantile(posterior_sample_obj, probs = 0.025),
+            R_e_q0975 = quantile(posterior_sample_obj, probs = 0.975))
+        
+        return(posterior_sample_estim)}
+  ) %>% 
+  ##Combines elements into a single value
+  reduce(bind_rows)
 
 
 # Aplicar a função Estimate_R
@@ -200,16 +202,16 @@ gráfico_PT <- ggplot(posterior_R_t, aes(x = date_point, y = R_e_median)) +
         axis.text.x = element_text(angle = 60, hjust = 1),
         axis.title.y = element_text(size = 7),
         axis.title.x = element_text(size = 7)) +
- 
-   scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
-                limits = c(min(covid_pt_var$data), max(posterior_R_t$date_point))) +
+  
+  scale_x_date(date_breaks = "2 weeks", labels = date_format("%b %d"), 
+               limits = c(min(covid_pt_var$data), max(posterior_R_t$date_point))) +
   
   scale_y_continuous(breaks = c(0:15), limits = c(0, 15)) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18", "2020-10-15", "2020-11-09"))), linetype= c("solid", "dotted", "twodash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
- 
-   ##Adicionar último valor de Rt no gráfico
+  
+  ##Adicionar último valor de Rt no gráfico
   geom_pointrange(data = last(posterior_R_t), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_R_t$date_point), y = last(posterior_R_t$R_e_median) - 0.5, label = round(last(posterior_R_t$R_e_median), digits = 3), size = 3)
 
@@ -299,7 +301,7 @@ gráfico_Norte <- ggplot(posterior_R_t1, aes(x = date_point, y = R_e_median)) +
 
 ggplotly(gráfico_Norte, tooltip = "text") %>%
   layout(title = list(text = paste0("ARS Norte", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
-                      legend = list(x = 100, y = 0.5))
+         legend = list(x = 100, y = 0.5))
 
 
 
@@ -384,11 +386,11 @@ ggplotly(gráfico_Centro, tooltip = "text") %>%
 
 # Rt ARS Lisboa e Vale do Tejo
 Rt_nonparam_si3 <- 
-    estimate_R(
-        covid_pt_var$confirmados_var_lvt, 
-        method = "uncertain_si",
-        config = sens_configs
-    )
+  estimate_R(
+    covid_pt_var$confirmados_var_lvt, 
+    method = "uncertain_si",
+    config = sens_configs
+  )
 
 ## Gráfico
 #plot(Rt_nonparam_si3, legend = FALSE)
@@ -397,33 +399,33 @@ Rt_nonparam_si3 <-
 sample_windows3 <- seq(length(Rt_nonparam_si3$R$t_start))
 
 posterior_R_t3 <- 
-    map(
-        .x = sample_windows3,
-        .f = function(x) {
-            
-            posterior_sample_obj3 <- 
-                sample_posterior_R(
-                    R = Rt_nonparam_si3,
-                    n = 1000, 
-                    window = x
-                )
-            
-            posterior_sample_estim3 <- 
-                data.frame(
-                    window_index = x,
-                    window_t_start = Rt_nonparam_si3$R$t_start[x],
-                    window_t_end = Rt_nonparam_si3$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si3$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj3),
-                    R_e_q0025 = quantile(posterior_sample_obj3, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj3, probs = 0.975)
-                )
-            
-            return(posterior_sample_estim3)
-            
-        }
-    ) %>% 
-    reduce(bind_rows)
+  map(
+    .x = sample_windows3,
+    .f = function(x) {
+      
+      posterior_sample_obj3 <- 
+        sample_posterior_R(
+          R = Rt_nonparam_si3,
+          n = 1000, 
+          window = x
+        )
+      
+      posterior_sample_estim3 <- 
+        data.frame(
+          window_index = x,
+          window_t_start = Rt_nonparam_si3$R$t_start[x],
+          window_t_end = Rt_nonparam_si3$R$t_end[x],
+          date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si3$R$t_end[x], "data"],
+          R_e_median = median(posterior_sample_obj3),
+          R_e_q0025 = quantile(posterior_sample_obj3, probs = 0.025),
+          R_e_q0975 = quantile(posterior_sample_obj3, probs = 0.975)
+        )
+      
+      return(posterior_sample_estim3)
+      
+    }
+  ) %>% 
+  reduce(bind_rows)
 
 
 ## GRÁFICO GGPLOT
@@ -466,11 +468,11 @@ ggplotly(gráfico_LVT, tooltip = "text") %>%
 
 # Rt ARS Alentejo
 Rt_nonparam_si4 <- 
-    estimate_R(
-        covid_pt_var$confirmados_var_alentejo, 
-        method = "uncertain_si",
-        config = sens_configs
-    )
+  estimate_R(
+    covid_pt_var$confirmados_var_alentejo, 
+    method = "uncertain_si",
+    config = sens_configs
+  )
 
 ## Gráfico
 #plot(Rt_nonparam_si4, legend = FALSE)
@@ -479,33 +481,33 @@ Rt_nonparam_si4 <-
 sample_windows4 <- seq(length(Rt_nonparam_si4$R$t_start))
 
 posterior_R_t4 <- 
-    map(
-        .x = sample_windows4,
-        .f = function(x) {
-            
-            posterior_sample_obj4 <- 
-                sample_posterior_R(
-                    R = Rt_nonparam_si4,
-                    n = 1000, 
-                    window = x
-                )
-            
-            posterior_sample_estim4 <- 
-                data.frame(
-                    window_index = x,
-                    window_t_start = Rt_nonparam_si4$R$t_start[x],
-                    window_t_end = Rt_nonparam_si4$R$t_end[x],
-                    date_point = covid19pt_var[covid_pt_var$t_start == Rt_nonparam_si4$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj4),
-                    R_e_q0025 = quantile(posterior_sample_obj4, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj4, probs = 0.975)
-                )
-            
-            return(posterior_sample_estim4)
-            
-        }
-    ) %>% 
-    reduce(bind_rows)
+  map(
+    .x = sample_windows4,
+    .f = function(x) {
+      
+      posterior_sample_obj4 <- 
+        sample_posterior_R(
+          R = Rt_nonparam_si4,
+          n = 1000, 
+          window = x
+        )
+      
+      posterior_sample_estim4 <- 
+        data.frame(
+          window_index = x,
+          window_t_start = Rt_nonparam_si4$R$t_start[x],
+          window_t_end = Rt_nonparam_si4$R$t_end[x],
+          date_point = covid19pt_var[covid_pt_var$t_start == Rt_nonparam_si4$R$t_end[x], "data"],
+          R_e_median = median(posterior_sample_obj4),
+          R_e_q0025 = quantile(posterior_sample_obj4, probs = 0.025),
+          R_e_q0975 = quantile(posterior_sample_obj4, probs = 0.975)
+        )
+      
+      return(posterior_sample_estim4)
+      
+    }
+  ) %>% 
+  reduce(bind_rows)
 
 
 
@@ -548,11 +550,11 @@ ggplotly(gráfico_Alentejo, tooltip = "text") %>%
 
 # Rt ARS Algarve
 Rt_nonparam_si5 <- 
-    estimate_R(
-        covid_pt_var$confirmados_var_algarve, 
-        method = "uncertain_si",
-        config = sens_configs
-    )
+  estimate_R(
+    covid_pt_var$confirmados_var_algarve, 
+    method = "uncertain_si",
+    config = sens_configs
+  )
 
 ## Gráfico
 #plot(Rt_nonparam_si5, legend = FALSE)
@@ -561,33 +563,33 @@ Rt_nonparam_si5 <-
 sample_windows5 <- seq(length(Rt_nonparam_si5$R$t_start))
 
 posterior_R_t5 <- 
-    map(
-        .x = sample_windows5,
-        .f = function(x) {
-            
-            posterior_sample_obj5 <- 
-                sample_posterior_R(
-                    R = Rt_nonparam_si5,
-                    n = 1000, 
-                    window = x
-                )
-            
-            posterior_sample_estim5 <- 
-                data.frame(
-                    window_index = x,
-                    window_t_start = Rt_nonparam_si5$R$t_start[x],
-                    window_t_end = Rt_nonparam_si5$R$t_end[x],
-                    date_point = covid19pt_var[covid_pt_var$t_start == Rt_nonparam_si5$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj5),
-                    R_e_q0025 = quantile(posterior_sample_obj5, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj5, probs = 0.975)
-                )
-            
-            return(posterior_sample_estim5)
-            
-        }
-    ) %>% 
-    reduce(bind_rows)
+  map(
+    .x = sample_windows5,
+    .f = function(x) {
+      
+      posterior_sample_obj5 <- 
+        sample_posterior_R(
+          R = Rt_nonparam_si5,
+          n = 1000, 
+          window = x
+        )
+      
+      posterior_sample_estim5 <- 
+        data.frame(
+          window_index = x,
+          window_t_start = Rt_nonparam_si5$R$t_start[x],
+          window_t_end = Rt_nonparam_si5$R$t_end[x],
+          date_point = covid19pt_var[covid_pt_var$t_start == Rt_nonparam_si5$R$t_end[x], "data"],
+          R_e_median = median(posterior_sample_obj5),
+          R_e_q0025 = quantile(posterior_sample_obj5, probs = 0.025),
+          R_e_q0975 = quantile(posterior_sample_obj5, probs = 0.975)
+        )
+      
+      return(posterior_sample_estim5)
+      
+    }
+  ) %>% 
+  reduce(bind_rows)
 
 
 ## GRÁFICO GGPLOT
@@ -620,7 +622,7 @@ gráfico_Algarve <- ggplot(posterior_R_t5, aes(x = date_point, y = R_e_median)) 
 
 
 ggplotly(gráfico_Algarve, tooltip = "text") %>%
-  layout(title = list(text = paste0("ARS Norte", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
+  layout(title = list(text = paste0("ARS Algarve", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
          legend = list(x = 100, y = 0.5))
 
 
@@ -629,11 +631,11 @@ ggplotly(gráfico_Algarve, tooltip = "text") %>%
 
 # Rt ARS Açores
 Rt_nonparam_si6 <- 
-    estimate_R(
-        covid_pt_var$confirmados_var_acores, 
-        method = "uncertain_si",
-        config = sens_configs
-    )
+  estimate_R(
+    covid_pt_var$confirmados_var_acores, 
+    method = "uncertain_si",
+    config = sens_configs
+  )
 
 ## Gráfico
 #plot(Rt_nonparam_si6, legend = FALSE)
@@ -642,33 +644,33 @@ Rt_nonparam_si6 <-
 sample_windows6 <- seq(length(Rt_nonparam_si6$R$t_start))
 
 posterior_R_t6 <- 
-    map(
-        .x = sample_windows6,
-        .f = function(x) {
-            
-            posterior_sample_obj6 <- 
-                sample_posterior_R(
-                    R = Rt_nonparam_si6,
-                    n = 1000, 
-                    window = x
-                )
-            
-            posterior_sample_estim6 <- 
-                data.frame(
-                    window_index = x,
-                    window_t_start = Rt_nonparam_si6$R$t_start[x],
-                    window_t_end = Rt_nonparam_si6$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si6$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj6),
-                    R_e_q0025 = quantile(posterior_sample_obj6, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj6, probs = 0.975)
-                )
-            
-            return(posterior_sample_estim6)
-            
-        }
-    ) %>% 
-    reduce(bind_rows)
+  map(
+    .x = sample_windows6,
+    .f = function(x) {
+      
+      posterior_sample_obj6 <- 
+        sample_posterior_R(
+          R = Rt_nonparam_si6,
+          n = 1000, 
+          window = x
+        )
+      
+      posterior_sample_estim6 <- 
+        data.frame(
+          window_index = x,
+          window_t_start = Rt_nonparam_si6$R$t_start[x],
+          window_t_end = Rt_nonparam_si6$R$t_end[x],
+          date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si6$R$t_end[x], "data"],
+          R_e_median = median(posterior_sample_obj6),
+          R_e_q0025 = quantile(posterior_sample_obj6, probs = 0.025),
+          R_e_q0975 = quantile(posterior_sample_obj6, probs = 0.975)
+        )
+      
+      return(posterior_sample_estim6)
+      
+    }
+  ) %>% 
+  reduce(bind_rows)
 
 
 ## GRÁFICO GGPLOT
@@ -697,7 +699,7 @@ gráfico_Açores <- ggplot(posterior_R_t6, aes(x = date_point, y = R_e_median)) 
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-16", "2020-03-18","2020-03-26", "2020-05-17", "2020-11-09"))), linetype= c("twodash", "dotted", "solid", "dotdash", "dotted"), colour = "indianred4", alpha = 0.5) +
   geom_vline(data=d_azo, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = 'indianred4', alpha = 0.5, show.legend = FALSE) +
-
+  
   ##Adicionar último valor de Rt no gráfico
   geom_pointrange(data = last(posterior_R_t6), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_R_t6$date_point), y = last(posterior_R_t6$R_e_median) - 0.5, label = round(last(posterior_R_t6$R_e_median), digits = 3), size = 3)
@@ -712,11 +714,11 @@ ggplotly(gráfico_Açores, tooltip = "text") %>%
 
 # Rt ARS Madeira
 Rt_nonparam_si7 <- 
-    estimate_R(
-        covid_pt_var$confirmados_var_madeira, 
-        method = "uncertain_si",
-        config = sens_configs
-    )
+  estimate_R(
+    covid_pt_var$confirmados_var_madeira, 
+    method = "uncertain_si",
+    config = sens_configs
+  )
 
 ## Gráfico
 #plot(Rt_nonparam_si7, legend = FALSE)
@@ -725,33 +727,33 @@ Rt_nonparam_si7 <-
 sample_windows7 <- seq(length(Rt_nonparam_si7$R$t_start))
 
 posterior_R_t7 <- 
-    map(
-        .x = sample_windows7,
-        .f = function(x) {
-            
-            posterior_sample_obj7 <- 
-                sample_posterior_R(
-                    R = Rt_nonparam_si7,
-                    n = 1000, 
-                    window = x
-                )
-            
-            posterior_sample_estim7 <- 
-                data.frame(
-                    window_index = x,
-                    window_t_start = Rt_nonparam_si7$R$t_start[x],
-                    window_t_end = Rt_nonparam_si7$R$t_end[x],
-                    date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si7$R$t_end[x], "data"],
-                    R_e_median = median(posterior_sample_obj7),
-                    R_e_q0025 = quantile(posterior_sample_obj7, probs = 0.025),
-                    R_e_q0975 = quantile(posterior_sample_obj7, probs = 0.975)
-                )
-            
-            return(posterior_sample_estim7)
-            
-        }
-    ) %>% 
-    reduce(bind_rows)
+  map(
+    .x = sample_windows7,
+    .f = function(x) {
+      
+      posterior_sample_obj7 <- 
+        sample_posterior_R(
+          R = Rt_nonparam_si7,
+          n = 1000, 
+          window = x
+        )
+      
+      posterior_sample_estim7 <- 
+        data.frame(
+          window_index = x,
+          window_t_start = Rt_nonparam_si7$R$t_start[x],
+          window_t_end = Rt_nonparam_si7$R$t_end[x],
+          date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si7$R$t_end[x], "data"],
+          R_e_median = median(posterior_sample_obj7),
+          R_e_q0025 = quantile(posterior_sample_obj7, probs = 0.025),
+          R_e_q0975 = quantile(posterior_sample_obj7, probs = 0.975)
+        )
+      
+      return(posterior_sample_estim7)
+      
+    }
+  ) %>% 
+  reduce(bind_rows)
 
 ## GRÁFICO GGPLOT
 d_mad=data.frame(date=as.Date(c("2020-03-15", "2020-03-18", "2020-05-11", "2020-05-28", "2020-11-09")), Evento = c("Quarentena obrigatória para todos os passageiros", "Estado de Emergência Nacional", "Início do desconfinamento", "Obrigatoriedade de teste negativo e/ou quarentena para todos os passageiros", "Estado de Emergência Nacional"))
@@ -830,7 +832,7 @@ Rt_regioes_tempo_graph <- ggplot(regioes_Rt_tempo, aes(x = Data, y = Rt_Médio, 
   xlab("Regiões") +
   ylab("Rt Médio") +
   labs(title="Evolução do Rt por regiões ao longo do tempo") +
-
+  
   theme(legend.title = element_blank(),
         axis.text.y = element_text(size = 7),
         axis.text.x = element_text(size = 7)) +
@@ -842,21 +844,116 @@ Rt_regioes_tempo_graph <- ggplot(regioes_Rt_tempo, aes(x = Data, y = Rt_Médio, 
   scale_x_date(
     date_breaks = "2 weeks", labels = date_format("%b %d"),
     limits = c(min(covid_pt_var$data), max(posterior_R_t7$date_point))) +
- 
-   scale_y_continuous(
+  
+  scale_y_continuous(
     breaks = 0:ceiling(max(posterior_R_t7$R_e_q0975)),
     limits = c(0, NA)
   )
-  
-  
+
 ### Fazer com que gráfico seja interativo
-ggplotly(Rt_regioes_tempo_graph, tooltip = "text") %>% 
+Rt_regioes_tempo_graph_interativo <- ggplotly(Rt_regioes_tempo_graph, tooltip = "text") %>% 
   layout(yaxis = list(title = paste0(c(rep("&nbsp;", 20),
                                        "Rt Médio",
                                        rep("&nbsp;", 20),
                                        rep("\n&nbsp;", 2)),
                                      collapse = "")),
          legend = list(x = 1, y = 0))
+Rt_regioes_tempo_graph_interativo
+
+###Tabela com todas as regioes
+#Portugal
+portugal <- as.data.frame(cbind(posterior_R_t$R_e_median))
+portugal <- as.data.frame(cbind(posterior_R_t$date_point, portugal))
+names(portugal) <- c("Data", "Portugal")
+portugal <- reshape2::melt(portugal, id.vars="Data")
+portugal <- cbind(portugal, posterior_R_t$R_e_q0025, posterior_R_t$R_e_q0975)
+names(portugal) <- c("Data", "Regiao", "mean", "min", "max")
 
 
+#Norte 
+norte <- as.data.frame(cbind(posterior_R_t1$R_e_median))
+norte <- as.data.frame(cbind(posterior_R_t1$date_point, norte))
+names(norte) <- c("Data", "Norte")
+norte <- reshape2::melt(norte, id.vars = "Data")
+norte <- cbind(norte, posterior_R_t1$R_e_q0025, posterior_R_t1$R_e_q0975)
+names(norte) <- c("Data", "Regiao", "mean", "min", "max")
 
+
+#Centro
+centro <- as.data.frame(cbind(posterior_R_t2$R_e_median))
+centro <- as.data.frame(cbind(posterior_R_t2$date_point, centro))
+names(centro) <- c("Data", "Centro")
+centro <- reshape2::melt(centro, id.vars="Data")
+centro <- cbind(centro, posterior_R_t2$R_e_q0025, posterior_R_t2$R_e_q0975)
+names(centro) <- c("Data", "Regiao", "mean", "min", "max")
+
+#LVT
+lvt <- as.data.frame(cbind(posterior_R_t3$R_e_median))
+lvt <- as.data.frame(cbind(posterior_R_t3$date_point, lvt))
+names(lvt) <- c("Data", "Lisboa e VT")
+lvt <- reshape2::melt(lvt, id.vars= "Data")
+lvt <- cbind(lvt, posterior_R_t3$R_e_q0025, posterior_R_t3$R_e_q0975)
+names(lvt) <- c("Data", "Regiao", "mean", "min", "max")
+
+#Alentejo
+alentejo <- as.data.frame(cbind(posterior_R_t4$R_e_median))
+alentejo <- as.data.frame(cbind(posterior_R_t4$date_point, alentejo))
+names(alentejo) <- c("Data", "Alentejo")
+alentejo <- reshape2::melt(alentejo, id.vars= "Data")
+alentejo <- cbind(alentejo, posterior_R_t4$R_e_q0025, posterior_R_t4$R_e_q0975)
+names(alentejo) <- c("Data", "Regiao", "mean", "min", "max")
+
+#Algarve
+algarve <- as.data.frame(cbind(posterior_R_t5$R_e_median))
+algarve <- as.data.frame(cbind(posterior_R_t5$date_point, algarve))
+names(algarve) <- c("Data", "Algarve")
+algarve <- reshape2::melt(algarve, id.vars= "Data")
+algarve <- cbind(algarve, posterior_R_t5$R_e_q0025, posterior_R_t5$R_e_q0975)
+names(algarve) <- c("Data", "Regiao", "mean", "min", "max")
+
+#Açores
+acores <- as.data.frame(cbind(posterior_R_t6$R_e_median))
+acores <- as.data.frame(cbind(posterior_R_t6$date_point, acores))
+names(acores) <- c("Data", "Açores")
+acores <- reshape2::melt(acores, id.vars= "Data")
+acores <- cbind(acores, posterior_R_t6$R_e_q0025, posterior_R_t6$R_e_q0975)
+names(acores) <- c("Data", "Regiao", "mean", "min", "max")
+
+#Madeira
+madeira <- as.data.frame(cbind(posterior_R_t7$R_e_median))
+madeira <- as.data.frame(cbind(posterior_R_t7$date_point, madeira))
+names(madeira) <- c("Data", "Madeira")
+madeira <- reshape2::melt(madeira, id.vars= "Data")
+madeira <- cbind(madeira, posterior_R_t7$R_e_q0025, posterior_R_t7$R_e_q0975)
+names(madeira) <- c("Data", "Regiao", "mean", "min", "max")
+
+##juntar todas as regioes
+regioes_erro <- as.data.frame(rbind(portugal, norte, centro, lvt, alentejo, algarve, acores, madeira))
+
+##Grafico
+
+grafico_err <- ggplot(regioes_erro, aes(x = Data, y = mean, group = 1, color = Regiao)) + 
+  geom_pointrange(aes(ymin=min, ymax=max),
+                  stat = "identity",
+                  position = "identity",
+                  size = 0.3,
+                  alpha = 0.4,
+                  linetype = "solid")+
+  theme_minimal()
+
+grafico_err_interativo <- ggplotly(grafico_err, tooltip = "text") %>%
+  layout(title = list(text = paste0("Regiões", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
+         legend = list(x = 100, y = 0.5))
+
+grafico_err_interativo 
+
+#Juntar os dois graficos
+browsable(tagList(list(
+    tags$div(
+      style = 'width:50%;display:block;float:left;',
+      Rt_regioes_tempo_graph_interativo),
+    tags$div(
+      style = 'width:50%;display:block;float:left;',
+      grafico_err_interativo))))
+
+  
