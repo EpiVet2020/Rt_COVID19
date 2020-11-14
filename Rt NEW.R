@@ -860,100 +860,22 @@ Rt_regioes_tempo_graph_interativo <- ggplotly(Rt_regioes_tempo_graph, tooltip = 
          legend = list(x = 1, y = 0))
 Rt_regioes_tempo_graph_interativo
 
-###Tabela com todas as regioes
-#Portugal
-portugal <- as.data.frame(cbind(posterior_R_t$R_e_median))
-portugal <- as.data.frame(cbind(posterior_R_t$date_point, portugal))
-names(portugal) <- c("Data", "Portugal")
-portugal <- reshape2::melt(portugal, id.vars="Data")
-portugal <- cbind(portugal, posterior_R_t$R_e_q0025, posterior_R_t$R_e_q0975)
-names(portugal) <- c("Data", "Regiao", "mean", "min", "max")
+# Gráfico bolinhas último Rt
+## Tabela com último Rt para cada região
+last_Rt <- as.data.frame(rbind(last(posterior_R_t), last(posterior_R_t1), last(posterior_R_t2), last(posterior_R_t3), last(posterior_R_t4), last(posterior_R_t5), last(posterior_R_t6), last(posterior_R_t7)))
+last_Rt <- last_Rt[, -c(1:4)]
+last_Rt <- cbind(c("Portugal", "Norte", "Centro", "LVT", "Alentejo", "Algarve", "Açores", "Madeira"), last_Rt)
+names(last_Rt)[1] <- "regioes"
 
-
-#Norte 
-norte <- as.data.frame(cbind(posterior_R_t1$R_e_median))
-norte <- as.data.frame(cbind(posterior_R_t1$date_point, norte))
-names(norte) <- c("Data", "Norte")
-norte <- reshape2::melt(norte, id.vars = "Data")
-norte <- cbind(norte, posterior_R_t1$R_e_q0025, posterior_R_t1$R_e_q0975)
-names(norte) <- c("Data", "Regiao", "mean", "min", "max")
-
-
-#Centro
-centro <- as.data.frame(cbind(posterior_R_t2$R_e_median))
-centro <- as.data.frame(cbind(posterior_R_t2$date_point, centro))
-names(centro) <- c("Data", "Centro")
-centro <- reshape2::melt(centro, id.vars="Data")
-centro <- cbind(centro, posterior_R_t2$R_e_q0025, posterior_R_t2$R_e_q0975)
-names(centro) <- c("Data", "Regiao", "mean", "min", "max")
-
-#LVT
-lvt <- as.data.frame(cbind(posterior_R_t3$R_e_median))
-lvt <- as.data.frame(cbind(posterior_R_t3$date_point, lvt))
-names(lvt) <- c("Data", "Lisboa e VT")
-lvt <- reshape2::melt(lvt, id.vars= "Data")
-lvt <- cbind(lvt, posterior_R_t3$R_e_q0025, posterior_R_t3$R_e_q0975)
-names(lvt) <- c("Data", "Regiao", "mean", "min", "max")
-
-#Alentejo
-alentejo <- as.data.frame(cbind(posterior_R_t4$R_e_median))
-alentejo <- as.data.frame(cbind(posterior_R_t4$date_point, alentejo))
-names(alentejo) <- c("Data", "Alentejo")
-alentejo <- reshape2::melt(alentejo, id.vars= "Data")
-alentejo <- cbind(alentejo, posterior_R_t4$R_e_q0025, posterior_R_t4$R_e_q0975)
-names(alentejo) <- c("Data", "Regiao", "mean", "min", "max")
-
-#Algarve
-algarve <- as.data.frame(cbind(posterior_R_t5$R_e_median))
-algarve <- as.data.frame(cbind(posterior_R_t5$date_point, algarve))
-names(algarve) <- c("Data", "Algarve")
-algarve <- reshape2::melt(algarve, id.vars= "Data")
-algarve <- cbind(algarve, posterior_R_t5$R_e_q0025, posterior_R_t5$R_e_q0975)
-names(algarve) <- c("Data", "Regiao", "mean", "min", "max")
-
-#Açores
-acores <- as.data.frame(cbind(posterior_R_t6$R_e_median))
-acores <- as.data.frame(cbind(posterior_R_t6$date_point, acores))
-names(acores) <- c("Data", "Açores")
-acores <- reshape2::melt(acores, id.vars= "Data")
-acores <- cbind(acores, posterior_R_t6$R_e_q0025, posterior_R_t6$R_e_q0975)
-names(acores) <- c("Data", "Regiao", "mean", "min", "max")
-
-#Madeira
-madeira <- as.data.frame(cbind(posterior_R_t7$R_e_median))
-madeira <- as.data.frame(cbind(posterior_R_t7$date_point, madeira))
-names(madeira) <- c("Data", "Madeira")
-madeira <- reshape2::melt(madeira, id.vars= "Data")
-madeira <- cbind(madeira, posterior_R_t7$R_e_q0025, posterior_R_t7$R_e_q0975)
-names(madeira) <- c("Data", "Regiao", "mean", "min", "max")
-
-##juntar todas as regioes
-regioes_erro <- as.data.frame(rbind(portugal, norte, centro, lvt, alentejo, algarve, acores, madeira))
-
-##Grafico
-
-grafico_err <- ggplot(regioes_erro, aes(x = Data, y = mean, group = 1, color = Regiao)) + 
-  geom_pointrange(aes(ymin=min, ymax=max),
-                  stat = "identity",
-                  position = "identity",
-                  size = 0.3,
-                  alpha = 0.4,
-                  linetype = "solid")+
-  theme_minimal()
-
-grafico_err_interativo <- ggplotly(grafico_err, tooltip = "text") %>%
-  layout(title = list(text = paste0("Regiões", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
-         legend = list(x = 100, y = 0.5))
-
-grafico_err_interativo 
-
-#Juntar os dois graficos
-browsable(tagList(list(
-    tags$div(
-      style = 'width:50%;display:block;float:left;',
-      Rt_regioes_tempo_graph_interativo),
-    tags$div(
-      style = 'width:50%;display:block;float:left;',
-      grafico_err_interativo))))
-
-  
+##GGPlot
+ggplot(last_Rt, aes(x = regioes, y = R_e_median, color = regioes)) + 
+  labs(title = "Rt atual em Portugal e nas suas ARS",
+       x = "Região",
+       y = "Número Reprodutivo Efetivo (Rt)") +
+  theme_minimal() +
+  theme(plot.title = element_text(size=10, face= "bold"),
+        axis.title.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10)) +
+  scale_y_continuous(breaks = seq(0, max(last_Rt$R_e_q0975), by = 0.1)) + 
+  geom_pointrange(aes(ymin = R_e_q0025, ymax = R_e_q0975), size = 1.1, alpha = 1) + 
+  geom_hline(yintercept = 1, colour = "grey65")
