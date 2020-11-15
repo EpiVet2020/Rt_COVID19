@@ -1,6 +1,6 @@
 ---
 title: "Análise comparativa entre Rt de diferentes países"
-author: Inês Marçal Antunes, Sara Sequeira e Teresa da Penha Coutinho
+author: Teresa da Penha Coutinho, Sara Sequeira e Inês Marçal Antunes
 date: "Novembro, 2020"
 output:
   html_document:
@@ -2298,6 +2298,16 @@ ggplotly(graph_bra, tooltip = "text", width = 900, height = 450) %>%
 
 ```
 
+
+<br>
+
+## **Análise do Número Efetivo Reprodutivo a nível internacional**
+***
+
+No gráfico representado, podemos avaliar o valor de Rt mais atual associado a cada país.
+
+<br>
+
 ```{r, fig.align="center", warning = FALSE, message = FALSE}
 
 #Data
@@ -2362,7 +2372,6 @@ posterior_R_t <-
 
 
 
-
 # Gráfico último Rt
 ## Tabela com último Rt para cada país
 last_Rt_paises <- last_Rt <- as.data.frame(rbind(last(posterior_R_t), last(posterior_Rt_it), last(posterior_Rt_ger), last(posterior_Rt_spa), last(posterior_Rt_bel), last(posterior_Rt_cz), last(posterior_Rt_swi), last(posterior_Rt_swe), last(posterior_Rt_uk), last(posterior_Rt_aus), last(posterior_Rt_india), last(posterior_Rt_hk), last(posterior_Rt_chi), last(posterior_Rt_usa), last(posterior_Rt_jap), last(posterior_Rt_mex), last(posterior_Rt_kor), last(posterior_Rt_bra)))
@@ -2384,9 +2393,10 @@ ggplot(last_Rt_paises, aes(x = País, y = R_e_median, color = País)) +
   geom_pointrange(aes(ymin = R_e_q0025, ymax = R_e_q0975), size = 0.5, alpha = 0.8) +
   geom_text_repel(label = round((last_Rt$R_e_median), digits = 2), color = "black", size = 2.5) +  
   geom_hline(yintercept = 1, colour = "grey65")
+
 ```
 
-
+<br>
 
 
 ## **Conclusão**
@@ -2406,9 +2416,9 @@ $~$
 <center> 
  **Um trabalho de**
 
-Inês Marçal Antunes [`r icon::fa("linkedin")`](https://www.linkedin.com/in/in%C3%AAs-antunes-b332401b9/) | Sara Sequeira [`r icon::fa("linkedin")`](https://www.linkedin.com/in/sara-sequeira-1b5085152/) | Teresa da Penha Coutinho [`r icon::fa("linkedin")`](https://www.linkedin.com/in/teresa-da-penha-coutinho/)
+Teresa da Penha Coutinho [`r icon::fa("linkedin")`](https://www.linkedin.com/in/teresa-da-penha-coutinho/) | Sara Sequeira [`r icon::fa("linkedin")`](https://www.linkedin.com/in/sara-sequeira-1b5085152/) | Inês Marçal Antunes [`r icon::fa("linkedin")`](https://www.linkedin.com/in/in%C3%AAs-antunes-b332401b9/) | 
 
-ines.marcal.antunes@gmail.com; sarasequeira5@hotmail.com; teresa.jesus.coutinho@gmail.com; 
+teresa.jesus.coutinho@gmail.com; sarasequeira5@hotmail.com; ines.marcal.antunes@gmail.com; 
 
 [`r icon::fa("github")`](https://github.com/EpiVet2020/Rt_COVID19.git)
 

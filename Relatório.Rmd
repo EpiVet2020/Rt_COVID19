@@ -1,7 +1,7 @@
 ---
 title: "Estimativa do Número de Reprodução Efetivo (Rt) da COVID19"
 subtitle: "Portugal e Administrações Regionais de Saúde"
-author: Inês Marçal Antunes, Sara Sequeira e Teresa da Penha Coutinho
+author: Sara Sequeira, Teresa da Penha Coutinho e Inês Marçal Antunes
 date: "Novembro, 2020"
 output:
   html_document:
@@ -1060,9 +1060,9 @@ $~$
 <center> 
  **Um trabalho de**
 
-Inês Marçal Antunes [`r icon::fa("linkedin")`](https://www.linkedin.com/in/in%C3%AAs-antunes-b332401b9/), Sara Sequeira [`r icon::fa("linkedin")`](https://www.linkedin.com/in/sara-sequeira-1b5085152/) e Teresa da Penha Coutinho [`r icon::fa("linkedin")`](https://www.linkedin.com/in/teresa-da-penha-coutinho/)
+Sara Sequeira [`r icon::fa("linkedin")`](https://www.linkedin.com/in/sara-sequeira-1b5085152/) | Teresa da Penha Coutinho [`r icon::fa("linkedin")`](https://www.linkedin.com/in/teresa-da-penha-coutinho/) | Inês Marçal Antunes [`r icon::fa("linkedin")`](https://www.linkedin.com/in/in%C3%AAs-antunes-b332401b9/)
 
-ines.marcal.antunes@gmail.com; sarasequeira5@hotmail.com; teresa.jesus.coutinho@gmail.com; 
+sarasequeira5@hotmail.com; teresa.jesus.coutinho@gmail.com; ines.marcal.antunes@gmail.com; 
 
 [`r icon::fa("github")`](https://github.com/EpiVet2020/Rt_COVID19.git)
 
