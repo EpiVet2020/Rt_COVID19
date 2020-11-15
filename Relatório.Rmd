@@ -943,9 +943,10 @@ plot <- ggplotly(gráfico_Madeira, tooltip = "text") %>%
 ### **Análise Comparativa entre Administrações Regionais de Saúde (ARS's)**
 ***
 
-Através do gráfico em baixo à esquerda, que sobrepõe a evolução do Número Reprodutivo Efetivo das várias ARS's, é possível realizar uma análise comparativa entre regiões. No gráfico do lado direito, estão identificados os Rt's atuais das diferentes ARS's.
+Através do gráfico, que sobrepõe a evolução do Número Reprodutivo Efetivo das várias ARS's, é possível realizar uma análise comparativa entre regiões.
+
 <br>
-```{r, figures-side, fig.show="hold", out.width="50%", message= FALSE}
+```{r, out.width="50%", message= FALSE}
 
 # Análise comparativa entre regiões
 ## Data frame com as regiões que começam no dia 7 de Março
@@ -1006,11 +1007,19 @@ ggplotly(Rt_regioes_tempo_graph, tooltip = "text") %>%
                                        rep("\n&nbsp;", 2)),
                                      collapse = "")),
          legend = list(x = 1, y = 0))
+```
+
+<br>
+
+## **Análise do Número Efetivo Reprodutivo em Portugal e suas ARS**
+***
+
+No gráfico representado, podemos avaliar o valor de Rt mais atual associado a cada país.
+
+<br>
 
 
-
-
-
+```{r, fig.show="hold", out.width="50%", message= FALSE}
 # Gráfico último Rt
 ## Tabela com último Rt para cada região
 last_Rt <- as.data.frame(rbind(last(posterior_R_t), last(posterior_R_t1), last(posterior_R_t2), last(posterior_R_t3), last(posterior_R_t4), last(posterior_R_t5), last(posterior_R_t6), last(posterior_R_t7)))
@@ -1032,7 +1041,6 @@ ggplot(last_Rt, aes(x = ARS, y = R_e_median, color = ARS)) +
   scale_shape_manual(values = c(18, 8, 11, 16, 4, 17, 9, 15)) +
   geom_text_repel(label = round((last_Rt$R_e_median), digits = 2), color = "black", size = 2.5) +
   geom_hline(yintercept = 1, colour = "grey65")
-
 ```
 
 ## **Conclusão**

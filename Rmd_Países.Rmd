@@ -2256,11 +2256,9 @@ posterior_Rt_bra <-
 ## Gráfico Brasil ggplot
 d_bra = data.frame(date=as.Date(c("2020-03-17", "2020-05-07", "2020-06-04")), Evento=c("Estado de Emergência - São Paulo e Rio de Janeiro", "Confinamento parcial obrigatório", "Levantamento gradual das medidas de restrição"))
 
-posterior_Rt_bra$date_point <- as.Date(posterior_Rt_bra$date_point)
-
 graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "cadetblue",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
-                                                                              '<br>Rt médio: ', R_e_median))) +
+                                                                                      '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "cadetblue") +
   
   labs( title = " Brasil", size= 10,
@@ -2290,13 +2288,76 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-05-07", "2020-06-04"))), linetype = c("twodash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
+  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_bra), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_bra$date_point), y = last(posterior_Rt_bra$R_e_median) - 0.5, label = round(last(posterior_Rt_bra$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_bra, tooltip = "text", width = 900, height = 450) %>%
   layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
+
+```
+
+```{r, fig.align="center", warning = FALSE, message = FALSE}
+
+#Data
+covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
+
+#Transformar para formato de data
+covid19pt$data <- as.Date(covid19pt$data,"%d-%m-%Y")
+
+# Criar novas variáveis da variação do nº confirmados (t - (t-1)) e criar uma tabela
+covid19pt <- mutate(covid19pt, 
+                    confirmados_lag = lag(confirmados),
+                    confirmados_var=confirmados-confirmados_lag)
+
+# Criar tabela
+covid19pt_var <- covid19pt %>%
+  select(
+    data, confirmados_var)
+
+# Previsão da evolução
+covid_pt_var <- covid19pt_var  %>%
+  filter(covid19pt_var$data > as.Date("2020-02-28")) %>%       
+  dplyr::mutate(t_start = dplyr::row_number())
+
+
+# Portugal
+# Aplicar a função Estimate_R
+Rt_nonparam_si <- estimate_R(covid_pt_var$confirmados_var, 
+                             method = "uncertain_si",
+                             config = sens_configs )
+
+## Determinação do Rt (sample from the posterior R distribution)
+## Definir a nossa janela com base no t_start
+sample_windows <- seq(length(Rt_nonparam_si$R$t_start))
+
+## Map function: applies a function to each element of a list and returns an object of the same type as the input 
+### Criar um data frame com valores de R
+posterior_R_t <- 
+  map(.x = sample_windows,
+      .f = function(x) {
+        ## Sample from  the posterior R distribution
+        posterior_sample_obj <- 
+          sample_posterior_R(
+            R = Rt_nonparam_si,
+            n = 1000, 
+            window = x )
+        ## Returns a data frame
+        posterior_sample_estim <- 
+          data.frame(
+            window_index = x,
+            window_t_start = Rt_nonparam_si$R$t_start[x],
+            window_t_end = Rt_nonparam_si$R$t_end[x],
+            date_point = covid_pt_var[covid_pt_var$t_start == Rt_nonparam_si$R$t_end[x], "data"],
+            R_e_median = median(posterior_sample_obj),
+            R_e_q0025 = quantile(posterior_sample_obj, probs = 0.025),
+            R_e_q0975 = quantile(posterior_sample_obj, probs = 0.975))
+        
+        return(posterior_sample_estim)}
+  ) %>% 
+  ##Combines elements into a single value
+  reduce(bind_rows)
 
 
 
@@ -2323,8 +2384,10 @@ ggplot(last_Rt_paises, aes(x = País, y = R_e_median, color = País)) +
   geom_pointrange(aes(ymin = R_e_q0025, ymax = R_e_q0975), size = 0.5, alpha = 0.8) +
   geom_text_repel(label = round((last_Rt$R_e_median), digits = 2), color = "black", size = 2.5) +  
   geom_hline(yintercept = 1, colour = "grey65")
-
 ```
+
+
+
 
 ## **Conclusão**
 ***
