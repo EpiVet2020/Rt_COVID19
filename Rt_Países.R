@@ -32,8 +32,6 @@ library(readr)
 library(readxl)
 library(scales)
 library(tibble)
-install_github("ropenscilabs/icon")
-library(icon)
 
 
 setwd("C:/Users/teres/Desktop/EPIVET/COVID19/Rt_COVID19")
@@ -182,22 +180,6 @@ covid_ger_var <- ger_var  %>%
   filter(ger_var$data > as.Date("2020-02-28")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Alemanha - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_ger <- estimate_R(as.numeric(covid_ger_var$confirmados_novos), 
                                  method = "uncertain_si",
@@ -299,22 +281,6 @@ covid_spa_var <- spa_var  %>%
   filter(spa_var$data > as.Date("2020-01-31")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Espanha - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_spa <- estimate_R(as.numeric(covid_spa_var$confirmados_novos), 
                                  method = "uncertain_si",
@@ -414,22 +380,6 @@ covid_bel_var <- bel_var  %>%
   # Neste caso não se filtrou > 28-02-2020 , uma vez que só reportaram a partir de Março.
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Bélgica - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_bel <- estimate_R(as.numeric(covid_bel_var$confirmados_novos), 
                                  method = "uncertain_si",
@@ -515,12 +465,11 @@ ggplotly(graph_bel, tooltip = "text", width = 900, height = 450) %>%
 
 
 
-
 # REPÚBLICA CHECA (https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19)
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 ## Alterar formato para data
-czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d")
+czechr$datum <- as.Date(czechr$datum, "%Y-%m-%d")
 
 ## Tabela confirmados novos
 cz_var <- czechr %>%
@@ -532,21 +481,6 @@ names(cz_var) <- c("data", "confirmados_novos")
 covid_cz_var <- cz_var  %>%
   filter(cz_var$data > as.Date("2020-01-27")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt Rép. Checa - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_cz <- estimate_R(as.numeric(covid_cz_var$confirmados_novos), 
@@ -650,22 +584,6 @@ covid_swi_var <- swi_var  %>%
   filter(swi_var$data > as.Date("2020-02-18")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Rép. Checa - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_swi <- estimate_R(as.numeric(covid_swi_var$confirmados_novos), 
                                  method = "uncertain_si",
@@ -767,21 +685,6 @@ names(swe_var) <- c("data", "confirmados_novos")
 covid_swe_var <- swe_var  %>%
   filter(swe_var$data > as.Date("2020-02-04")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt Suécia- Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_swe <- estimate_R(as.numeric(covid_swe_var$confirmados_novos),
@@ -890,21 +793,6 @@ covid_uk_var <- uk_var  %>%
   filter(uk_var$data > as.Date("2020-02-28")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Reino Unido - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_uk <- estimate_R(as.numeric(covid_uk_var$confirmados_novos), 
@@ -1008,22 +896,6 @@ covid_aus_var <- aus_var  %>%
   filter(aus_var$data > as.Date("2020-01-25")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Australia- Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_aus <- estimate_R(as.numeric(covid_aus_var$confirmados_novos),
                                  method = "uncertain_si",
@@ -1116,12 +988,12 @@ ggplotly(graph_aus, tooltip = "text", width = 900, height = 450) %>%
 nzealand <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-nzealand$ï..Date_reported <- as.Date(nzealand$ï..Date_reported, "%Y-%m-%d")
+nzealand$Date_reported <- as.Date(nzealand$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 nzealand_var <- nzealand %>%
   filter(Country == "New Zealand") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(nzealand_var) <- c("data", "confirmados_novos")
 
 ## Alterar para formato Data
@@ -1132,21 +1004,6 @@ covid_nze_var <- nzealand_var  %>%
   filter(nzealand_var$data > as.Date("2020-01-03")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Nova Zelândia - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_nze <- estimate_R(as.numeric(covid_nze_var$confirmados_novos), 
@@ -1248,22 +1105,6 @@ names(india_var) <- c("data", "confirmados_novos")
 covid_india_var <- india_var  %>%
   filter(india_var$data > as.Date("2020-01-31")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
-
-### Cálculo do Rt India- Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 
 ## Aplicar a função Estimate_R
@@ -1376,22 +1217,6 @@ covid_hk_var <- hk_var  %>%
   filter(hk_var$data > as.Date("2020-02-28")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt HK - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_hk <- estimate_R(as.numeric(covid_hk_var$confirmados_novos), 
                                 method = "uncertain_si",
@@ -1472,101 +1297,6 @@ ggplotly(graph_hk, tooltip = "text", width = 900, height = 450) %>%
   layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
 
 
-------
-  # Serial Interval específico
-  ## Comparar Rt conforme SI
-  sens_configs2 <- 
-  make_config(
-    list(
-      mean_si = 4.9, std_mean_si = 0.7,
-      min_mean_si = 3.6, max_mean_si = 6.2,
-      std_si = 4.4, std_std_si = 0.5,
-      min_std_si = 2.9, max_std_si = 8.3,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
-### Aplicar a função Estimate_R
-Rt_nonparam_si_hk2 <- estimate_R(as.numeric(covid_hk_var$confirmados_novos), 
-                                 method = "uncertain_si",
-                                 config = sens_configs2
-)
-
-sample_windows_hk2 <- seq(length(Rt_nonparam_si_hk2$R$t_start))
-
-### Criar um data frame com valores de R
-posterior_Rt_hk2 <- 
-  map(.x = sample_windows_hk2,
-      .f = function(x) {
-        
-        posterior_sample_obj_hk2 <- 
-          sample_posterior_R(
-            R = Rt_nonparam_si_hk2,
-            n = 1000, 
-            window = x )
-        
-        posterior_sample_estim_hk2 <- 
-          data.frame(
-            window_index = x,
-            window_t_start = Rt_nonparam_si_hk2$R$t_start[x],
-            window_t_end = Rt_nonparam_si_hk2$R$t_end[x],
-            date_point = covid_hk_var[covid_hk_var$t_start == Rt_nonparam_si_hk2$R$t_end[x], "data"],
-            R_e_median = median(posterior_sample_obj_hk2),
-            R_e_q0025 = quantile(posterior_sample_obj_hk2, probs = 0.025),
-            R_e_q0975 = quantile(posterior_sample_obj_hk2, probs = 0.975))
-        
-        return(posterior_sample_estim_hk2)}
-  ) %>% 
-  
-  reduce(bind_rows)
-
-
-## Gráfico Hong Kong ggplot 2
-
-graph_hk2 <- ggplot(posterior_Rt_hk2, aes(x = date_point, y = R_e_median)) +
-  geom_line(colour = "paleturquoise4",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
-                                                                                           '<br>Rt médio: ', R_e_median))) +
-  geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "paleturquoise1") +
-  
-  labs( title = "Hong Kong - Evolução do Número Efetivo Reprodutivo ao longo do tempo", size= 10,
-        subtitle = "Fonte de dados:  ",
-        x = "Data",
-        y = "Nº de reprodução efetivo (Rt)"
-  ) +
-  
-  theme_minimal() +
-  
-  theme(axis.title = element_text(size = 10, hjust = 0.5),
-        plot.subtitle = element_text(size= 8),
-        axis.title.x = element_text(size = 7),
-        axis.title.y = element_text(size = 7),
-        axis.text.x = element_text(angle = 60, hjust = 1)
-  ) +
-  
-  scale_x_date(
-    date_breaks = "2 weeks", labels = date_format("%b %d"),
-    limits = c(min(covid_hk_var$data), max((posterior_Rt_hk2$date_point)))
-  ) +
-  
-  scale_y_continuous(
-    breaks = 0:ceiling(max(posterior_Rt_hk2$R_e_q0975)),
-    limits = c(0, 10)
-  ) +
-  geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
-  geom_vline(xintercept = as.numeric(as.Date(c("2020-03-25", "2020-07-20", "2020-10-04"))), linetype = c("solid", "twodash", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_hk, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE) + 
-  geom_pointrange(data = last(posterior_Rt_hk2), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
-  annotate(geom = "text", x = last(posterior_Rt_hk2$date_point), y = last(posterior_Rt_hk2$R_e_median) - 0.5, label = round(last(posterior_Rt_hk2$R_e_median), digits = 3), size = 3)
-
-
-
-
-### Tornar gráfico interativo
-ggplotly(graph_hk2, tooltip = "text", width = 900, height = 450) %>%
-  layout(title = list(text = paste0("Hong Kong", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
-
 
 
 
@@ -1575,34 +1305,18 @@ ggplotly(graph_hk2, tooltip = "text", width = 900, height = 450) %>%
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
+china$Date_reported <- as.Date(china$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 chi_var <- china %>%
   filter(Country == "China") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_chi_var <- chi_var  %>%
   filter(chi_var$data > as.Date("2020-01-03")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt China - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_chi <- estimate_R(as.numeric(covid_chi_var$confirmados_novos), 
@@ -1707,21 +1421,6 @@ covid_usa_var <- usa_var  %>%
   filter(usa_var$data > as.Date("2020-01-29")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt USA - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_usa <- estimate_R(as.numeric(covid_usa_var$confirmados_novos), 
@@ -1827,22 +1526,6 @@ covid_jap_var <- jap_var  %>%
   filter(jap_var$data > as.Date("2020-02-10")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Japão - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_jap <- estimate_R(as.numeric(covid_jap_var$confirmados_novos), 
                                  method = "uncertain_si",
@@ -1928,17 +1611,16 @@ ggplotly(graph_jap, tooltip = "text", width = 900, height = 450) %>%
 
 
 
-
 # MÉXICO (https://covid19.who.int/table)
 mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-mexico$ï..Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
+mexico$Date_reported <- as.Date(mexico$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 mex_var <- mexico %>%
   filter(Country == "Mexico") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(mex_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -1946,21 +1628,6 @@ covid_mex_var <- mex_var  %>%
   filter(mex_var$data > as.Date("2020-02-28")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt México - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_mex <- estimate_R(as.numeric(covid_mex_var$confirmados_novos), 
@@ -2062,22 +1729,6 @@ covid_kor_var <- kor_var  %>%
   filter(kor_var$data > as.Date("2020-01-20")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
 
-## Cálculo do Rt Coreia do Sul - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
-
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_kor <- estimate_R(as.numeric(covid_kor_var$confirmados_novos), 
                                  method = "uncertain_si",
@@ -2166,34 +1817,18 @@ ggplotly(graph_kor, tooltip = "text", width = 900, height = 450) %>%
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-brasil$ï..Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
+brasil$Date_reported <- as.Date(brasil$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 bra_var <- brasil %>%
   filter(Country == "Brazil") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(bra_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_bra_var <- bra_var  %>%
   filter(bra_var$data > as.Date("2020-02-28")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt Brasil - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_bra <- estimate_R(as.numeric(covid_bra_var$confirmados_novos), 
@@ -2274,15 +1909,16 @@ ggplotly(graph_bra, tooltip = "text", width = 900, height = 450) %>%
 
 
 
-# Gráfico bolinhas último Rt
+
+# Gráfico último Rt
 ## Tabela com último Rt para cada país
 last_Rt_paises <- last_Rt <- as.data.frame(rbind(last(posterior_R_t), last(posterior_Rt_it), last(posterior_Rt_ger), last(posterior_Rt_spa), last(posterior_Rt_bel), last(posterior_Rt_cz), last(posterior_Rt_swi), last(posterior_Rt_swe), last(posterior_Rt_uk), last(posterior_Rt_aus), last(posterior_Rt_india), last(posterior_Rt_hk), last(posterior_Rt_chi), last(posterior_Rt_usa), last(posterior_Rt_jap), last(posterior_Rt_mex), last(posterior_Rt_kor), last(posterior_Rt_bra)))
 last_Rt_paises <- last_Rt_paises[, -c(1:4)]
 last_Rt_paises <- cbind(c("Portugal", "Itália", "Alemanha", "Espanha", "Bélgica", "República Checa", "Suiça", "Suécia", "Reino Unido", "Austrália", "Índia", "Hong Kong", "China", "Estados Unidos", "Japão", "México", "Coreia do Sul", "Brasil"), last_Rt_paises)
-names(last_Rt_paises)[1] <- "paises"
+names(last_Rt_paises)[1] <- "País"
 
 ##GGPlot
-ggplot(last_Rt_paises, aes(x = paises, y = R_e_median, color = paises)) + 
+ggplot(last_Rt_paises, aes(x = País, y = R_e_median, color = País)) + 
   labs(title = "Rt atual em países da UE e Extracomunitários ",
        x = "País",
        y = "Número Reprodutivo Efetivo (Rt)") +
@@ -2292,7 +1928,8 @@ ggplot(last_Rt_paises, aes(x = paises, y = R_e_median, color = paises)) +
         axis.title.y = element_text(size = 10),
         axis.title.x = element_text(size = 10)) +
   scale_y_continuous(breaks = seq(0, max(last_Rt$R_e_q0975), by = 0.1)) + 
-  geom_pointrange(aes(ymin = R_e_q0025, ymax = R_e_q0975), size = 1.1, alpha = 1) + 
+  geom_pointrange(aes(ymin = R_e_q0025, ymax = R_e_q0975), size = 0.5, alpha = 0.8) +
+  geom_text_repel(label = round((last_Rt$R_e_median), digits = 2), color = "black", size = 2.5) +  
   geom_hline(yintercept = 1, colour = "grey65")
 
 

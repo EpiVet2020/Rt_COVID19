@@ -118,8 +118,11 @@ library(rjson)
 library(readr)
 library(readxl)
 library(scales)
+library(htmltools)
 install_github("ropenscilabs/icon")
 library(icon)
+library(ggrepel)
+
 
 #Importar dados
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -928,7 +931,7 @@ gráfico_Madeira <- ggplot(posterior_R_t7, aes(x = date_point, y = R_e_median)) 
   annotate(geom = "text", x = last(posterior_R_t7$date_point), y = last(posterior_R_t7$R_e_median) - 0.5, label = round(last(posterior_R_t7$R_e_median), digits = 3), size = 3)
 
 
-ggplotly(gráfico_Madeira, tooltip = "text") %>%
+plot <- ggplotly(gráfico_Madeira, tooltip = "text") %>%
   layout(title = list(text = paste0("ARS Madeira", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"), font=list(face="bold")), 
          legend = list(x = 100, y = 0.95))
 
@@ -940,9 +943,9 @@ ggplotly(gráfico_Madeira, tooltip = "text") %>%
 ### **Análise Comparativa entre Administrações Regionais de Saúde (ARS's)**
 ***
 
-Através deste gráfico, que sobrepõe a evolução do Número Reprodutivo Efetivo das várias ARS's, podemos realizar uma análise comparativa das regiões, nomeadamente, em relação ao Rt atual.
+Através do gráfico em baixo à esquerda, que sobrepõe a evolução do Número Reprodutivo Efetivo das várias ARS's, é possível realizar uma análise comparativa entre regiões. No gráfico do lado direito, estão identificados os Rt's atuais das diferentes ARS's.
 <br>
-```{r, warning=FALSE, message= FALSE, fig.align='center'}
+```{r, figures-side, fig.show="hold", out.width="50%", message= FALSE}
 
 # Análise comparativa entre regiões
 ## Data frame com as regiões que começam no dia 7 de Março
@@ -1003,6 +1006,32 @@ ggplotly(Rt_regioes_tempo_graph, tooltip = "text") %>%
                                        rep("\n&nbsp;", 2)),
                                      collapse = "")),
          legend = list(x = 1, y = 0))
+
+
+
+
+
+# Gráfico último Rt
+## Tabela com último Rt para cada região
+last_Rt <- as.data.frame(rbind(last(posterior_R_t), last(posterior_R_t1), last(posterior_R_t2), last(posterior_R_t3), last(posterior_R_t4), last(posterior_R_t5), last(posterior_R_t6), last(posterior_R_t7)))
+last_Rt <- last_Rt[, -c(1:4)]
+last_Rt <- cbind(c("Portugal", "Norte", "Centro", "LVT", "Alentejo", "Algarve", "Açores", "Madeira"), last_Rt)
+names(last_Rt)[1] <- "ARS"
+
+##GGPlot
+ggplot(last_Rt, aes(x = ARS, y = R_e_median, color = ARS)) + 
+  labs(title = "Rt atual em Portugal e nas suas Administrações Regionais de Saúde (ARS's)",
+       x = "ARS's",
+       y = "Número Reprodutivo Efetivo (Rt)") +
+  theme_minimal() +
+  theme(plot.title = element_text(size=10, face= "bold"),
+        axis.title.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10)) +
+  scale_y_continuous(breaks = seq(0, max(last_Rt$R_e_q0975), by = 0.1)) + 
+  geom_pointrange(aes(ymin = R_e_q0025, ymax = R_e_q0975, shape = ARS), size = 0.5, alpha = 0.8) +
+  scale_shape_manual(values = c(18, 8, 11, 16, 4, 17, 9, 15)) +
+  geom_text_repel(label = round((last_Rt$R_e_median), digits = 2), color = "black", size = 2.5) +
+  geom_hline(yintercept = 1, colour = "grey65")
 
 ```
 

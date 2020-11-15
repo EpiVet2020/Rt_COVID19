@@ -108,6 +108,7 @@ library(readxl)
 library(scales)
 install_github("ropenscilabs/icon")
 library(icon)
+library(ggrepel)
 
 #Importar dados
 covid19pt <-read.csv("https://raw.githubusercontent.com/dssg-pt/covid19pt-data/master/data.csv", stringsAsFactors = FALSE)
@@ -658,11 +659,11 @@ Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 ## Alterar formato para data
-czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d") 
+czechr$datum <- as.Date(czechr$datum, "%Y-%m-%d") 
 
 ## Tabela confirmados novos
 cz_var <- czechr %>%
-  select(ï..datum, prirustkovy_pocet_nakazenych)
+  select(datum, prirustkovy_pocet_nakazenych)
 names(cz_var) <- c("data", "confirmados_novos")
 
 
@@ -1571,12 +1572,12 @@ A partir de Setembro, com o início do desconfinamento em Xinjiang, os valores d
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
+china$Date_reported <- as.Date(china$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 chi_var <- china %>%
   filter(Country == "China") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -1954,12 +1955,12 @@ No México, os primeiros casos foram registados no fim de fevereiro e o pico no 
 mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-mexico$ï..Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
+mexico$Date_reported <- as.Date(mexico$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 mex_var <- mexico %>%
   filter(Country == "Mexico") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(mex_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -2205,34 +2206,18 @@ No Brasil, o pico no Rt (Rt = 8,26) foi registado no dia 7 de março, cerca de 1
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-brasil$ï..Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
+brasil$Date_reported <- as.Date(brasil$Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 bra_var <- brasil %>%
   filter(Country == "Brazil") %>%
-  select(ï..Date_reported, New_cases)
+  select(Date_reported, New_cases)
 names(bra_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
 covid_bra_var <- bra_var  %>%
   filter(bra_var$data > as.Date("2020-02-28")) %>% 
   dplyr::mutate(t_start = dplyr::row_number())
-
-## Cálculo do Rt Brasil - Uncertainty method --> "uncertain_si"
-### Serial Interval (c/ base nos valores anteriores)
-
-sens_configs <- 
-  make_config(
-    list(
-      mean_si = 4.7, std_mean_si = 0.7,
-      min_mean_si = 3.7, max_mean_si = 6.0,
-      std_si = 2.9, std_std_si = 0.5,
-      min_std_si = 1.9, max_std_si = 4.9,
-      n1 = 1000,
-      n2 = 100,
-      seed = 123456789
-    )
-  )
 
 ## Aplicar a função Estimate_R
 Rt_nonparam_si_bra <- estimate_R(as.numeric(covid_bra_var$confirmados_novos), 
@@ -2271,9 +2256,11 @@ posterior_Rt_bra <-
 ## Gráfico Brasil ggplot
 d_bra = data.frame(date=as.Date(c("2020-03-17", "2020-05-07", "2020-06-04")), Evento=c("Estado de Emergência - São Paulo e Rio de Janeiro", "Confinamento parcial obrigatório", "Levantamento gradual das medidas de restrição"))
 
+posterior_Rt_bra$date_point <- as.Date(posterior_Rt_bra$date_point)
+
 graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   geom_line(colour = "cadetblue",  alpha = 0.5, size = 1, aes(group = 1, text = paste('Data: ', date_point,
-                                                                                         '<br>Rt médio: ', R_e_median))) +
+                                                                              '<br>Rt médio: ', R_e_median))) +
   geom_ribbon(aes(ymin = R_e_q0025, ymax = R_e_q0975), alpha = 0.15, fill = "cadetblue") +
   
   labs( title = " Brasil", size= 10,
@@ -2303,13 +2290,39 @@ graph_bra <- ggplot(posterior_Rt_bra, aes(x = date_point, y = R_e_median)) +
   ) +
   geom_hline(yintercept = 1, colour= "grey65", alpha= 0.4) +
   geom_vline(xintercept = as.numeric(as.Date(c("2020-03-17", "2020-05-07", "2020-06-04"))), linetype = c("twodash", "solid", "dotted"), colour = "darkred" , alpha = 0.5) +
-  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento, ), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
+  geom_vline(data=d_bra, mapping =  aes(xintercept = date, linetype = Evento), size = 1, colour = "darkred", alpha = 0.5, show.legend = FALSE)+ 
   geom_pointrange(data = last(posterior_Rt_bra), mapping = aes(x = date_point, y = R_e_median, ymin = R_e_q0025, ymax = R_e_q0975), stat = "identity", position = "identity", colour = "indianred4", size = 1,5, alpha = 0.8, linetype = "solid") + 
   annotate(geom = "text", x = last(posterior_Rt_bra$date_point), y = last(posterior_Rt_bra$R_e_median) - 0.5, label = round(last(posterior_Rt_bra$R_e_median), digits = 3), size = 3)
 
 ### Tornar gráfico interativo
 ggplotly(graph_bra, tooltip = "text", width = 900, height = 450) %>%
   layout(title = list(text = paste0("Brasil", "<br>", "<sup>", "Evolução do Número Efetivo Reprodutivo ao longo do tempo", "</sup>"),font=list(face="bold")), legend = list(x = 100, y = 0.5))
+
+
+
+
+
+# Gráfico último Rt
+## Tabela com último Rt para cada país
+last_Rt_paises <- last_Rt <- as.data.frame(rbind(last(posterior_R_t), last(posterior_Rt_it), last(posterior_Rt_ger), last(posterior_Rt_spa), last(posterior_Rt_bel), last(posterior_Rt_cz), last(posterior_Rt_swi), last(posterior_Rt_swe), last(posterior_Rt_uk), last(posterior_Rt_aus), last(posterior_Rt_india), last(posterior_Rt_hk), last(posterior_Rt_chi), last(posterior_Rt_usa), last(posterior_Rt_jap), last(posterior_Rt_mex), last(posterior_Rt_kor), last(posterior_Rt_bra)))
+last_Rt_paises <- last_Rt_paises[, -c(1:4)]
+last_Rt_paises <- cbind(c("Portugal", "Itália", "Alemanha", "Espanha", "Bélgica", "República Checa", "Suiça", "Suécia", "Reino Unido", "Austrália", "Índia", "Hong Kong", "China", "Estados Unidos", "Japão", "México", "Coreia do Sul", "Brasil"), last_Rt_paises)
+names(last_Rt_paises)[1] <- "País"
+
+##GGPlot
+ggplot(last_Rt_paises, aes(x = País, y = R_e_median, color = País)) + 
+  labs(title = "Rt atual em países da UE e Extracomunitários ",
+       x = "País",
+       y = "Número Reprodutivo Efetivo (Rt)") +
+  theme_minimal() +
+  theme(plot.title = element_text(size=10, face= "bold"),
+        axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.title.y = element_text(size = 10),
+        axis.title.x = element_text(size = 10)) +
+  scale_y_continuous(breaks = seq(0, max(last_Rt$R_e_q0975), by = 0.1)) + 
+  geom_pointrange(aes(ymin = R_e_q0025, ymax = R_e_q0975), size = 0.5, alpha = 0.8) +
+  geom_text_repel(label = round((last_Rt$R_e_median), digits = 2), color = "black", size = 2.5) +  
+  geom_hline(yintercept = 1, colour = "grey65")
 
 ```
 
