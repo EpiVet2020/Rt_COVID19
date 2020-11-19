@@ -659,11 +659,11 @@ Após o fim do Verão, chegou a 2ª vaga de casos, levando a que fossem impostas
 czechr <- read.csv("https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/nakaza.csv")
 
 ## Alterar formato para data
-czechr$datum <- as.Date(czechr$datum, "%Y-%m-%d") 
+czechr$ï..datum <- as.Date(czechr$ï..datum, "%Y-%m-%d") 
 
 ## Tabela confirmados novos
 cz_var <- czechr %>%
-  select(datum, prirustkovy_pocet_nakazenych)
+  select(ï..datum, prirustkovy_pocet_nakazenych)
 names(cz_var) <- c("data", "confirmados_novos")
 
 
@@ -1572,12 +1572,12 @@ A partir de Setembro, com o início do desconfinamento em Xinjiang, os valores d
 china <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-china$Date_reported <- as.Date(china$Date_reported, "%Y-%m-%d")
+china$ï..Date_reported <- as.Date(china$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 chi_var <- china %>%
   filter(Country == "China") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(chi_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -1955,12 +1955,12 @@ No México, os primeiros casos foram registados no fim de fevereiro e o pico no 
 mexico <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-mexico$Date_reported <- as.Date(mexico$Date_reported, "%Y-%m-%d")
+mexico$ï..Date_reported <- as.Date(mexico$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 mex_var <- mexico %>%
   filter(Country == "Mexico") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(mex_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
@@ -2206,12 +2206,12 @@ No Brasil, o pico no Rt (Rt = 8,26) foi registado no dia 7 de março, cerca de 1
 brasil <- read.csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
 
 ## Alterar formato para data
-brasil$Date_reported <- as.Date(brasil$Date_reported, "%Y-%m-%d")
+brasil$ï..Date_reported <- as.Date(brasil$ï..Date_reported, "%Y-%m-%d")
 
 ## Criar tabela confirmados novos
 bra_var <- brasil %>%
   filter(Country == "Brazil") %>%
-  select(Date_reported, New_cases)
+  select(ï..Date_reported, New_cases)
 names(bra_var) <- c("data", "confirmados_novos")
 
 ## Previsão da evolução
