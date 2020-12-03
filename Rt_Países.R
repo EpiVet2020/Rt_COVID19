@@ -163,7 +163,7 @@ germany <- fromJSON("https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb
 germany <- germany$features
 
 ## Remover horas e minutos
-germany$properties$Meldedatum <- strftime(germany$properties$Meldedatum, format = "%Y-%m-%d")
+germany$properties$Meldedatum <- strftime(germany$properties$Meldedatum, format = "%Y-%m-%d")  
 ## Alterar para formato de data
 germany$properties$Meldedatum <- as.Date(germany$properties$Meldedatum, format = "%Y-%m-%d")
 
@@ -1509,7 +1509,7 @@ ggplotly(graph_usa, tooltip = "text", width = 900, height = 450) %>%
 
 
 #JAPÃO - alterar data do j.son todos os dias (https://github.com/reustle/covid19japan-data/tree/master/docs/summary)
-japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-11-22.json")
+japan <- fromJSON("https://raw.githubusercontent.com/reustle/covid19japan-data/master/docs/summary/2020-12-03.json")
 japan <- japan$daily
 
 ## Alterar formato para data
